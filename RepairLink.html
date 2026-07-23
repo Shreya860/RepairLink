@@ -63,633 +63,7 @@
     pointer-events:auto; background:rgba(255,255,255,0.97);
     border:1px solid var(--line); border-radius:14px; padding:14px 16px;
     display:flex; flex-direction:column; gap:9px; min-width:220px;
-    box-shadow:0 6px 20px rgba(34,29,20,0.1);
-  }
-  .legend-title{font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; color:var(--ink);}
-  .legend-sub{font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:4px;}
-  .legend-row{display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink);}
-  .legend-dot{width:26px; height:26px; flex:none; display:flex; align-items:center; justify-content:center;}
-  .legend-dot svg{width:23px; height:23px;}
-
-  .chat-cta{
-    position:absolute; top:24px; left:50%; transform:translateX(-50%); z-index:25;
-    display:flex; align-items:center; gap:9px;
-    background:linear-gradient(135deg, #25D366, #1DA851); color:#083318;
-    font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:999px;
-    text-decoration:none; box-shadow:0 8px 24px rgba(29,168,81,0.35);
-    border:1px solid rgba(255,255,255,0.5); transition: transform .15s ease, box-shadow .15s ease;
-  }
-  .chat-cta:hover{transform:translateX(-50%) translateY(-2px); box-shadow:0 12px 30px rgba(29,168,81,0.45);}
-  .chat-cta svg{width:17px; height:17px;}
-
-  .locate-box{
-    position:absolute; left:26px; bottom:26px; z-index:20; pointer-events:auto;
-    width:300px; max-width:80vw; background:rgba(255,255,255,0.97);
-    border:1px solid var(--line); border-radius:14px; padding:18px;
-    box-shadow:0 10px 28px rgba(34,29,20,0.14);
-  }
-  .locate-eyebrow{font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:#C98A00; margin-bottom:6px;}
-  .locate-box h3{font-family:'Fraunces', serif; font-size:15.5px; font-weight:600; margin-bottom:10px; line-height:1.35; color:var(--ink);}
-  .locate-box select{
-    width:100%; background:var(--paper-2); color:var(--ink); border:1px solid var(--line);
-    border-radius:9px; padding:10px 12px; font-family:'Manrope',sans-serif; font-size:13px; margin-bottom:10px;
-  }
-  .locate-btn{
-    width:100%; background:var(--marigold); color:#2A1E00; font-weight:700; font-size:13px;
-    border:none; border-radius:9px; padding:11px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:7px;
-  }
-  .locate-btn:hover{background:#ffc935;}
-  .locate-btn svg{width:14px; height:14px;}
-
-  .hero-scrim{
-    position:fixed; inset:0; z-index:40; background:rgba(34,29,20,0.45); backdrop-filter: blur(3px);
-    display:flex; align-items:center; justify-content:center; padding:24px;
-    transition:opacity .3s ease; opacity:1;
-  }
-  .hero-scrim.closed{opacity:0; pointer-events:none;}
-  .hero-card{
-    max-width:560px; width:100%; background:var(--paper); border:1px solid var(--line);
-    border-radius:20px; padding:40px 38px; text-align:center; position:relative;
-    box-shadow:0 30px 70px rgba(34,29,20,0.3);
-  }
-  .hero-stitch{width:38px; height:38px; margin:0 auto 18px auto; display:flex; align-items:center; justify-content:center;}
-  .hero-eyebrow{font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:#C98A00; margin-bottom:10px;}
-  .hero-card h2{font-family:'Fraunces', serif; font-weight:700; font-size:29px; margin-bottom:16px; line-height:1.22; color:var(--ink);}
-  .hero-card p{font-size:14.5px; line-height:1.75; color:var(--ink-dim); text-align:left;}
-  .hero-card p + p{margin-top:12px;}
-  .hero-region{
-    display:inline-flex; align-items:center; gap:7px; margin-top:18px; padding:7px 14px;
-    background:var(--marigold-dim); border:1px solid #FFDD8A; color:#8A5C00;
-    border-radius:999px; font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:600;
-  }
-  .hero-btn{
-    margin-top:26px; display:inline-flex; align-items:center; gap:9px;
-    background:var(--marigold); color:#2A1E00; font-weight:700; font-size:14px;
-    padding:13px 26px; border-radius:12px; border:none; cursor:pointer;
-  }
-  .hero-btn:hover{background:#ffc935;}
-  .hero-btn svg{width:15px; height:15px;}
-
-  /* ---- Flat symbols: solid white disc behind the icon (cheap box-shadow, no filter) ---- */
-  .kmarker{
-    position:relative; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
-    background:#fff; border-radius:50%; box-shadow:0 2px 4px rgba(34,29,20,0.3);
-  }
-  .kmarker svg{width:20px; height:20px; display:block;}
-  .kmarker.highlighted{width:42px; height:42px;}
-  .kmarker.highlighted svg{width:28px; height:28px;}
-
-  .zone-label{
-    background:rgba(255,255,255,0.92); border:1px solid var(--line); color:var(--ink);
-    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.05em;
-    padding:4px 10px; border-radius:6px; text-transform:uppercase; white-space:nowrap;
-    box-shadow:0 3px 10px rgba(34,29,20,0.15);
-  }
-
-  .panel-scrim{position:fixed; inset:0; z-index:29; background:rgba(34,29,20,0.35); opacity:0; pointer-events:none; transition:opacity .25s ease;}
-  .panel-scrim.open{opacity:1; pointer-events:auto;}
-  .panel{
-    position:fixed; top:0; right:0; height:100%; width:410px; max-width:92vw;
-    background:var(--paper); border-left:1px solid var(--line); z-index:30;
-    transform:translateX(100%); transition:transform .32s cubic-bezier(.2,.8,.2,1);
-    display:flex; flex-direction:column; overflow-y:auto;
-    box-shadow:-16px 0 40px rgba(34,29,20,0.15);
-  }
-  .panel.open{transform:translateX(0);}
-  .panel-close{
-    position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%;
-    background:var(--paper-2); border:1px solid var(--line); color:var(--ink);
-    display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; z-index:2;
-  }
-
-  .ticket-header{padding:26px 26px 18px 26px; border-bottom:1px dashed var(--line); position:relative;}
-  .ticket-no{font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--ink-dim); text-transform:uppercase;}
-  .ticket-header h2{font-family:'Fraunces', serif; font-weight:700; font-size:27px; margin-top:8px; color:var(--ink);}
-  .trade-tag{
-    display:inline-flex; align-items:center; gap:7px; margin-top:10px; padding:6px 12px;
-    border-radius:999px; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
-  }
-  .trade-tag svg{width:12px; height:12px;}
-
-  .panel-body{padding:22px 26px 36px 26px;}
-  .proximity-bar{
-    display:flex; align-items:center; gap:9px; background:var(--marigold-dim);
-    border:1px solid #FFDD8A; color:#8A5C00; font-family:'JetBrains Mono', monospace;
-    font-size:11.5px; padding:10px 14px; border-radius:10px; margin-bottom:18px;
-  }
-  .proximity-bar svg{width:14px; height:14px; flex:none;}
-
-  .chat-window{background:var(--paper-2); border:1px solid var(--line); border-radius:16px; padding:18px;}
-  .chat-header{display:flex; align-items:center; gap:11px; margin-bottom:14px;}
-  .chat-avatar{
-    width:40px; height:40px; border-radius:50%; background:#fff; flex:none;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Fraunces', serif; font-weight:700; font-size:16px; border:2px solid var(--marigold); color:var(--ink);
-  }
-  .chat-name{font-family:'Fraunces', serif; font-weight:600; font-size:15px; color:var(--ink);}
-  .chat-status{font-size:11px; color:#2FA65C; margin-top:2px;}
-  .chat-status::before{content:"●"; margin-right:4px; font-size:8px;}
-  .chat-bubble{
-    background:#fff; border:1px solid var(--line); color:var(--ink);
-    border-radius:16px 16px 16px 4px; padding:12px 15px; font-size:14px; line-height:1.65;
-    max-width:94%;
-  }
-  .chat-bubble + .chat-bubble{margin-top:8px;}
-  .chat-time{font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--ink-dim); margin-top:8px; text-align:right;}
-
-  .stat-row{display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;}
-  .stat{flex:1; min-width:110px; background:var(--paper-2); border:1px solid var(--line); border-radius:10px; padding:12px 14px;}
-  .stat-label{font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-dim);}
-  .stat-value{font-family:'Fraunces', serif; font-size:19px; font-weight:600; margin-top:4px; color:var(--ink);}
-  .panel-cta{
-    display:flex; align-items:center; justify-content:center; gap:9px; margin-top:22px; width:100%;
-    background:linear-gradient(135deg, #25D366, #1DA851); color:#083318; font-weight:700; font-size:13.5px;
-    padding:13px 18px; border-radius:12px; text-decoration:none;
-  }
-  .panel-cta svg{width:16px; height:16px;}
-
-  .results-header{padding:26px 26px 16px 26px; border-bottom:1px dashed var(--line);}
-  .results-header .ticket-no{color:#C98A00;}
-  .results-header h2{font-family:'Fraunces', serif; font-weight:700; font-size:21px; margin-top:8px; line-height:1.3; color:var(--ink);}
-  .results-list{padding:18px 26px 36px 26px; display:flex; flex-direction:column; gap:12px;}
-  .result-card{background:var(--paper-2); border:1px solid var(--line); border-radius:14px; padding:16px; cursor:pointer; transition:border-color .15s ease, background .15s ease;}
-  .result-card:hover{border-color:var(--marigold); background:#fff;}
-  .result-top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .result-name{font-family:'Fraunces', serif; font-weight:600; font-size:16px; color:var(--ink);}
-  .result-dist{font-family:'JetBrains Mono', monospace; font-size:11px; color:#C98A00; white-space:nowrap;}
-  .result-trade{display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:4px 10px; border-radius:999px; font-size:10.5px; font-weight:700; text-transform:uppercase;}
-  .result-trade svg{width:10px; height:10px;}
-  .result-area{font-size:12px; color:var(--ink-dim); margin-top:8px;}
-
-  .leaflet-popup-content-wrapper{background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:10px;}
-  .leaflet-popup-tip{background:var(--paper); border:1px solid var(--line);}
-  .leaflet-popup-content{font-family:'Manrope',sans-serif; font-size:12.5px; margin:10px 12px;}
-  .leaflet-popup-content b{font-family:'Fraunces',serif; font-size:14px;}
-
-  @media (max-width:640px){
-    header{padding:12px; flex-direction:column; gap:8px;}
-
-    .brand{padding:10px 14px;}
-    .brand p{display:none;}
-
-    .legend{
-      min-width:auto; width:100%; padding:10px 12px; gap:6px 12px;
-      display:grid; grid-template-columns:1fr 1fr;
-    }
-    .legend-title{grid-column:1 / -1; font-size:13px;}
-    .legend-sub{display:none;}
-    .legend-row{font-size:12px; gap:8px;}
-    .legend-row span span{display:none;} /* drop the "— shoe & leather repair" style captions, keep just the trade name */
-    .legend-dot{width:22px; height:22px;}
-    .legend-dot svg{width:19px; height:19px;}
-
-    /* chat-cta used to float top-center over the now-tall stacked header — move it to a
-       bottom-right FAB, clear of both the locate box (bottom-left) and the zoom control */
-    .chat-cta{
-      position:fixed; top:auto; left:auto; right:14px; bottom:104px; transform:none;
-      width:50px; height:50px; padding:0; border-radius:50%; justify-content:center;
-    }
-    .chat-cta span{display:none;}
-    .chat-cta:hover{transform:none;}
-
-    .locate-box{width:calc(100% - 28px); bottom:14px; left:14px; padding:14px;}
-    .locate-box h3{font-size:14px;}
-
-    .hero-card{padding:28px 22px;}
-    .hero-card h2{font-size:23px;}
-    .hero-card p{font-size:13.5px;}
-  }
-</style>
-</head>
-<body>
-
-<div id="map"></div>
-
-<div class="hero-scrim" id="heroScrim">
-  <div class="hero-card">
-    <div class="hero-stitch">
-      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/><path d="M2 12h4M8 12h4M14 12h4M20 12h2" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/></svg>
-    </div>
-    <div class="hero-eyebrow">What is RepairLink?</div>
-    <h2>We give your broken things a second chance.</h2>
-    <p>We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.</p>
-    <p>Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.</p>
-    <div class="hero-region">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
-      Currently live only in North Delhi
-    </div>
-    <br>
-    <button class="hero-btn" id="heroClose">
-      Explore the map
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </button>
-  </div>
-</div>
-
-<header>
-  <div class="brand">
-    <div class="brand-mark">
-      <svg class="stitch" width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M2 12h3M7 12h3M12 12h3M17 12h3" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/>
-        <circle cx="12" cy="12" r="9" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/>
-      </svg>
-      <h1>RepairLink</h1>
-    </div>
-    <p>Mapping North Delhi's kaarigars — repair first, recycle what's left</p>
-  </div>
-
-  <div class="legend">
-    <div class="legend-title">Services We Provide</div>
-    <div class="legend-sub">Tap a symbol on the map to meet the kaarigar</div>
-    <div class="legend-row"><div class="legend-dot" id="legendCobbler"></div><span>Cobblers <span style="color:var(--ink-dim)">— shoe & leather repair</span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span>Watch repairers <span style="color:var(--ink-dim)">— horologists</span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span>Appliance repair <span style="color:var(--ink-dim)">— mixers & grinders</span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span>Locksmiths <span style="color:var(--ink-dim)">— keys & locks</span></span></div>
-  </div>
-</header>
-
-<a class="chat-cta" id="whatsappTop" href="https://wa.me/919999999999?text=Hi%20RepairLink%2C%20I%20need%20help%20finding%20a%20kaarigar%20near%20me" target="_blank" rel="noopener">
-  <svg viewBox="0 0 24 24" fill="#083318"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.35 4.95L2 22l5.28-1.39a9.9 9.9 0 004.76 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.87 14.02c-.25.7-1.25 1.29-2.03 1.45-.55.12-1.26.21-3.66-.78-3.08-1.27-5.06-4.4-5.21-4.6-.15-.2-1.24-1.65-1.24-3.15s.78-2.23 1.06-2.53c.25-.27.55-.34.73-.34.19 0 .37 0 .53.01.17.01.4-.06.62.48.25.6.85 2.08.92 2.23.07.15.12.32.02.51-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.17-.2.72-.84.92-1.13.2-.29.4-.24.65-.14.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.12.07.72-.19 1.42z"/></svg>
-  <span>Chat with a RepairLink helper</span>
-</a>
-
-<div class="locate-box">
-  <div class="locate-eyebrow">Find your nearest kaarigar</div>
-  <h3>Select your location and we'll show you the closest artisan of each trade — in no time.</h3>
-  <select id="localitySelect"><option value="">Choose your area in North Delhi…</option></select>
-  <button class="locate-btn" id="locateBtn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
-    Find closest kaarigars
-  </button>
-</div>
-
-<div class="panel-scrim" id="scrim"></div>
-
-<div class="panel" id="panel">
-  <div class="panel-close" id="panelClose">✕</div>
-
-  <div id="storyView">
-    <div class="ticket-header">
-      <div class="ticket-no" id="ticketNo">REPAIR TICKET NO. 001</div>
-      <h2 id="artisanName">—</h2>
-      <div class="trade-tag" id="tradeTag"></div>
-    </div>
-    <div class="panel-body">
-      <div class="proximity-bar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
-        <span id="proximityText">—</span>
-      </div>
-      <div class="chat-window">
-        <div class="chat-header">
-          <div class="chat-avatar" id="chatAvatar">R</div>
-          <div>
-            <div class="chat-name" id="chatName">—</div>
-            <div class="chat-status">Usually replies within the hour</div>
-          </div>
-        </div>
-        <div class="chat-bubble" id="storyText1"></div>
-        <div class="chat-bubble" id="storyText2"></div>
-        <div class="chat-time">Delivered</div>
-      </div>
-      <div class="stat-row">
-        <div class="stat"><div class="stat-label">Hours</div><div class="stat-value" id="statHours">—</div></div>
-        <div class="stat"><div class="stat-label">Years here</div><div class="stat-value" id="statYears">—</div></div>
-      </div>
-      <a class="panel-cta" id="whatsappPanel" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="#083318"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.35 4.95L2 22l5.28-1.39a9.9 9.9 0 004.76 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.87 14.02c-.25.7-1.25 1.29-2.03 1.45-.55.12-1.26.21-3.66-.78-3.08-1.27-5.06-4.4-5.21-4.6-.15-.2-1.24-1.65-1.24-3.15s.78-2.23 1.06-2.53c.25-.27.55-.34.73-.34.19 0 .37 0 .53.01.17.01.4-.06.62.48.25.6.85 2.08.92 2.23.07.15.12.32.02.51-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.17-.2.72-.84.92-1.13.2-.29.4-.24.65-.14.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.12.07.72-.19 1.42z"/></svg>
-        Message this kaarigar on WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <div id="resultsView" style="display:none;">
-    <div class="results-header">
-      <div class="ticket-no">CLOSEST TO YOU</div>
-      <h2 id="resultsLocality">—</h2>
-    </div>
-    <div class="results-list" id="resultsList"></div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>
-  const TRADES = {
-    cobbler:   { label:"Cobbler", color:"#FFB800", dim:"var(--marigold-dim)",
-      icon:'<path fill="CURR" d="M6 3h3v7.3l6.4 2.7c1.2.5 1.9 1.6 1.9 2.9V16H6a2 2 0 01-2-2V5a2 2 0 012-2z"/><path fill="CURR" d="M3.3 16h14.4a1.6 1.6 0 01-1.6 1.6H4.9A1.6 1.6 0 013.3 16z"/>' },
-    watch:     { label:"Watch Repairer", color:"#FF4C3B", dim:"var(--vermilion-dim)",
-      icon:'<rect fill="CURR" x="10" y="1.5" width="4" height="3" rx="0.8"/><rect fill="CURR" x="10" y="19.5" width="4" height="3" rx="0.8"/><circle fill="CURR" cx="12" cy="12" r="6.3"/><path stroke="#fff" stroke-width="1.3" stroke-linecap="round" fill="none" d="M12 8.6v3.6l2.4 1.4"/>' },
-    appliance: { label:"Appliance Repairer", color:"#2E8FE0", dim:"var(--teal-dim)",
-      icon:'<path fill="CURR" d="M7.2 3h9.6l-1.7 9.8a3.7 3.7 0 01-3.65 3.1h-.7a3.7 3.7 0 01-3.65-3.1z"/><rect fill="CURR" x="9.3" y="19.4" width="5.4" height="1.8" rx="0.6"/><path stroke="#fff" stroke-width="1" stroke-linecap="round" d="M9.3 7.8h5.4"/>' },
-    locksmith: { label:"Locksmith", color:"#2FA65C", dim:"var(--leaf-dim)",
-      icon:'<circle fill="CURR" cx="7.2" cy="16.8" r="3.6"/><path stroke="CURR" stroke-width="2.6" stroke-linecap="round" fill="none" d="M9.7 14.3L18.5 5.5"/><path stroke="CURR" stroke-width="2.2" stroke-linecap="round" fill="none" d="M18.5 5.5l2.3 2.3M15.9 8.1l2.1 2.1"/>' }
-  };
-
-  const ARTISANS = [
-    { name:"Ramesh Kumar", trade:"cobbler", phone:"919876507001", years:11, hours:"10 AM – 7 PM · Closed Sun", lat:28.6667, lng:77.2286, area:"Kashmere Gate",
-      s1:"Hey! I'm Ramesh — I've been sitting right here near Kashmere Gate for the past 11 years.",
-      s2:"I've repaired more than 5,000 shoes in that time and I keep my rates minimal, because everyone deserves a well-fitting pair. I sit from 10 AM to 7 PM, but not on Sundays — that's family day." },
-    { name:"Suresh Lal", trade:"cobbler", phone:"919876507002", years:6, hours:"9 AM – 6:30 PM · Closed Sun", lat:28.6580, lng:77.2100, area:"Sadar Bazaar",
-      s1:"Namaste, I'm Suresh, working out of a small corner in Sadar Bazaar for 6 years now.",
-      s2:"My father taught me this trade, and before him, my grandfather. Nothing goes to waste if it can still be mended. Come by 9 to 6:30, except Sundays." },
-    { name:"Iqbal Ahmed", trade:"watch", phone:"919876507003", years:19, hours:"11 AM – 8 PM · Closed Sun", lat:28.6800, lng:77.2220, area:"Civil Lines",
-      s1:"I'm Iqbal — I've kept time for this part of Civil Lines for 19 years now.",
-      s2:"Battery changes, strap repairs, old mechanical pieces no showroom wants to touch anymore — I take them all. I'm here 11 to 8, every day but Sunday." },
-    { name:"Harbhajan Singh", trade:"watch", phone:"919876507004", years:8, hours:"10:30 AM – 7:30 PM · Closed Sun", lat:28.6800, lng:77.2050, area:"Kamla Nagar",
-      s1:"Hello, I'm Harbhajan, and I've had my little watch counter in Kamla Nagar for 8 years.",
-      s2:"Students from the college nearby are half my customers. I charge what's fair, especially for students. Find me 10:30 to 7:30, closed Sundays." },
-    { name:"Farooq Sheikh", trade:"appliance", phone:"919876507005", years:14, hours:"10 AM – 7 PM · Closed Sun", lat:28.6600, lng:77.2050, area:"Azad Market",
-      s1:"I'm Farooq — for 14 years I've been fixing mixers, grinders and small kitchen motors near Azad Market.",
-      s2:"Most people think a mixer with a dead motor is trash. Nine times out of ten, it isn't. I take minimal charges. Open 10 to 7, not Sundays." },
-    { name:"Deepak Chauhan", trade:"appliance", phone:"919876507006", years:9, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.7100, lng:77.1900, area:"Model Town",
-      s1:"Hi, I'm Deepak, running a small repair stall in Model Town for the past 9 years.",
-      s2:"Mixies, grinders, table fans, irons — if it plugs in and it's stopped working, bring it over. Open 9:30 to 6:30, closed Sundays." },
-    { name:"Rafiq Malik", trade:"locksmith", phone:"919876507007", years:16, hours:"9 AM – 9 PM · Open all week", lat:28.6660, lng:77.2170, area:"Tis Hazari",
-      s1:"I'm Rafiq — I've been cutting keys and fixing locks near Tis Hazari courts for 16 years.",
-      s2:"Court days keep this area busy, so I stay open all week, 9 AM to 9 PM. Old almirah locks, padlocks, house locks — always for the right reasons." },
-    { name:"Meena Devi", trade:"locksmith", phone:"919876507008", years:7, hours:"10 AM – 6 PM · Closed Sun", lat:28.6870, lng:77.2010, area:"Roshanara Road",
-      s1:"Hello, I'm Meena — one of the few women locksmiths you'll find in this trade, working near Roshanara Road for 7 years.",
-      s2:"Duplicate keys, jammed locks, gate repairs — I handle it all, and I keep my rates the same for everyone. Here 10 to 6, closed Sundays." },
-    { name:"Vinod Kashyap", trade:"cobbler", phone:"919876507009", years:5, hours:"10 AM – 8 PM · Closed Sun", lat:28.7040, lng:77.2110, area:"Mukherjee Nagar",
-      s1:"I'm Vinod, and I've had my stool outside the coaching lane in Mukherjee Nagar for 5 years now.",
-      s2:"Half my customers are students who've worn one pair of shoes into the ground. I keep prices student-friendly and turn most repairs around same-day." },
-    { name:"Nasir Khan", trade:"watch", phone:"919876507010", years:12, hours:"10 AM – 7:30 PM · Closed Sun", lat:28.6995, lng:77.2080, area:"GTB Nagar",
-      s1:"Hello, I'm Nasir — I've run a small watch counter outside GTB Nagar metro for 12 years.",
-      s2:"Mostly strap changes and battery swaps for people rushing to catch a train, but I enjoy the occasional old mechanical watch too." },
-    { name:"Ashok Verma", trade:"appliance", phone:"919876507011", years:10, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.6960, lng:77.2260, area:"Timarpur",
-      s1:"I'm Ashok, fixing mixers and grinders out of a small shop in Timarpur for the past 10 years.",
-      s2:"If the jar is cracked or the blade's gone blunt, I can usually source a replacement part rather than telling you to buy new." },
-    { name:"Salim Qureshi", trade:"locksmith", phone:"919876507012", years:13, hours:"9 AM – 8 PM · Open all week", lat:28.7130, lng:77.2280, area:"Wazirabad",
-      s1:"I'm Salim, working near Wazirabad for 13 years now, mostly gate and shutter locks.",
-      s2:"This area has a lot of old iron gates that jam in the monsoon — that's most of my calls in July and August." },
-    { name:"Balwant Singh", trade:"cobbler", phone:"919876507013", years:8, hours:"10 AM – 7 PM · Closed Sun", lat:28.7160, lng:77.1720, area:"Adarsh Nagar",
-      s1:"Sat Sri Akal, I'm Balwant — I've been repairing shoes in Adarsh Nagar market for 8 years.",
-      s2:"Sports shoes are my specialty — kids wear through soles fast here and I can resole them for a fraction of a new pair." },
-    { name:"Prakash Yadav", trade:"watch", phone:"919876507014", years:6, hours:"10:30 AM – 7 PM · Closed Sun", lat:28.6920, lng:77.1570, area:"Keshav Puram",
-      s1:"Hi, I'm Prakash, at a small counter in Keshav Puram for 6 years now.",
-      s2:"Straps, glass, batteries, and small repairs on quartz watches — quick and fair, every time." },
-    { name:"Zaheer Ahmed", trade:"appliance", phone:"919876507015", years:7, hours:"10 AM – 7 PM · Closed Sun", lat:28.7050, lng:77.2270, area:"Majnu ka Tilla",
-      s1:"I'm Zaheer — I've fixed household appliances near Majnu ka Tilla for 7 years.",
-      s2:"Mixers, grinders, and the occasional rice cooker — if the motor still turns, I can usually bring it back." },
-    { name:"Om Prakash", trade:"locksmith", phone:"919876507016", years:10, hours:"9 AM – 8 PM · Open all week", lat:28.7550, lng:77.2000, area:"Burari",
-      s1:"I'm Om Prakash, cutting keys and repairing locks in Burari for 10 years.",
-      s2:"New duplicate keys usually take me ten minutes. If you're locked out, call ahead and I'll try to reach you within the hour." },
-    { name:"Chhotu Ram", trade:"cobbler", phone:"919876507017", years:9, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.8530, lng:77.0920, area:"Narela",
-      s1:"I'm Chhotu Ram, working from a small stall near Narela market for 9 years.",
-      s2:"This is a working-class area, so I keep my rates as low as I can — a resole rarely costs more than a cup of chai." },
-    { name:"Aslam Sheikh", trade:"watch", phone:"919876507018", years:15, hours:"10 AM – 7 PM · Closed Sun", lat:28.7960, lng:77.1360, area:"Alipur",
-      s1:"I'm Aslam — I've run a small watch repair table in Alipur for 15 years.",
-      s2:"I still keep spare parts for a few older mechanical brands that most repairers won't touch anymore." },
-    { name:"Kishan Lal", trade:"appliance", phone:"919876507019", years:11, hours:"9 AM – 7 PM · Closed Sun", lat:28.6720, lng:77.1980, area:"Sabzi Mandi",
-      s1:"I'm Kishan, fixing mixers and grinders near Sabzi Mandi for 11 years.",
-      s2:"Vendors here bring me their crushers and juicers when they break down mid-morning — I try to get them running before the lunch rush." },
-    { name:"Radha Devi", trade:"locksmith", phone:"919876507020", years:5, hours:"10:30 AM – 6:30 PM · Closed Sun", lat:28.6960, lng:77.1980, area:"Shakti Nagar",
-      s1:"Hello, I'm Radha — one of the newer locksmiths around, working in Shakti Nagar for 5 years.",
-      s2:"I learned the trade at a training centre and set up on my own after. Duplicate keys and small lock repairs are my main work." },
-    { name:"Mahesh Prasad", trade:"cobbler", phone:"919876507021", years:7, hours:"10 AM – 7 PM · Closed Sun", lat:28.6920, lng:77.2100, area:"Malka Ganj",
-      s1:"I'm Mahesh, mending shoes near Malka Ganj for the past 7 years.",
-      s2:"College students and office-goers both stop by here — I keep a price list on display so nobody has to ask twice." },
-    { name:"Yusuf Malik", trade:"watch", phone:"919876507022", years:9, hours:"10 AM – 7:30 PM · Closed Sun", lat:28.6980, lng:77.1930, area:"Rana Pratap Bagh",
-      s1:"I'm Yusuf, running a small watch stall in Rana Pratap Bagh for 9 years.",
-      s2:"Battery changes take five minutes, most strap repairs under fifteen — I keep common straps in stock so you rarely come back twice." },
-    { name:"Devendra Kumar", trade:"appliance", phone:"919876507023", years:6, hours:"10 AM – 7 PM · Closed Sun", lat:28.7020, lng:77.2070, area:"Kingsway Camp",
-      s1:"I'm Devendra, repairing mixers and small appliances in Kingsway Camp for 6 years.",
-      s2:"I studied basic electricals before I started this, so I can usually diagnose a fault on the spot." },
-    { name:"Naseem Akhtar", trade:"locksmith", phone:"919876507024", years:8, hours:"9:30 AM – 7:30 PM · Closed Sun", lat:28.7370, lng:77.1620, area:"Bhalswa",
-      s1:"I'm Naseem, working with locks and keys near Bhalswa for 8 years.",
-      s2:"A lot of my work here is repairing old padlocks rather than replacing them — most can be saved with the right part." }
-  ];
-
-  const localityMap = new Map();
-  ARTISANS.forEach(a => { if(!localityMap.has(a.area)) localityMap.set(a.area, {lat:a.lat, lng:a.lng}); });
-  const LOCALITIES = Array.from(localityMap, ([name, c]) => ({name, ...c})).sort((a,b)=>a.name.localeCompare(b.name));
-
-  const localitySelect = document.getElementById('localitySelect');
-  LOCALITIES.forEach(loc => {
-    const opt = document.createElement('option');
-    opt.value = loc.name; opt.textContent = loc.name;
-    localitySelect.appendChild(opt);
-  });
-
-  // legend icons
-  document.getElementById('legendCobbler').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.cobbler.icon.replaceAll('CURR', TRADES.cobbler.color)}</svg>`;
-  document.getElementById('legendWatch').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.watch.icon.replaceAll('CURR', TRADES.watch.color)}</svg>`;
-  document.getElementById('legendAppliance').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.appliance.icon.replaceAll('CURR', TRADES.appliance.color)}</svg>`;
-  document.getElementById('legendLocksmith').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.locksmith.icon.replaceAll('CURR', TRADES.locksmith.color)}</svg>`;
-
-  // ---------- Map ----------
-  const map = L.map('map', { zoomControl:false, attributionControl:true }).setView([28.74, 77.18], 11.4);
-  L.control.zoom({ position:'bottomright' }).addTo(map);
-
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)',
-    maxZoom:17, minZoom:10, updateWhenZooming:false, keepBuffer:2
-  }).addTo(map);
-
-  // North Delhi service-zone boundary — darker, wider, covering the full spread
-  const NORTH_DELHI_ZONE = [
-    [28.865,77.078],[28.885,77.128],[28.868,77.188],[28.805,77.228],
-    [28.735,77.238],[28.700,77.243],[28.665,77.238],[28.652,77.213],
-    [28.650,77.200],[28.657,77.184],[28.672,77.174],[28.690,77.176],
-    [28.700,77.170],[28.712,77.165],[28.740,77.152],[28.780,77.132],
-    [28.822,77.108],[28.865,77.078]
-  ];
-  L.polygon(NORTH_DELHI_ZONE, {
-    color:'#8A5C00', weight:2.4, opacity:0.85, dashArray:'9 5',
-    fillColor:'#FFB800', fillOpacity:0.07
-  }).addTo(map).bindTooltip('North Delhi service zone (illustrative outline)', {sticky:true, direction:'top'});
-
-  L.marker([28.822, 77.10], { icon: L.divIcon({ html:'<div class="zone-label">North Delhi Service Zone</div>', className:'', iconSize:null }) }).addTo(map);
-
-  // ---------- Icons ----------
-  function iconSvg(trade, highlighted){
-    const t = TRADES[trade];
-    return `<div class="kmarker ${highlighted ? 'highlighted' : ''}"><svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg></div>`;
-  }
-  function buildIcon(trade, highlighted){
-    return L.divIcon({
-      html: iconSvg(trade, highlighted), className:'',
-      iconSize: highlighted ? [42,42] : [30,30],
-      iconAnchor: highlighted ? [21,21] : [15,15]
-    });
-  }
-
-  const panel = document.getElementById('panel');
-  const scrim = document.getElementById('scrim');
-  const storyView = document.getElementById('storyView');
-  const resultsView = document.getElementById('resultsView');
-
-  let currentReference = { lat:28.6900, lng:77.2050, label:"central North Delhi" };
-
-  function haversine(lat1, lng1, lat2, lng2){
-    const R = 6371;
-    const dLat = (lat2-lat1) * Math.PI/180;
-    const dLng = (lng2-lng1) * Math.PI/180;
-    const x = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-    return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
-  }
-  function formatDistance(km){
-    return km < 1 ? `${Math.round(km*1000)} m` : `${km.toFixed(1)} km`;
-  }
-
-  function openPanel(){ panel.classList.add('open'); scrim.classList.add('open'); }
-  function closePanel(){ panel.classList.remove('open'); scrim.classList.remove('open'); resetHighlights(); }
-  document.getElementById('panelClose').addEventListener('click', closePanel);
-  scrim.addEventListener('click', closePanel);
-
-  function showStory(a, idx){
-    storyView.style.display = 'block';
-    resultsView.style.display = 'none';
-    const t = TRADES[a.trade];
-    document.getElementById('ticketNo').textContent = `REPAIR TICKET NO. ${String(idx+1).padStart(3,'0')}`;
-    document.getElementById('artisanName').textContent = a.name;
-    const tag = document.getElementById('tradeTag');
-    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${t.label} · ${a.area}`;
-    tag.style.background = t.dim;
-    tag.style.color = t.color;
-    const dist = haversine(currentReference.lat, currentReference.lng, a.lat, a.lng);
-    document.getElementById('proximityText').textContent = `${formatDistance(dist)} away · from ${currentReference.label}`;
-    document.getElementById('chatAvatar').textContent = a.name.charAt(0);
-    document.getElementById('chatAvatar').style.borderColor = t.color;
-    document.getElementById('chatName').textContent = a.name;
-    document.getElementById('storyText1').textContent = a.s1;
-    document.getElementById('storyText2').textContent = a.s2;
-    document.getElementById('statHours').textContent = a.hours.split('·')[0].trim();
-    document.getElementById('statYears').textContent = a.years + ' yrs';
-    document.getElementById('whatsappPanel').href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
-    openPanel();
-  }
-
-  const markers = [];
-  ARTISANS.forEach((a, idx) => {
-    const marker = L.marker([a.lat, a.lng], { icon: buildIcon(a.trade, false) }).addTo(map);
-    marker.bindPopup(`<b>${a.name}</b><br>${TRADES[a.trade].label} · ${a.area}<br><span style="opacity:.7">Click to read their story →</span>`);
-    marker.on('click', () => showStory(a, idx));
-    markers.push(marker);
-  });
-
-  function resetHighlights(){ markers.forEach((m, i) => m.setIcon(buildIcon(ARTISANS[i].trade, false))); }
-
-  // fit the whole spread on load
-  const bounds = L.latLngBounds(ARTISANS.map(a => [a.lat, a.lng]));
-  map.fitBounds(bounds, { padding:[60,60] });
-
-  document.getElementById('locateBtn').addEventListener('click', () => {
-    const name = localitySelect.value;
-    if(!name){ localitySelect.focus(); return; }
-    const loc = LOCALITIES.find(l => l.name === name);
-    currentReference = { lat:loc.lat, lng:loc.lng, label:loc.name };
-    resetHighlights();
-
-    const nearestByTrade = {};
-    Object.keys(TRADES).forEach(trade => {
-      let best = null, bestDist = Infinity, bestIdx = -1;
-      ARTISANS.forEach((a, idx) => {
-        if(a.trade !== trade) return;
-        const d = haversine(loc.lat, loc.lng, a.lat, a.lng);
-        if(d < bestDist){ bestDist = d; best = a; bestIdx = idx; }
-      });
-      if(best) nearestByTrade[trade] = { artisan:best, dist:bestDist, idx:bestIdx };
-    });
-
-    document.getElementById('resultsLocality').textContent = `Nearest to ${loc.name}`;
-    const list = document.getElementById('resultsList');
-    list.innerHTML = '';
-    Object.entries(nearestByTrade).forEach(([trade, info]) => {
-      const t = TRADES[trade];
-      const card = document.createElement('div');
-      card.className = 'result-card';
-      card.innerHTML = `
-        <div class="result-top">
-          <div class="result-name">${info.artisan.name}</div>
-          <div class="result-dist">${formatDistance(info.dist)} away</div>
-        </div>
-        <div class="result-trade" style="background:${t.dim}; color:${t.color}">
-          <svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${t.label}
-        </div>
-        <div class="result-area">${info.artisan.area}</div>`;
-      card.addEventListener('click', () => showStory(info.artisan, info.idx));
-      list.appendChild(card);
-      markers[info.idx].setIcon(buildIcon(trade, true));
-    });
-
-    storyView.style.display = 'none';
-    resultsView.style.display = 'block';
-    openPanel();
-    map.flyTo([loc.lat, loc.lng], 14, { duration: 0.9 });
-  });
-
-  document.getElementById('heroClose').addEventListener('click', () => {
-    document.getElementById('heroScrim').classList.add('closed');
-  });
-</script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RepairLink — Find Your Neighbourhood Kaarigar</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#221D14;
-    --ink-dim:#7A7264;
-    --paper:#FFFFFF;
-    --paper-2:#F3EFE6;
-    --line: rgba(34,29,20,0.14);
-    --marigold:#FFB800;
-    --vermilion:#FF4C3B;
-    --teal:#2E8FE0;
-    --leaf:#2FA65C;
-    --marigold-dim:#FFF3D2;
-    --vermilion-dim:#FFE3E0;
-    --teal-dim:#E1EFFC;
-    --leaf-dim:#E1F5E8;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%; width:100%; overflow:hidden;}
-  body{font-family:'Manrope', sans-serif; background:#EDE7D8; color:var(--ink); position:relative;}
-  #map{position:absolute; inset:0; z-index:1;}
-  .leaflet-marker-pane, .leaflet-tile-pane{will-change: transform;}
-  .leaflet-control-attribution{
-    background:rgba(255,255,255,0.85) !important; color:var(--ink-dim) !important;
-    font-family:'JetBrains Mono', monospace; font-size:9px !important;
-  }
-  .leaflet-control-attribution a{color:var(--ink-dim) !important;}
-
-  .leaflet-control-zoom{border:none !important; margin:0 16px 16px 0 !important;}
-  .leaflet-control-zoom a{
-    width:40px !important; height:40px !important; line-height:40px !important;
-    background:var(--paper) !important; color:var(--ink) !important;
-    border:1px solid var(--line) !important; font-size:20px !important; font-weight:700 !important;
-    box-shadow:0 4px 14px rgba(34,29,20,0.15) !important;
-  }
-  .leaflet-control-zoom a:first-child{border-radius:12px 12px 0 0 !important;}
-  .leaflet-control-zoom a:last-child{border-radius:0 0 12px 12px !important; border-top:none !important;}
-  .leaflet-control-zoom a:hover{background:var(--paper-2) !important; color:var(--marigold) !important;}
-
-  header{
-    position:absolute; top:0; left:0; right:0; z-index:20;
-    display:flex; align-items:flex-start; justify-content:space-between;
-    padding:22px 26px; pointer-events:none;
-  }
-  .brand{pointer-events:auto; background:rgba(255,255,255,0.96);
-    border:1px solid var(--line); border-radius:14px; padding:12px 18px; box-shadow:0 6px 20px rgba(34,29,20,0.1);}
-  .brand-mark{display:flex; align-items:center; gap:10px;}
-  .brand h1{font-family:'Fraunces', serif; font-weight:700; font-size:21px; letter-spacing:0.2px; color:var(--ink);}
-  .brand p{
-    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.07em;
-    text-transform:uppercase; color:var(--ink-dim); margin-top:4px; max-width:270px;
-  }
-
-  .legend{
-    pointer-events:auto; background:rgba(255,255,255,0.97);
-    border:1px solid var(--line); border-radius:14px; padding:14px 16px;
-    display:flex; flex-direction:column; gap:9px; min-width:220px;
-    box-shadow:0 6px 20px rgba(34,29,20,0.1);
+    box-shadow:0 6px 20px rgba(34,29,20,0.1); margin-top:44px;
   }
   .legend-title{font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; color:var(--ink);}
   .legend-sub{font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:4px;}
@@ -883,8 +257,9 @@
 
   /* ---------- Language toggle ---------- */
   .lang-toggle{
-    position:fixed; top:24px; right:26px; z-index:70; display:flex; background:var(--paper);
-    border:1px solid var(--line); border-radius:999px; padding:3px; box-shadow:0 6px 18px rgba(34,29,20,0.18);
+    position:fixed; top:0; right:0; z-index:100; pointer-events:auto; display:flex; background:var(--paper);
+    border:1px solid var(--line); border-top:none; border-right:none; border-radius:0 0 0 14px;
+    padding:8px 12px; box-shadow:0 6px 18px rgba(34,29,20,0.18);
   }
   .lang-btn{
     border:none; background:transparent; font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:600;
@@ -1002,7 +377,7 @@
     header{padding:12px; flex-direction:column; gap:8px;}
     .brand{padding:10px 14px;}
     .brand p{display:none;}
-    .legend{min-width:auto; width:100%; padding:10px 12px; gap:6px 12px; display:grid; grid-template-columns:1fr 1fr;}
+    .legend{min-width:auto; width:100%; padding:10px 12px; gap:6px 12px; display:grid; grid-template-columns:1fr 1fr; margin-top:0;}
     .legend-title{grid-column:1 / -1; font-size:13px;}
     .legend-sub{display:none;}
     .legend-row{font-size:12px; gap:8px;}
@@ -1018,7 +393,6 @@
     .hero-card h2{font-size:23px;}
     .hero-card p{font-size:13.5px;}
     .role-card{padding:30px 22px;}
-    .lang-toggle{top:auto; bottom:14px; right:14px;}
     .disclaimer-bar{font-size:10px; padding:7px 12px;}
     .artisan-shell{padding:16px;}
     .artisan-form-card{padding:24px 20px;}
@@ -1028,11 +402,6 @@
 <body>
 
 <div id="map"></div>
-
-<div class="lang-toggle" id="langToggle">
-  <button class="lang-btn active" data-lang="en">EN</button>
-  <button class="lang-btn" data-lang="hi">हिं</button>
-</div>
 
 <div class="disclaimer-bar" id="disclaimerBar">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
@@ -1070,7 +439,7 @@
 
     <div class="field-group">
       <label data-i18n="fieldName">Full name</label>
-      <input type="text" id="afName" placeholder="e.g. Ramesh Kumar">
+      <input type="text" id="afName" placeholder="e.g. Ramesh Kumar" data-i18n-placeholder="phName">
     </div>
     <div class="field-row">
       <div class="field-group">
@@ -1089,21 +458,21 @@
     </div>
     <div class="field-group">
       <label data-i18n="fieldArea">Area / locality</label>
-      <input type="text" id="afArea" placeholder="e.g. Kamla Nagar">
+      <input type="text" id="afArea" placeholder="e.g. Kamla Nagar" data-i18n-placeholder="phArea">
     </div>
     <div class="field-row">
       <div class="field-group">
         <label data-i18n="fieldPhone">Phone / WhatsApp number</label>
-        <input type="tel" id="afPhone" placeholder="10-digit number">
+        <input type="tel" id="afPhone" placeholder="10-digit number" data-i18n-placeholder="phPhone">
       </div>
       <div class="field-group">
         <label data-i18n="fieldHours">Working hours</label>
-        <input type="text" id="afHours" placeholder="e.g. 10 AM – 7 PM, closed Sun">
+        <input type="text" id="afHours" placeholder="e.g. 10 AM – 7 PM, closed Sun" data-i18n-placeholder="phHours">
       </div>
     </div>
     <div class="field-group">
       <label data-i18n="fieldIntro">A line about your work</label>
-      <textarea id="afIntro" placeholder="e.g. I've been resoling shoes near Kamla Nagar for 8 years..."></textarea>
+      <textarea id="afIntro" placeholder="e.g. I've been resoling shoes near Kamla Nagar for 8 years..." data-i18n-placeholder="phIntro"></textarea>
     </div>
     <div class="field-group">
       <label data-i18n="fieldId">ID for verification (mock — nothing is uploaded in this prototype)</label>
@@ -1146,17 +515,17 @@
     <div class="hero-stitch">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/><path d="M2 12h4M8 12h4M14 12h4M20 12h2" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/></svg>
     </div>
-    <div class="hero-eyebrow">What is RepairLink?</div>
-    <h2>We give your broken things a second chance.</h2>
-    <p>We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.</p>
-    <p>Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.</p>
+    <div class="hero-eyebrow" data-i18n="heroEyebrow">What is RepairLink?</div>
+    <h2 data-i18n="heroTitle">We give your broken things a second chance.</h2>
+    <p data-i18n="heroP1">We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.</p>
+    <p data-i18n="heroP2">Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.</p>
     <div class="hero-region">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
-      Currently live only in North Delhi
+      <span data-i18n="heroRegion">Currently live only in North Delhi</span>
     </div>
     <br>
     <button class="hero-btn" id="heroClose">
-      Explore the map
+      <span data-i18n="heroBtnText">Explore the map</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </button>
   </div>
@@ -1171,31 +540,36 @@
       </svg>
       <h1>RepairLink</h1>
     </div>
-    <p>Mapping North Delhi's kaarigars — repair first, recycle what's left</p>
+    <p data-i18n="brandTagline">Mapping North Delhi's kaarigars — repair first, recycle what's left</p>
   </div>
 
   <div class="legend">
-    <div class="legend-title">Services We Provide</div>
-    <div class="legend-sub">Tap a symbol on the map to meet the kaarigar</div>
-    <div class="legend-row"><div class="legend-dot" id="legendCobbler"></div><span>Cobblers <span style="color:var(--ink-dim)">— shoe & leather repair</span><span class="legend-price" id="legendPriceCobbler"></span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span>Watch repairers <span style="color:var(--ink-dim)">— horologists</span><span class="legend-price" id="legendPriceWatch"></span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span>Appliance repair <span style="color:var(--ink-dim)">— mixers & grinders</span><span class="legend-price" id="legendPriceAppliance"></span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span>Locksmiths <span style="color:var(--ink-dim)">— keys & locks</span><span class="legend-price" id="legendPriceLocksmith"></span></span></div>
+    <div class="legend-title" data-i18n="legendTitle">Services We Provide</div>
+    <div class="legend-sub" data-i18n="legendSub">Tap a symbol on the map to meet the kaarigar</div>
+    <div class="legend-row"><div class="legend-dot" id="legendCobbler"></div><span><span data-i18n="legendCobblerName">Cobblers</span> <span style="color:var(--ink-dim)" data-i18n="legendCobblerDesc">— shoe & leather repair</span><span class="legend-price" id="legendPriceCobbler"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span><span data-i18n="legendWatchName">Watch repairers</span> <span style="color:var(--ink-dim)" data-i18n="legendWatchDesc">— horologists</span><span class="legend-price" id="legendPriceWatch"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span><span data-i18n="legendApplianceName">Appliance repair</span> <span style="color:var(--ink-dim)" data-i18n="legendApplianceDesc">— mixers & grinders</span><span class="legend-price" id="legendPriceAppliance"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span><span data-i18n="legendLocksmithName">Locksmiths</span> <span style="color:var(--ink-dim)" data-i18n="legendLocksmithDesc">— keys & locks</span><span class="legend-price" id="legendPriceLocksmith"></span></span></div>
   </div>
 </header>
 
+<div class="lang-toggle" id="langToggle">
+  <button class="lang-btn active" data-lang="en">EN</button>
+  <button class="lang-btn" data-lang="hi">हिं</button>
+</div>
+
 <a class="chat-cta" id="whatsappTop" href="https://wa.me/919999999999?text=Hi%20RepairLink%2C%20I%20need%20help%20finding%20a%20kaarigar%20near%20me" target="_blank" rel="noopener">
   <svg viewBox="0 0 24 24" fill="#083318"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.35 4.95L2 22l5.28-1.39a9.9 9.9 0 004.76 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.87 14.02c-.25.7-1.25 1.29-2.03 1.45-.55.12-1.26.21-3.66-.78-3.08-1.27-5.06-4.4-5.21-4.6-.15-.2-1.24-1.65-1.24-3.15s.78-2.23 1.06-2.53c.25-.27.55-.34.73-.34.19 0 .37 0 .53.01.17.01.4-.06.62.48.25.6.85 2.08.92 2.23.07.15.12.32.02.51-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.17-.2.72-.84.92-1.13.2-.29.4-.24.65-.14.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.12.07.72-.19 1.42z"/></svg>
-  <span>Chat with a RepairLink helper</span>
+  <span data-i18n="chatCtaText">Chat with a RepairLink helper</span>
 </a>
 
 <div class="locate-box">
-  <div class="locate-eyebrow">Find your nearest kaarigar</div>
-  <h3>Select your location and we'll show you the closest artisan of each trade — in no time.</h3>
-  <select id="localitySelect"><option value="">Choose your area in North Delhi…</option></select>
+  <div class="locate-eyebrow" data-i18n="locateEyebrow">Find your nearest kaarigar</div>
+  <h3 data-i18n="locateHeading">Select your location and we'll show you the closest artisan of each trade — in no time.</h3>
+  <select id="localitySelect"><option value="" data-i18n="localityPlaceholder">Choose your area in North Delhi…</option></select>
   <button class="locate-btn" id="locateBtn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
-    Find closest kaarigars
+    <span data-i18n="locateBtnText">Find closest kaarigars</span>
   </button>
 </div>
 
@@ -1262,7 +636,7 @@
 
   <div id="resultsView" style="display:none;">
     <div class="results-header">
-      <div class="ticket-no">CLOSEST TO YOU</div>
+      <div class="ticket-no" data-i18n="resultsHeader">CLOSEST TO YOU</div>
       <h2 id="resultsLocality">—</h2>
     </div>
     <div class="results-list" id="resultsList"></div>
@@ -1275,19 +649,181 @@
   let currentLang = 'en';
   const translations = {
     en: {
+      disclaimer: "Prototype demo — names, phone numbers, ratings & reviews shown here are placeholder data, not real people.",
+      roleTitle: "Welcome to RepairLink",
+      roleSub: "Tell us who you are, so we can show you the right screen.",
+      roleCustomerTitle: "I need something repaired",
+      roleCustomerDesc: "Find a trusted kaarigar near you — cobbler, watch repairer, appliance technician or locksmith.",
+      roleArtisanTitle: "I repair things for a living",
+      roleArtisanDesc: "List yourself on RepairLink so customers nearby can find and message you directly.",
+      backToStart: "Back",
+      artisanEyebrow: "List yourself as a kaarigar",
+      artisanFormTitle: "Get discovered by customers near you",
+      artisanFormIntro: "Fill this in and our team will verify your details before your profile goes live on the map. Verification helps customers trust who they're calling.",
+      fieldName: "Full name",
+      fieldTrade: "Your trade",
+      tradeCobbler: "Cobbler",
+      tradeWatch: "Watch repairer",
+      tradeAppliance: "Appliance repairer",
+      tradeLocksmith: "Locksmith",
+      fieldYears: "Years of experience",
+      fieldArea: "Area / locality",
+      fieldPhone: "Phone / WhatsApp number",
+      fieldHours: "Working hours",
+      fieldIntro: "A line about your work",
+      fieldId: "ID for verification (mock — nothing is uploaded in this prototype)",
+      uploadText: "Tap to attach Aadhaar / shop ID photo",
+      submitListing: "Submit for verification",
+      pendingTag: "⏳ Pending verification",
+      previewLabel: "HOW YOUR PROFILE WILL LOOK",
+      statHoursLabel: "Hours",
+      statYearsLabel: "Years here",
+      statJobsLabel: "Jobs completed",
+      verifySteps: "What happens next",
+      verifyStep1: "Our team calls you to confirm your details and check your ID.",
+      verifyStep2: "We do a short in-person or phone verification of your shop/stall.",
+      verifyStep3: "Once verified, your profile goes live with a green \"Verified\" badge that customers can see and trust.",
+      submitAnother: "Submit another profile",
+      repliesHour: "Usually replies within the hour",
+      delivered: "Delivered",
+      whatCustomersSay: "What customers say",
+      messageWhatsapp: "Message this kaarigar on WhatsApp",
       markDone: "Mark repair done",
       reportIssue: "Report an issue",
-      disclaimer: "Prototype demo — names, phone numbers, ratings & reviews shown here are placeholder data, not real people."
+      heroEyebrow: "What is RepairLink?",
+      heroTitle: "We give your broken things a second chance.",
+      heroP1: "We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.",
+      heroP2: "Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.",
+      heroRegion: "Currently live only in North Delhi",
+      heroBtnText: "Explore the map",
+      brandTagline: "Mapping North Delhi's kaarigars — repair first, recycle what's left",
+      legendTitle: "Services We Provide",
+      legendSub: "Tap a symbol on the map to meet the kaarigar",
+      legendCobblerName: "Cobblers",
+      legendCobblerDesc: "— shoe & leather repair",
+      legendWatchName: "Watch repairers",
+      legendWatchDesc: "— horologists",
+      legendApplianceName: "Appliance repair",
+      legendApplianceDesc: "— mixers & grinders",
+      legendLocksmithName: "Locksmiths",
+      legendLocksmithDesc: "— keys & locks",
+      chatCtaText: "Chat with a RepairLink helper",
+      locateEyebrow: "Find your nearest kaarigar",
+      locateHeading: "Select your location and we'll show you the closest artisan of each trade — in no time.",
+      localityPlaceholder: "Choose your area in North Delhi…",
+      locateBtnText: "Find closest kaarigars",
+      resultsHeader: "CLOSEST TO YOU",
+      nearestTo: "Nearest to",
+      awayLabel: "away",
+      fromLabel: "from",
+      ticketNoLabel: "REPAIR TICKET NO.",
+      verifiedText: "Verified",
+      pendingText: "Pending verification",
+      estLabel: "Est.",
+      priceTooltip: "Estimated range only — confirm the final price with the kaarigar directly.",
+      reviewsLabel: "reviews",
+      yrsLabel: "yrs",
+      toastDone: "Repair marked as complete. Thank you!",
+      toastReport: "Report received. Our team will look into this.",
+      phName: "e.g. Ramesh Kumar",
+      phArea: "e.g. Kamla Nagar",
+      phPhone: "10-digit number",
+      phHours: "e.g. 10 AM – 7 PM, closed Sun",
+      phIntro: "e.g. I've been resoling shoes near Kamla Nagar for 8 years...",
+      clickForStory: "Click to read their story →"
     },
     hi: {
+      disclaimer: "प्रोटोटाइप डेमो — यहाँ दिखाए गए नाम, फोन नंबर, रेटिंग और समीक्षाएं केवल उदाहरण के लिए हैं, असली लोग नहीं।",
+      roleTitle: "RepairLink में आपका स्वागत है",
+      roleSub: "हमें बताएं कि आप कौन हैं, ताकि हम आपको सही स्क्रीन दिखा सकें।",
+      roleCustomerTitle: "मुझे कुछ ठीक करवाना है",
+      roleCustomerDesc: "अपने पास भरोसेमंद कारीगर खोजें — मोची, घड़ी मरम्मत करने वाला, उपकरण तकनीशियन या ताला बनाने वाला।",
+      roleArtisanTitle: "मैं मरम्मत का काम करता/करती हूँ",
+      roleArtisanDesc: "RepairLink पर खुद को सूचीबद्ध करें ताकि आस-पास के ग्राहक आपको ढूंढ कर सीधे संपर्क कर सकें।",
+      backToStart: "वापस",
+      artisanEyebrow: "खुद को कारीगर के रूप में सूचीबद्ध करें",
+      artisanFormTitle: "अपने पास के ग्राहकों तक पहुंचें",
+      artisanFormIntro: "यह भरें और हमारी टीम आपकी प्रोफ़ाइल मैप पर लाइव होने से पहले आपकी जानकारी सत्यापित करेगी। सत्यापन से ग्राहकों को भरोसा होता है कि वे किसे कॉल कर रहे हैं।",
+      fieldName: "पूरा नाम",
+      fieldTrade: "आपका व्यवसाय",
+      tradeCobbler: "मोची",
+      tradeWatch: "घड़ी मरम्मत करने वाला",
+      tradeAppliance: "उपकरण मरम्मत करने वाला",
+      tradeLocksmith: "ताला बनाने वाला",
+      fieldYears: "अनुभव के वर्ष",
+      fieldArea: "क्षेत्र / इलाका",
+      fieldPhone: "फोन / व्हाट्सएप नंबर",
+      fieldHours: "काम के घंटे",
+      fieldIntro: "अपने काम के बारे में एक पंक्ति",
+      fieldId: "सत्यापन के लिए पहचान पत्र (नकली — इस प्रोटोटाइप में कुछ भी अपलोड नहीं होता)",
+      uploadText: "आधार / दुकान आईडी फ़ोटो जोड़ने के लिए टैप करें",
+      submitListing: "सत्यापन के लिए जमा करें",
+      pendingTag: "⏳ सत्यापन लंबित",
+      previewLabel: "आपकी प्रोफ़ाइल ऐसी दिखेगी",
+      statHoursLabel: "घंटे",
+      statYearsLabel: "यहाँ के वर्ष",
+      statJobsLabel: "पूरी की गई मरम्मतें",
+      verifySteps: "आगे क्या होगा",
+      verifyStep1: "हमारी टीम आपकी जानकारी की पुष्टि करने और आपकी आईडी जाँचने के लिए आपको कॉल करेगी।",
+      verifyStep2: "हम आपकी दुकान/स्टॉल का संक्षिप्त व्यक्तिगत या फोन सत्यापन करते हैं।",
+      verifyStep3: "सत्यापन के बाद, आपकी प्रोफ़ाइल हरे \"सत्यापित\" बैज के साथ लाइव हो जाती है, जिसे ग्राहक देख और भरोसा कर सकते हैं।",
+      submitAnother: "एक और प्रोफ़ाइल जमा करें",
+      repliesHour: "आमतौर पर एक घंटे के भीतर जवाब देते हैं",
+      delivered: "भेज दिया गया",
+      whatCustomersSay: "ग्राहक क्या कहते हैं",
+      messageWhatsapp: "इस कारीगर को व्हाट्सएप पर संदेश भेजें",
       markDone: "मरम्मत पूर्ण को चिह्नित करें",
       reportIssue: "समस्या दर्ज करें",
-      disclaimer: "प्रोटोटाइप डेमो — यहाँ दिखाए गए नाम, फोन नंबर, रेटिंग और समीक्षाएं केवल उदाहरण के लिए हैं।"
+      heroEyebrow: "RepairLink क्या है?",
+      heroTitle: "हम आपकी टूटी चीज़ों को दूसरा मौका देते हैं।",
+      heroP1: "हम आपको मरम्मत के संपर्क उपलब्ध कराते हैं, ताकि आपकी रोज़मर्रा की ज़रूरतें बिना कचरा बढ़ाए पूरी हो सकें। हम आपको सबसे नज़दीकी कारीगर — मोची, घड़ी मरम्मत करने वाला, उपकरण तकनीशियन या ताला बनाने वाला — से जोड़ते हैं जो आपकी पहले से मौजूद चीज़ को ठीक कर सके।",
+      heroP2: "जो चीज़ सच में मरम्मत के लायक नहीं होती, उसे हम खुद इकट्ठा करके रीसाइक्लिंग के लिए भेजते हैं, ताकि दिल्ली में कचरा कम जमा हो।",
+      heroRegion: "फिलहाल केवल उत्तरी दिल्ली में उपलब्ध",
+      heroBtnText: "मैप देखें",
+      brandTagline: "उत्तरी दिल्ली के कारीगरों की मैपिंग — पहले मरम्मत, फिर जो बचे उसे रीसाइकल",
+      legendTitle: "हमारी सेवाएं",
+      legendSub: "कारीगर से मिलने के लिए मैप पर एक चिह्न टैप करें",
+      legendCobblerName: "मोची",
+      legendCobblerDesc: "— जूते और चमड़े की मरम्मत",
+      legendWatchName: "घड़ी मरम्मत करने वाले",
+      legendWatchDesc: "— घड़ीसाज़",
+      legendApplianceName: "उपकरण मरम्मत",
+      legendApplianceDesc: "— मिक्सर और ग्राइंडर",
+      legendLocksmithName: "ताला बनाने वाले",
+      legendLocksmithDesc: "— चाबी और ताले",
+      chatCtaText: "RepairLink सहायक से चैट करें",
+      locateEyebrow: "अपना नज़दीकी कारीगर खोजें",
+      locateHeading: "अपना स्थान चुनें और हम आपको हर व्यवसाय के सबसे नज़दीकी कारीगर तुरंत दिखाएंगे।",
+      localityPlaceholder: "उत्तरी दिल्ली में अपना क्षेत्र चुनें…",
+      locateBtnText: "नज़दीकी कारीगर खोजें",
+      resultsHeader: "आपके सबसे नज़दीक",
+      nearestTo: "इनके सबसे नज़दीक",
+      awayLabel: "दूर",
+      fromLabel: "से",
+      ticketNoLabel: "मरम्मत टिकट नंबर",
+      verifiedText: "सत्यापित",
+      pendingText: "सत्यापन लंबित",
+      estLabel: "अनुमानित",
+      priceTooltip: "केवल अनुमानित सीमा — अंतिम मूल्य की पुष्टि सीधे कारीगर से करें।",
+      reviewsLabel: "समीक्षाएं",
+      yrsLabel: "वर्ष",
+      toastDone: "मरम्मत पूर्ण के रूप में चिह्नित। धन्यवाद!",
+      toastReport: "रिपोर्ट मिल गई है। हमारी टीम इसे देखेगी।",
+      phName: "जैसे: रमेश कुमार",
+      phArea: "जैसे: कमला नगर",
+      phPhone: "10 अंकों का नंबर",
+      phHours: "जैसे: सुबह 10 – शाम 7, रविवार बंद",
+      phIntro: "जैसे: मैं कमला नगर के पास 8 साल से जूतों की मरम्मत कर रहा/रही हूँ...",
+      clickForStory: "उनकी कहानी पढ़ने के लिए क्लिक करें →"
     }
   };
 
   function t18n(key) {
     return (translations[currentLang] && translations[currentLang][key]) || translations['en'][key] || key;
+  }
+
+  function tradeLabel(tradeKey) {
+    return t18n('trade' + tradeKey.charAt(0).toUpperCase() + tradeKey.slice(1));
   }
 
   const TRADES = {
@@ -1392,10 +928,13 @@
   document.getElementById('legendWatch').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.watch.icon.replaceAll('CURR', TRADES.watch.color)}</svg>`;
   document.getElementById('legendAppliance').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.appliance.icon.replaceAll('CURR', TRADES.appliance.color)}</svg>`;
   document.getElementById('legendLocksmith').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.locksmith.icon.replaceAll('CURR', TRADES.locksmith.color)}</svg>`;
-  document.getElementById('legendPriceCobbler').textContent = `Est. ${TRADES.cobbler.price}`;
-  document.getElementById('legendPriceWatch').textContent = `Est. ${TRADES.watch.price}`;
-  document.getElementById('legendPriceAppliance').textContent = `Est. ${TRADES.appliance.price}`;
-  document.getElementById('legendPriceLocksmith').textContent = `Est. ${TRADES.locksmith.price}`;
+  function refreshLegendPrices(){
+    document.getElementById('legendPriceCobbler').textContent = `${t18n('estLabel')} ${TRADES.cobbler.price}`;
+    document.getElementById('legendPriceWatch').textContent = `${t18n('estLabel')} ${TRADES.watch.price}`;
+    document.getElementById('legendPriceAppliance').textContent = `${t18n('estLabel')} ${TRADES.appliance.price}`;
+    document.getElementById('legendPriceLocksmith').textContent = `${t18n('estLabel')} ${TRADES.locksmith.price}`;
+  }
+  refreshLegendPrices();
 
   // ---------- Map Setup ----------
   const map = L.map('map', { zoomControl:false, attributionControl:true }).setView([28.74, 77.18], 11.4);
@@ -1520,37 +1059,39 @@
   scrim.addEventListener('click', closePanel);
 
   let currentArtisan = null;
+  let currentArtisanIdx = null;
 
   function showStory(a, idx){
     storyView.style.display = 'block';
     resultsView.style.display = 'none';
     currentArtisan = a;
+    currentArtisanIdx = idx;
     const t = TRADES[a.trade];
     const td = trustData(a, idx);
-    document.getElementById('ticketNo').textContent = `REPAIR TICKET NO. ${String(idx+1).padStart(3,'0')}`;
+    document.getElementById('ticketNo').textContent = `${t18n('ticketNoLabel')} ${String(idx+1).padStart(3,'0')}`;
     document.getElementById('artisanName').childNodes[0].nodeValue = a.name + ' ';
     const badge = document.getElementById('verifyBadge');
     badge.classList.toggle('pending', !td.verified);
-    document.getElementById('verifyBadgeText').textContent = td.verified ? 'Verified' : 'Pending verification';
+    document.getElementById('verifyBadgeText').textContent = td.verified ? t18n('verifiedText') : t18n('pendingText');
     const tag = document.getElementById('tradeTag');
-    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${t.label} · ${a.area}`;
+    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(a.trade)} · ${a.area}`;
     tag.style.background = t.dim;
     tag.style.color = t.color;
     document.getElementById('starsRow').innerHTML = starsSvg(td.rating);
     document.getElementById('ratingNum').textContent = td.rating.toFixed(1);
-    document.getElementById('reviewCountText').textContent = `(${td.reviewCount} reviews)`;
+    document.getElementById('reviewCountText').textContent = `(${td.reviewCount} ${t18n('reviewsLabel')})`;
     const pill = document.getElementById('pricePill');
-    pill.textContent = `Est. ${t.price}`;
-    pill.title = 'Estimated range only — confirm the final price with the kaarigar directly.';
+    pill.textContent = `${t18n('estLabel')} ${t.price}`;
+    pill.title = t18n('priceTooltip');
     const dist = haversine(currentReference.lat, currentReference.lng, a.lat, a.lng);
-    document.getElementById('proximityText').textContent = `${formatDistance(dist)} away · from ${currentReference.label}`;
+    document.getElementById('proximityText').textContent = `${formatDistance(dist)} ${t18n('awayLabel')} · ${t18n('fromLabel')} ${currentReference.label}`;
     document.getElementById('chatAvatar').textContent = a.name.charAt(0);
     document.getElementById('chatAvatar').style.borderColor = t.color;
     document.getElementById('chatName').textContent = a.name;
     document.getElementById('storyText1').textContent = a.s1;
     document.getElementById('storyText2').textContent = a.s2;
     document.getElementById('statHours').textContent = a.hours.split('·')[0].trim();
-    document.getElementById('statYears').textContent = a.years + ' yrs';
+    document.getElementById('statYears').textContent = a.years + ' ' + t18n('yrsLabel');
     document.getElementById('statJobs').textContent = td.jobsCompleted + '+';
     const reviewsList = document.getElementById('reviewsList');
     reviewsList.innerHTML = td.reviews.map(r => `
@@ -1571,24 +1112,30 @@
     openPanel();
   }
 
+  function popupHtml(a){
+    return `<b>${a.name}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${a.area}<br><span style="opacity:.7">${t18n('clickForStory')}</span>`;
+  }
+
   const markers = [];
   ARTISANS.forEach((a, idx) => {
     const marker = L.marker([a.lat, a.lng], { icon: buildIcon(a.trade, false, isVerified(a)) }).addTo(map);
-    marker.bindPopup(`<b>${a.name}</b>${isVerified(a) ? ' <span style="color:#1F7A44">✓ Verified</span>' : ''}<br>${TRADES[a.trade].label} · ${a.area}<br><span style="opacity:.7">Click to read their story →</span>`);
+    marker.bindPopup(popupHtml(a));
     marker.on('click', () => showStory(a, idx));
     markers.push(marker);
   });
+
+  function refreshMarkerPopups(){
+    markers.forEach((m, i) => m.setPopupContent(popupHtml(ARTISANS[i])));
+  }
 
   function resetHighlights(){ markers.forEach((m, i) => m.setIcon(buildIcon(ARTISANS[i].trade, false, isVerified(ARTISANS[i])))); }
 
   const bounds = L.latLngBounds(ARTISANS.map(a => [a.lat, a.lng]));
   map.fitBounds(bounds, { padding:[60,60] });
 
-  document.getElementById('locateBtn').addEventListener('click', () => {
-    const name = localitySelect.value;
-    if(!name){ localitySelect.focus(); return; }
-    const loc = LOCALITIES.find(l => l.name === name);
-    currentReference = { lat:loc.lat, lng:loc.lng, label:loc.name };
+  let currentLocality = null;
+
+  function renderResultsForLocality(loc){
     resetHighlights();
 
     const nearestByTrade = {};
@@ -1602,7 +1149,7 @@
       if(best) nearestByTrade[trade] = { artisan:best, dist:bestDist, idx:bestIdx };
     });
 
-    document.getElementById('resultsLocality').textContent = `Nearest to ${loc.name}`;
+    document.getElementById('resultsLocality').textContent = `${t18n('nearestTo')} ${loc.name}`;
     const list = document.getElementById('resultsList');
     list.innerHTML = '';
     Object.entries(nearestByTrade).forEach(([trade, info]) => {
@@ -1612,16 +1159,25 @@
       card.innerHTML = `
         <div class="result-top">
           <div class="result-name">${info.artisan.name}</div>
-          <div class="result-dist">${formatDistance(info.dist)} away</div>
+          <div class="result-dist">${formatDistance(info.dist)} ${t18n('awayLabel')}</div>
         </div>
         <div class="result-trade" style="background:${t.dim}; color:${t.color}">
-          <svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${t.label}
+          <svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(trade)}
         </div>
         <div class="result-area">${info.artisan.area}</div>`;
       card.addEventListener('click', () => showStory(info.artisan, info.idx));
       list.appendChild(card);
       markers[info.idx].setIcon(buildIcon(trade, true, isVerified(info.artisan)));
     });
+  }
+
+  document.getElementById('locateBtn').addEventListener('click', () => {
+    const name = localitySelect.value;
+    if(!name){ localitySelect.focus(); return; }
+    const loc = LOCALITIES.find(l => l.name === name);
+    currentReference = { lat:loc.lat, lng:loc.lng, label:loc.name };
+    currentLocality = loc;
+    renderResultsForLocality(loc);
 
     storyView.style.display = 'none';
     resultsView.style.display = 'block';
@@ -1664,10 +1220,10 @@
     const intro = document.getElementById('afIntro').value || "Serving customers locally with reliable repairs.";
 
     document.getElementById('afPreviewName').textContent = name;
-    document.getElementById('afPreviewTradeTag').textContent = TRADES[trade].label;
+    document.getElementById('afPreviewTradeTag').textContent = tradeLabel(trade);
     document.getElementById('afPreviewIntro').textContent = intro;
     document.getElementById('afPreviewHours').textContent = hours;
-    document.getElementById('afPreviewYears').textContent = years + " yrs";
+    document.getElementById('afPreviewYears').textContent = years + " " + t18n('yrsLabel');
 
     document.getElementById('artisanFormCard').style.display = 'none';
     document.getElementById('artisanPreviewCard').style.display = 'block';
@@ -1688,12 +1244,46 @@
 
   document.getElementById('markDoneBtn').addEventListener('click', function() {
     this.classList.add('confirmed');
-    showToast('Repair marked as complete. Thank you!');
+    showToast(t18n('toastDone'));
   });
 
   document.getElementById('reportBtn').addEventListener('click', function() {
     this.classList.add('confirmed');
-    showToast('Report received. Our team will look into this.');
+    showToast(t18n('toastReport'));
+  });
+
+  // ---------- Language Toggle Wiring ----------
+  function applyTranslations(){
+    document.documentElement.lang = currentLang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t18n(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t18n(el.getAttribute('data-i18n-placeholder'));
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === currentLang);
+    });
+
+    // Re-render dynamic content built from JS templates, which data-i18n can't reach.
+    refreshLegendPrices();
+    refreshMarkerPopups();
+    const panelWasOpen = panel.classList.contains('open');
+    if(currentArtisan !== null && storyView.style.display !== 'none'){
+      showStory(currentArtisan, currentArtisanIdx);
+    } else if(currentLocality){
+      renderResultsForLocality(currentLocality);
+    }
+    if(!panelWasOpen){ closePanel(); }
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentLang = btn.dataset.lang;
+      applyTranslations();
+    });
   });
 </script>
 </body>
