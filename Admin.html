@@ -93,8 +93,10 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     projectId: "repairlink-de1ta",
@@ -166,9 +168,11 @@
         
         let actionHtml = '';
         if (k.verified) {
-          actionHtml = `<span style="color:var(--leaf); font-weight:700;">Verified</span>`;
+          actionHtml = `<span style="color:var(--leaf); font-weight:700; display:inline-block; margin-right:8px;">Verified</span>
+          <button onclick="revokeKaarigar('${id}')" style="background:#f5f5f5; color:#555; border:1px solid var(--line); padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Revoke</button>`;
         } else {
-          actionHtml = `<button onclick="approveKaarigar('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Approve</button>`;
+          actionHtml = `<button onclick="approveKaarigar('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Approve</button>
+          <button onclick="rejectKaarigar('${id}')" style="background:#FFF0F0; color:#D32F2F; border:1px solid #FFCDD2; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif; margin-left: 8px;">Reject</button>`;
         }
         
         kaarigarsBody.innerHTML += `
@@ -194,6 +198,29 @@
       loadData();
     } catch(err) {
       alert("Error approving kaarigar: " + err.message);
+    }
+  }
+
+  window.revokeKaarigar = async function(id) {
+    if(!confirm("Are you sure you want to revoke this kaarigar's verification?")) return;
+    try {
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'kaarigars', id), {
+        verified: false
+      });
+      loadData();
+    } catch(err) {
+      alert("Error revoking kaarigar: " + err.message);
+    }
+  }
+
+  window.rejectKaarigar = async function(id) {
+    if(!confirm("Are you sure you want to reject and delete this kaarigar's application? They will need to re-apply.")) return;
+    try {
+      await deleteDoc(doc(db, 'kaarigars', id));
+      loadData();
+    } catch(err) {
+      alert("Error rejecting kaarigar: " + err.message);
     }
   }
 
@@ -224,8 +251,63 @@
       contentHtml += `<div class="detail-row"><div class="detail-label">${key}</div><div class="detail-value">${val}</div></div>`;
     }
     
+    contentHtml += `
+      <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button onclick="editKaarigarDetails('${id}')" style="background:var(--marigold); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Edit Details</button>
+      </div>
+    `;
+    
     document.getElementById('modalContent').innerHTML = contentHtml;
     document.getElementById('detailsModal').style.display = 'flex';
+  }
+
+  window.editKaarigarDetails = function(id) {
+    const k = window.adminKaarigarsData[id];
+    document.getElementById('modalTitle').textContent = "Edit Kaarigar Details";
+    document.getElementById('modalContent').innerHTML = `
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Name</label>
+        <input type="text" id="editKName" value="${k.name || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Trade</label>
+        <input type="text" id="editKTrade" value="${k.trade || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Area</label>
+        <input type="text" id="editKArea" value="${k.area || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Years of Experience</label>
+        <input type="number" id="editKYears" value="${k.years || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Intro</label>
+        <textarea id="editKIntro" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif; min-height:80px; resize:vertical;">${k.intro || ''}</textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
+        <button onclick="showKaarigarDetails('${id}')" style="background:var(--paper-2); border:1px solid var(--line); padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:700;">Cancel</button>
+        <button onclick="saveKaarigarDetails('${id}')" style="background:var(--marigold); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Save Changes</button>
+      </div>
+    `;
+  }
+
+  window.saveKaarigarDetails = async function(id) {
+    try {
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'kaarigars', id), {
+        name: document.getElementById('editKName').value,
+        trade: document.getElementById('editKTrade').value,
+        area: document.getElementById('editKArea').value,
+        years: parseInt(document.getElementById('editKYears').value) || 0,
+        intro: document.getElementById('editKIntro').value
+      });
+      alert("Kaarigar details updated successfully!");
+      document.getElementById('detailsModal').style.display = 'none';
+      loadData();
+    } catch(err) {
+      alert("Error saving: " + err.message);
+    }
   }
 </script>
 </body>
