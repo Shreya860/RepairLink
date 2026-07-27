@@ -84,7 +84,7 @@ function routeUser(role) {
   if(role === 'admin') {
     window.location.href = 'Admin.html';
   } else if (role === 'kaarigar') {
-    window.location.href = 'Dashboard.html';
+    window.location.href = 'KaarigarDashboard.html';
   } else {
     // Default user
     window.location.href = 'RepairLink.html';

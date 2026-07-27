@@ -26,20 +26,30 @@ onAuthStateChanged(auth, async (user) => {
     if(navLogin) navLogin.style.display = 'none';
     if(navLogout) navLogout.style.display = 'inline-block';
     
-    // Check if admin to inject Admin link
+    // Check role and inject links
     try {
       const { getDoc, doc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
       const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if(userDoc.exists() && userDoc.data().role === 'admin') {
-        const nav = navLogout.parentNode;
-        if(!document.getElementById('navAdmin')) {
-          const adminLink = document.createElement('a');
-          adminLink.id = 'navAdmin';
-          adminLink.href = 'Admin.html';
-          adminLink.textContent = 'Admin Panel';
-          adminLink.style.color = '#FF4C3B';
-          adminLink.style.textDecoration = 'none';
-          nav.insertBefore(adminLink, navLogout);
+      if(userDoc.exists()) {
+        const role = userDoc.data().role;
+        const navDashboard = document.getElementById('navDashboard');
+        if (navDashboard) {
+          if (role === 'kaarigar') navDashboard.href = 'KaarigarDashboard.html';
+          else if (role === 'user') navDashboard.href = 'UserDashboard.html';
+          else if (role === 'admin') navDashboard.href = 'Admin.html';
+        }
+        
+        if (role === 'admin') {
+          const nav = navLogout.parentNode;
+          if(!document.getElementById('navAdmin')) {
+            const adminLink = document.createElement('a');
+            adminLink.id = 'navAdmin';
+            adminLink.href = 'Admin.html';
+            adminLink.textContent = 'Admin Panel';
+            adminLink.style.color = '#FF4C3B';
+            adminLink.style.textDecoration = 'none';
+            nav.insertBefore(adminLink, navLogout);
+          }
         }
       }
     } catch(err) {
