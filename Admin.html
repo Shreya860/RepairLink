@@ -141,17 +141,38 @@
       kaarigarsBody.innerHTML = '';
       kaarigarsSnap.forEach(d => {
         const k = d.data();
+        const id = d.id;
+        
+        let actionHtml = '';
+        if (k.verified) {
+          actionHtml = `<span style="color:var(--leaf); font-weight:700;">Verified</span>`;
+        } else {
+          actionHtml = `<button onclick="approveKaarigar('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Approve</button>`;
+        }
+        
         kaarigarsBody.innerHTML += `
           <tr>
-            <td style="font-weight:600">${k.name}</td>
-            <td>${k.trade}</td>
-            <td>${k.locality}</td>
-            <td>${k.verified ? 'Verified' : 'Pending'}</td>
+            <td style="font-weight:600">${k.name || 'Unknown'}</td>
+            <td>${k.trade || 'N/A'}</td>
+            <td>${k.area || 'N/A'}</td>
+            <td>${actionHtml}</td>
           </tr>
         `;
       });
     } catch(err) {
       kaarigarsBody.innerHTML = `<tr><td colspan="4">Error loading kaarigars: ${err.message}</td></tr>`;
+    }
+  }
+
+  window.approveKaarigar = async function(id) {
+    try {
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'kaarigars', id), {
+        verified: true
+      });
+      loadData();
+    } catch(err) {
+      alert("Error approving kaarigar: " + err.message);
     }
   }
 </script>
