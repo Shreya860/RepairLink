@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepairLink — Find Your Neighbourhood Kaarigar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="map"></div>
+
+<div class="disclaimer-bar" id="disclaimerBar">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+  <span data-i18n="disclaimer">Prototype demo — names, phone numbers, ratings & reviews shown here are placeholder data, not real people.</span>
+</div>
+
+<div class="role-scrim" id="roleScrim">
+  <div class="role-card">
+    <h2 data-i18n="roleTitle">Welcome to RepairLink</h2>
+    <p data-i18n="roleSub">Tell us who you are, so we can show you the right screen.</p>
+    <div class="role-options">
+      <div class="role-opt customer" id="roleCustomer">
+        <div class="role-opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg></div>
+        <h3 data-i18n="roleCustomerTitle">I need something repaired</h3>
+        <p data-i18n="roleCustomerDesc">Find a trusted kaarigar near you — cobbler, watch repairer, appliance technician or locksmith.</p>
+      </div>
+      <div class="role-opt artisan" id="roleArtisan">
+        <div class="role-opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.1-3.1a5 5 0 01-6.6 6.6L4.7 22.3a1.5 1.5 0 01-2.1-2.1L12.8 9.7a5 5 0 016.6-6.6l-3.1 3.1z"/></svg></div>
+        <h3 data-i18n="roleArtisanTitle">I repair things for a living</h3>
+        <p data-i18n="roleArtisanDesc">List yourself on RepairLink so customers nearby can find and message you directly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="artisan-shell" id="artisanShell">
+  <div class="artisan-form-card" id="artisanFormCard">
+    <div class="back-link" id="artisanBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span data-i18n="backToStart">Back</span>
+    </div>
+    <div class="artisan-eyebrow" data-i18n="artisanEyebrow">List yourself as a kaarigar</div>
+    <h2 data-i18n="artisanFormTitle">Get discovered by customers near you</h2>
+    <p class="intro" data-i18n="artisanFormIntro">Fill this in and our team will verify your details before your profile goes live on the map. Verification helps customers trust who they're calling.</p>
+
+    <div class="field-group">
+      <label data-i18n="fieldName">Full name</label>
+      <input type="text" id="afName" placeholder="e.g. Ramesh Kumar" data-i18n-placeholder="phName">
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label data-i18n="fieldTrade">Your trade</label>
+        <select id="afTrade">
+          <option value="cobbler" data-i18n="tradeCobbler">Cobbler</option>
+          <option value="watch" data-i18n="tradeWatch">Watch repairer</option>
+          <option value="appliance" data-i18n="tradeAppliance">Appliance repairer</option>
+          <option value="locksmith" data-i18n="tradeLocksmith">Locksmith</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label data-i18n="fieldYears">Years of experience</label>
+        <input type="number" id="afYears" placeholder="e.g. 8" min="0">
+      </div>
+    </div>
+    <div class="field-group">
+      <label data-i18n="fieldArea">Area / locality</label>
+      <input type="text" id="afArea" placeholder="e.g. Kamla Nagar" data-i18n-placeholder="phArea">
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label data-i18n="fieldPhone">Phone / WhatsApp number</label>
+        <input type="tel" id="afPhone" placeholder="10-digit number" data-i18n-placeholder="phPhone">
+      </div>
+      <div class="field-group">
+        <label data-i18n="fieldHours">Working hours</label>
+        <input type="text" id="afHours" placeholder="e.g. 10 AM – 7 PM, closed Sun" data-i18n-placeholder="phHours">
+      </div>
+    </div>
+    <div class="field-group">
+      <label data-i18n="fieldIntro">A line about your work</label>
+      <textarea id="afIntro" placeholder="e.g. I've been resoling shoes near Kamla Nagar for 8 years..." data-i18n-placeholder="phIntro"></textarea>
+    </div>
+    <div class="field-group">
+      <label data-i18n="fieldId">ID for verification (mock — nothing is uploaded in this prototype)</label>
+      <div class="upload-box" id="afUpload">
+        <span data-i18n="uploadText">Tap to attach Aadhaar / shop ID photo</span>
+      </div>
+    </div>
+    <button class="form-submit" id="afSubmit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <span data-i18n="submitListing">Submit for verification</span>
+    </button>
+  </div>
+
+  <div class="artisan-form-card" id="artisanPreviewCard" style="display:none;">
+    <div class="preview-tag" data-i18n="pendingTag">⏳ Pending verification</div>
+    <div class="ticket-no" style="margin-bottom:6px;" data-i18n="previewLabel">HOW YOUR PROFILE WILL LOOK</div>
+    <h2 id="afPreviewName" style="font-family:'Fraunces',serif; font-size:24px; margin-bottom:8px;">—</h2>
+    <div class="trade-tag" id="afPreviewTradeTag" style="margin-bottom:14px;"></div>
+    <p class="intro" id="afPreviewIntro" style="margin-bottom:0;"></p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-label" data-i18n="statHoursLabel">Hours</div><div class="stat-value" id="afPreviewHours">—</div></div>
+      <div class="stat"><div class="stat-label" data-i18n="statYearsLabel">Years here</div><div class="stat-value" id="afPreviewYears">—</div></div>
+    </div>
+    <div class="review-block">
+      <div class="review-block-title" data-i18n="verifySteps">What happens next</div>
+      <ul class="verify-steps">
+        <li><span class="step-num">1</span><span data-i18n="verifyStep1">Our team calls you to confirm your details and check your ID.</span></li>
+        <li><span class="step-num">2</span><span data-i18n="verifyStep2">We do a short in-person or phone verification of your shop/stall.</span></li>
+        <li><span class="step-num">3</span><span data-i18n="verifyStep3">Once verified, your profile goes live with a green "Verified" badge that customers can see and trust.</span></li>
+      </ul>
+    </div>
+    <button class="form-submit" id="afAnother" style="margin-top:20px; background:var(--marigold); color:#2A1E00;">
+      <span data-i18n="submitAnother">Submit another profile</span>
+    </button>
+  </div>
+</div>
+
+<div class="hero-scrim" id="heroScrim">
+  <div class="hero-card">
+    <div class="hero-stitch">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/><path d="M2 12h4M8 12h4M14 12h4M20 12h2" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/></svg>
+    </div>
+    <div class="hero-eyebrow" data-i18n="heroEyebrow">What is RepairLink?</div>
+    <h2 data-i18n="heroTitle">We give your broken things a second chance.</h2>
+    <p data-i18n="heroP1">We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.</p>
+    <p data-i18n="heroP2">Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.</p>
+    <div class="hero-region">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
+      <span data-i18n="heroRegion">Currently live only in North Delhi</span>
+    </div>
+    <br>
+    <button class="hero-btn" id="heroClose">
+      <span data-i18n="heroBtnText">Explore the map</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg class="stitch" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M2 12h3M7 12h3M12 12h3M17 12h3" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/>
+        <circle cx="12" cy="12" r="9" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/>
+      </svg>
+      <h1>RepairLink</h1>
+    </div>
+    <p data-i18n="brandTagline">Mapping North Delhi's kaarigars — repair first, recycle what's left</p>
+    <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
+      <a href="RepairLink.html" style="color: var(--leaf); text-decoration: none;">Home</a>
+      <a href="AboutUs.html" style="color: var(--ink); text-decoration: none;">About Us</a>
+      <a href="Dashboard.html" style="color: var(--ink); text-decoration: none;">Dashboard</a>
+      <a href="Contact.html" style="color: var(--ink); text-decoration: none;">Contact</a>
+    </nav>
+  </div>
+
+  <div class="legend">
+    <div class="legend-title" data-i18n="legendTitle">Services We Provide</div>
+    <div class="legend-sub" data-i18n="legendSub">Tap a symbol on the map to meet the kaarigar</div>
+    <div class="legend-row"><div class="legend-dot" id="legendCobbler"></div><span><span data-i18n="legendCobblerName">Cobblers</span> <span style="color:var(--ink-dim)" data-i18n="legendCobblerDesc">— shoe & leather repair</span><span class="legend-price" id="legendPriceCobbler"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span><span data-i18n="legendWatchName">Watch repairers</span> <span style="color:var(--ink-dim)" data-i18n="legendWatchDesc">— horologists</span><span class="legend-price" id="legendPriceWatch"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span><span data-i18n="legendApplianceName">Appliance repair</span> <span style="color:var(--ink-dim)" data-i18n="legendApplianceDesc">— mixers & grinders</span><span class="legend-price" id="legendPriceAppliance"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span><span data-i18n="legendLocksmithName">Locksmiths</span> <span style="color:var(--ink-dim)" data-i18n="legendLocksmithDesc">— keys & locks</span><span class="legend-price" id="legendPriceLocksmith"></span></span></div>
+  </div>
+</header>
+
+<div class="lang-toggle" id="langToggle">
+  <button class="lang-btn active" data-lang="en">EN</button>
+  <button class="lang-btn" data-lang="hi">हिं</button>
+</div>
+
+<a class="chat-cta" id="whatsappTop" href="https://wa.me/919999999999?text=Hi%20RepairLink%2C%20I%20need%20help%20finding%20a%20kaarigar%20near%20me" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="#083318"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.35 4.95L2 22l5.28-1.39a9.9 9.9 0 004.76 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.87 14.02c-.25.7-1.25 1.29-2.03 1.45-.55.12-1.26.21-3.66-.78-3.08-1.27-5.06-4.4-5.21-4.6-.15-.2-1.24-1.65-1.24-3.15s.78-2.23 1.06-2.53c.25-.27.55-.34.73-.34.19 0 .37 0 .53.01.17.01.4-.06.62.48.25.6.85 2.08.92 2.23.07.15.12.32.02.51-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.17-.2.72-.84.92-1.13.2-.29.4-.24.65-.14.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.12.07.72-.19 1.42z"/></svg>
+  <span data-i18n="chatCtaText">Chat with a RepairLink helper</span>
+</a>
+
+<div class="locate-box">
+  <div class="locate-eyebrow" data-i18n="locateEyebrow">Find your nearest kaarigar</div>
+  <h3 data-i18n="locateHeading">Select your location and we'll show you the closest artisan of each trade — in no time.</h3>
+  <select id="localitySelect"><option value="" data-i18n="localityPlaceholder">Choose your area in North Delhi…</option></select>
+  <button class="locate-btn" id="locateBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
+    <span data-i18n="locateBtnText">Find closest kaarigars</span>
+  </button>
+</div>
+
+<div class="mock-toast" id="mockToast"></div>
+
+<div class="panel-scrim" id="scrim"></div>
+
+<div class="panel" id="panel">
+  <div class="panel-close" id="panelClose">✕</div>
+
+  <div id="storyView">
+    <div class="ticket-header">
+      <div class="ticket-no" id="ticketNo">REPAIR TICKET NO. 001</div>
+      <h2 id="artisanName">— <span class="verify-badge" id="verifyBadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span id="verifyBadgeText">Verified</span></span></h2>
+      <div class="trade-tag" id="tradeTag"></div>
+      <div class="rating-row">
+        <span class="stars" id="starsRow"></span>
+        <span><span class="rating-num" id="ratingNum">—</span> <span id="reviewCountText">(0 reviews)</span></span>
+        <span class="price-pill" id="pricePill">₹—</span>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="proximity-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
+        <span id="proximityText">—</span>
+      </div>
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-avatar" id="chatAvatar">R</div>
+          <div>
+            <div class="chat-name" id="chatName">—</div>
+            <div class="chat-status" data-i18n="repliesHour">Usually replies within the hour</div>
+          </div>
+        </div>
+        <div class="chat-bubble" id="storyText1"></div>
+        <div class="chat-bubble" id="storyText2"></div>
+        <div class="chat-time" data-i18n="delivered">Delivered</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="stat-label" data-i18n="statHoursLabel">Hours</div><div class="stat-value" id="statHours">—</div></div>
+        <div class="stat"><div class="stat-label" data-i18n="statYearsLabel">Years here</div><div class="stat-value" id="statYears">—</div></div>
+        <div class="stat"><div class="stat-label" data-i18n="statJobsLabel">Jobs completed</div><div class="stat-value" id="statJobs">—</div></div>
+      </div>
+      <div class="review-block">
+        <div class="review-block-title" data-i18n="whatCustomersSay">What customers say</div>
+        <div id="reviewsList"></div>
+      </div>
+      <a class="panel-cta" id="whatsappPanel" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="#083318"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.35 4.95L2 22l5.28-1.39a9.9 9.9 0 004.76 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.87 14.02c-.25.7-1.25 1.29-2.03 1.45-.55.12-1.26.21-3.66-.78-3.08-1.27-5.06-4.4-5.21-4.6-.15-.2-1.24-1.65-1.24-3.15s.78-2.23 1.06-2.53c.25-.27.55-.34.73-.34.19 0 .37 0 .53.01.17.01.4-.06.62.48.25.6.85 2.08.92 2.23.07.15.12.32.02.51-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.17-.2.72-.84.92-1.13.2-.29.4-.24.65-.14.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.12.07.72-.19 1.42z"/></svg>
+        <span data-i18n="messageWhatsapp">Message this kaarigar on WhatsApp</span>
+      </a>
+      <div class="action-row">
+        <button class="action-btn done" id="markDoneBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+          <span data-i18n="markDone">Mark repair done</span>
+        </button>
+        <button class="action-btn report" id="reportBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+          <span data-i18n="reportIssue">Report an issue</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsView" style="display:none;">
+    <div class="results-header">
+      <div class="ticket-no" data-i18n="resultsHeader">CLOSEST TO YOU</div>
+      <h2 id="resultsLocality">—</h2>
+    </div>
+    <div class="results-list" id="resultsList"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

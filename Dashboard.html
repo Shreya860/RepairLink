@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — RepairLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  .container { max-width: 800px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 24px; color: var(--ink); }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 30px; }
+  .stat-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; text-align: center; }
+  .stat-card-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 8px; }
+  .stat-card-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--ink); }
+  
+  .job-list { display: flex; flex-direction: column; gap: 12px; }
+  .job-item { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid var(--line); padding: 16px; border-radius: 12px; }
+  .job-info { display: flex; flex-direction: column; gap: 4px; }
+  .job-title { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .job-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); }
+  .job-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--marigold-dim); color: #8A5C00; }
+  .job-status.done { background: var(--leaf-dim); color: #1F7A44; }
+</style>
+</head>
+<body>
+
+<header style="position: relative; padding: 0; align-items: center; justify-content: center; margin-bottom: 30px;">
+  <div class="brand" style="pointer-events: auto;">
+    <div class="brand-mark">
+      <svg class="stitch" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M2 12h3M7 12h3M12 12h3M17 12h3" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/>
+        <circle cx="12" cy="12" r="9" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/>
+      </svg>
+      <h1 style="margin:0; font-size: 21px;">RepairLink</h1>
+    </div>
+    <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
+      <a href="RepairLink.html" style="color: var(--ink); text-decoration: none;">Home</a>
+      <a href="AboutUs.html" style="color: var(--ink); text-decoration: none;">About Us</a>
+      <a href="Dashboard.html" style="color: var(--leaf); text-decoration: none;">Dashboard</a>
+      <a href="Contact.html" style="color: var(--ink); text-decoration: none;">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <h1>Kaarigar Dashboard</h1>
+  
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-card-label">Jobs Completed</div>
+      <div class="stat-card-value">124</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Active Requests</div>
+      <div class="stat-card-value">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Profile Views</div>
+      <div class="stat-card-value">89</div>
+    </div>
+  </div>
+
+  <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 16px;">Recent Jobs</h2>
+  <div class="job-list">
+    <div class="job-item">
+      <div class="job-info">
+        <div class="job-title">Shoe Resoling (Sneakers)</div>
+        <div class="job-meta">Today, 2:30 PM • Kamla Nagar</div>
+      </div>
+      <div class="job-status">Pending</div>
+    </div>
+    <div class="job-item">
+      <div class="job-info">
+        <div class="job-title">Watch Battery Replacement</div>
+        <div class="job-meta">Yesterday, 11:00 AM • Model Town</div>
+      </div>
+      <div class="job-status done">Completed</div>
+    </div>
+    <div class="job-item">
+      <div class="job-info">
+        <div class="job-title">Mixer Grinder Motor Fix</div>
+        <div class="job-meta">Oct 12, 4:15 PM • Civil Lines</div>
+      </div>
+      <div class="job-status done">Completed</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

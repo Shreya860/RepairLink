@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — RepairLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  .container { max-width: 500px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 8px; color: var(--ink); }
+  p.sub { font-size: 14px; color: var(--ink-dim); margin-bottom: 24px; }
+  
+  .field-group { margin-bottom: 16px; }
+  .field-group label { display: block; font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .field-group input, .field-group textarea {
+    width: 100%; background: var(--paper-2); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 9px; padding: 10px 12px; font-family: 'Manrope', sans-serif; font-size: 13px;
+  }
+  .field-group textarea { resize: vertical; min-height: 100px; }
+  
+  .submit-btn {
+    width: 100%; margin-top: 8px; background: var(--marigold); color: #2A1E00; font-weight: 700; font-size: 14px;
+    padding: 13px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .submit-btn:hover { background: #ffc935; }
+</style>
+</head>
+<body>
+
+<header style="position: relative; padding: 0; align-items: center; justify-content: center; margin-bottom: 30px;">
+  <div class="brand" style="pointer-events: auto;">
+    <div class="brand-mark">
+      <svg class="stitch" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M2 12h3M7 12h3M12 12h3M17 12h3" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/>
+        <circle cx="12" cy="12" r="9" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/>
+      </svg>
+      <h1 style="margin:0; font-size: 21px;">RepairLink</h1>
+    </div>
+    <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
+      <a href="RepairLink.html" style="color: var(--ink); text-decoration: none;">Home</a>
+      <a href="AboutUs.html" style="color: var(--ink); text-decoration: none;">About Us</a>
+      <a href="Dashboard.html" style="color: var(--ink); text-decoration: none;">Dashboard</a>
+      <a href="Contact.html" style="color: var(--leaf); text-decoration: none;">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <h1>Get in Touch</h1>
+  <p class="sub">Have a question or need to report an issue? Send us a message and our team will get back to you shortly.</p>
+  
+  <form onsubmit="event.preventDefault(); alert('Message sent! Our team will contact you shortly.'); this.reset();">
+    <div class="field-group">
+      <label>Your Name</label>
+      <input type="text" placeholder="e.g. Ramesh Kumar" required>
+    </div>
+    <div class="field-group">
+      <label>Phone or Email</label>
+      <input type="text" placeholder="How can we reach you?" required>
+    </div>
+    <div class="field-group">
+      <label>Message</label>
+      <textarea placeholder="Tell us how we can help..." required></textarea>
+    </div>
+    <button type="submit" class="submit-btn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Send Message
+    </button>
+  </form>
+</div>
+
+</body>
+</html>
