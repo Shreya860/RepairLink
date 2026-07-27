@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — RepairLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  .container { max-width: 1000px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 24px; color: var(--ink); }
+  
+  .data-section { margin-bottom: 40px; }
+  .data-section h2 { font-family: 'Fraunces', serif; font-size: 20px; margin-bottom: 16px; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+  th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--ink-dim); letter-spacing: 0.05em; }
+  tr:hover { background: var(--paper-2); }
+  
+  .badge { padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .badge.admin { background: var(--marigold-dim); color: #8A5C00; }
+  .badge.user { background: #E3F2FD; color: #1565C0; }
+  .badge.kaarigar { background: var(--leaf-dim); color: #1F7A44; }
+  
+  .nav-header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .nav-header a { font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-header a:hover { color: var(--marigold); }
+  
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-container { background: var(--paper); border-radius: 20px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto; }
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ink-dim); }
+  .modal-close:hover { color: var(--ink); }
+  .detail-row { margin-bottom: 12px; }
+  .detail-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 4px; }
+  .detail-value { font-size: 15px; font-weight: 600; color: var(--ink); word-wrap: break-word; }
+</style>
+</head>
+<body>
+
+<div class="nav-header">
+  <div style="font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700;">RepairLink<span style="color:var(--leaf)">.</span> Admin</div>
+  <a href="RepairLink.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Map</a>
+</div>
+
+<div class="container" id="adminContainer" style="display:none;">
+  <h1>Admin Dashboard</h1>
+  
+  <div class="data-section">
+    <h2>All Users</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+      <tbody id="usersTableBody">
+        <tr><td colspan="4" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="data-section">
+    <h2>All Kaarigars (Listings)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Trade</th>
+          <th>Area</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="kaarigarsTableBody">
+        <tr><td colspan="4" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="detailsModal">
+  <div class="modal-container">
+    <button class="modal-close" onclick="document.getElementById('detailsModal').style.display='none'">&times;</button>
+    <h2 id="modalTitle" style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:20px;">Details</h2>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    projectId: "repairlink-de1ta",
+    appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+    storageBucket: "repairlink-de1ta.firebasestorage.app",
+    apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+    authDomain: "repairlink-de1ta.firebaseapp.com",
+    messagingSenderId: "4711329582",
+    measurementId: "G-BQ7PBRSGH3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = 'Auth.html';
+      return;
+    }
+    
+    // Check role
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists() && userDoc.data().role === 'admin') {
+      document.getElementById('adminContainer').style.display = 'block';
+      loadData();
+    } else {
+      alert("Access Denied. Admins only.");
+      window.location.href = 'RepairLink.html';
+    }
+  });
+
+  window.adminUsersData = {};
+  window.adminKaarigarsData = {};
+
+  async function loadData() {
+    const usersBody = document.getElementById('usersTableBody');
+    const kaarigarsBody = document.getElementById('kaarigarsTableBody');
+    
+    // Load Users
+    try {
+      const usersSnap = await getDocs(collection(db, 'users'));
+      usersBody.innerHTML = '';
+      usersSnap.forEach(d => {
+        const u = d.data();
+        window.adminUsersData[d.id] = u;
+        const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
+        usersBody.innerHTML += `
+          <tr>
+            <td style="font-weight:600"><a href="#" onclick="showUserDetails('${d.id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${u.displayName || 'No Name'}</a></td>
+            <td>${u.email}</td>
+            <td><span class="badge ${u.role}">${u.role}</span></td>
+            <td>${dateStr}</td>
+          </tr>
+        `;
+      });
+    } catch(err) {
+      usersBody.innerHTML = `<tr><td colspan="4">Error loading users: ${err.message}</td></tr>`;
+    }
+    
+    // Load Kaarigars
+    try {
+      const kaarigarsSnap = await getDocs(collection(db, 'kaarigars'));
+      kaarigarsBody.innerHTML = '';
+      kaarigarsSnap.forEach(d => {
+        const k = d.data();
+        const id = d.id;
+        window.adminKaarigarsData[id] = k;
+        
+        let actionHtml = '';
+        if (k.verified) {
+          actionHtml = `<span style="color:var(--leaf); font-weight:700; display:inline-block; margin-right:8px;">Verified</span>
+          <button onclick="revokeKaarigar('${id}')" style="background:#f5f5f5; color:#555; border:1px solid var(--line); padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Revoke</button>`;
+        } else {
+          actionHtml = `<button onclick="approveKaarigar('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Approve</button>
+          <button onclick="rejectKaarigar('${id}')" style="background:#FFF0F0; color:#D32F2F; border:1px solid #FFCDD2; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif; margin-left: 8px;">Reject</button>`;
+        }
+        
+        kaarigarsBody.innerHTML += `
+          <tr>
+            <td style="font-weight:600"><a href="#" onclick="showKaarigarDetails('${id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${k.name || 'Unknown'}</a></td>
+            <td>${k.trade || 'N/A'}</td>
+            <td>${k.area || 'N/A'}</td>
+            <td>${actionHtml}</td>
+          </tr>
+        `;
+      });
+    } catch(err) {
+      kaarigarsBody.innerHTML = `<tr><td colspan="4">Error loading kaarigars: ${err.message}</td></tr>`;
+    }
+  }
+
+  window.approveKaarigar = async function(id) {
+    try {
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'kaarigars', id), {
+        verified: true
+      });
+      loadData();
+    } catch(err) {
+      alert("Error approving kaarigar: " + err.message);
+    }
+  }
+
+  window.revokeKaarigar = async function(id) {
+    if(!confirm("Are you sure you want to revoke this kaarigar's verification?")) return;
+    try {
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'kaarigars', id), {
+        verified: false
+      });
+      loadData();
+    } catch(err) {
+      alert("Error revoking kaarigar: " + err.message);
+    }
+  }
+
+  window.rejectKaarigar = async function(id) {
+    if(!confirm("Are you sure you want to reject and delete this kaarigar's application? They will need to re-apply.")) return;
+    try {
+      await deleteDoc(doc(db, 'kaarigars', id));
+      loadData();
+    } catch(err) {
+      alert("Error rejecting kaarigar: " + err.message);
+    }
+  }
+
+  window.showUserDetails = function(id) {
+    const u = window.adminUsersData[id];
+    document.getElementById('modalTitle').textContent = "User Details";
+    document.getElementById('modalContent').innerHTML = `
+      <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${u.displayName || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${u.email || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">Role</div><div class="detail-value">${u.role || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">ID</div><div class="detail-value" style="font-family:'JetBrains Mono', monospace; font-size:12px;">${u.uid || id}</div></div>
+      <div class="detail-row"><div class="detail-label">Profile Image</div><div class="detail-value">${u.photoURL ? `<img src="${u.photoURL}" width="50" style="border-radius:50%">` : 'None'}</div></div>
+    `;
+    document.getElementById('detailsModal').style.display = 'flex';
+  }
+
+  window.showKaarigarDetails = function(id) {
+    const k = window.adminKaarigarsData[id];
+    document.getElementById('modalTitle').textContent = "Kaarigar Details";
+    let contentHtml = '';
+    
+    // Sort keys alphabetically for neatness
+    const keys = Object.keys(k).sort();
+    for(const key of keys) {
+      // Don't show raw lat/lng objects or very long data if we don't want to, but for admin it's fine.
+      let val = k[key];
+      if (typeof val === 'object') val = JSON.stringify(val);
+      contentHtml += `<div class="detail-row"><div class="detail-label">${key}</div><div class="detail-value">${val}</div></div>`;
+    }
+    
+    contentHtml += `
+      <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button onclick="editKaarigarDetails('${id}')" style="background:var(--marigold); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Edit Details</button>
+      </div>
+    `;
+    
+    document.getElementById('modalContent').innerHTML = contentHtml;
+    document.getElementById('detailsModal').style.display = 'flex';
+  }
+
+  window.editKaarigarDetails = function(id) {
+    const k = window.adminKaarigarsData[id];
+    document.getElementById('modalTitle').textContent = "Edit Kaarigar Details";
+    document.getElementById('modalContent').innerHTML = `
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Name</label>
+        <input type="text" id="editKName" value="${k.name || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Trade</label>
+        <input type="text" id="editKTrade" value="${k.trade || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Area</label>
+        <input type="text" id="editKArea" value="${k.area || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Years of Experience</label>
+        <input type="number" id="editKYears" value="${k.years || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      </div>
+      <div class="detail-row" style="margin-bottom:12px;">
+        <label class="detail-label" style="display:block;">Intro</label>
+        <textarea id="editKIntro" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif; min-height:80px; resize:vertical;">${k.intro || ''}</textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
+        <button onclick="showKaarigarDetails('${id}')" style="background:var(--paper-2); border:1px solid var(--line); padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:700;">Cancel</button>
+        <button onclick="saveKaarigarDetails('${id}')" style="background:var(--marigold); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Save Changes</button>
+      </div>
+    `;
+  }
+
+  window.saveKaarigarDetails = async function(id) {
+    try {
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'kaarigars', id), {
+        name: document.getElementById('editKName').value,
+        trade: document.getElementById('editKTrade').value,
+        area: document.getElementById('editKArea').value,
+        years: parseInt(document.getElementById('editKYears').value) || 0,
+        intro: document.getElementById('editKIntro').value
+      });
+      alert("Kaarigar details updated successfully!");
+      document.getElementById('detailsModal').style.display = 'none';
+      loadData();
+    } catch(err) {
+      alert("Error saving: " + err.message);
+    }
+  }
+</script>
+</body>
+</html>

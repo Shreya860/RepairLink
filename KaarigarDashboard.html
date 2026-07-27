@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaarigar Dashboard — RepairLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  .container { max-width: 800px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 24px; color: var(--ink); }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 30px; }
+  .stat-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; text-align: center; }
+  .stat-card-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 8px; }
+  .stat-card-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--ink); }
+  
+  .job-list { display: flex; flex-direction: column; gap: 12px; }
+  .job-item { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid var(--line); padding: 16px; border-radius: 12px; }
+  .job-info { display: flex; flex-direction: column; gap: 4px; }
+  .job-title { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .job-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-dim); }
+  .job-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--marigold-dim); color: #8A5C00; }
+  .job-status.done { background: var(--leaf-dim); color: #1F7A44; }
+  
+  .profile-status { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; margin-bottom: 20px; padding: 12px; border-radius: 8px; }
+  .status-pending { background: var(--marigold-dim); color: #8A5C00; border: 1px solid #FFD54F; }
+  .status-live { background: var(--leaf-dim); color: #1F7A44; border: 1px solid #81C784; }
+  .status-incomplete { background: #f5f5f5; color: var(--ink-dim); border: 1px solid var(--line); }
+  
+  .form-group { margin-bottom: 16px; width: 100%; text-align: left; }
+  .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-family: 'Manrope', sans-serif; font-size: 14px; background: var(--paper-2); color: var(--ink); box-sizing: border-box; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  
+  .btn { padding: 12px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; }
+  .btn-primary { background: var(--marigold); color: #2A1E00; }
+  .btn-primary:hover { background: #ffc935; }
+  .btn-secondary { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line); }
+  .btn-secondary:hover { background: #e0e0e0; }
+  
+  .preview-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 24px; text-align: left; margin-bottom: 20px; }
+  .preview-card h3 { margin: 0 0 4px 0; font-family: 'Fraunces', serif; font-size: 20px; color: var(--ink); }
+  .preview-meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-dim); margin-bottom: 12px; }
+  .preview-intro { font-size: 14px; color: var(--ink); line-height: 1.5; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<header style="position: relative; padding: 0; align-items: center; justify-content: center; margin-bottom: 30px;">
+  <div class="brand" style="pointer-events: auto;">
+    <div class="brand-mark">
+      <svg class="stitch" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M2 12h3M7 12h3M12 12h3M17 12h3" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/>
+        <circle cx="12" cy="12" r="9" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/>
+      </svg>
+      <h1 style="margin:0; font-size: 21px;">RepairLink</h1>
+    </div>
+    <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
+      <a href="RepairLink.html" style="color: var(--ink); text-decoration: none;">Home</a>
+      <a href="AboutUs.html" style="color: var(--ink); text-decoration: none;">About Us</a>
+      <a href="KaarigarDashboard.html" id="navDashboard" style="color: var(--leaf); text-decoration: none;">Dashboard</a>
+      <a href="Contact.html" style="color: var(--ink); text-decoration: none;">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container" id="dashboardContainer" style="display:none;">
+  <h1>Kaarigar Dashboard</h1>
+  
+  <div id="profileStatusBanner" class="profile-status status-incomplete">Checking status...</div>
+  
+  <!-- Profile Form View -->
+  <div id="profileFormView" style="display:none; width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-sizing: border-box;">
+    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 20px;">Profile Details</h2>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="kName" placeholder="e.g. Ramesh Kumar">
+    </div>
+    <div class="form-group">
+      <label>Trade</label>
+      <select id="kTrade">
+        <option value="cobbler">Cobbler</option>
+        <option value="watch">Watch Repairer</option>
+        <option value="appliance">Appliance Repairer</option>
+        <option value="locksmith">Locksmith</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Area / Locality</label>
+      <input type="text" id="kArea" placeholder="e.g. Kamla Nagar">
+    </div>
+    <div class="form-group">
+      <label>Years of Experience</label>
+      <input type="number" id="kYears" placeholder="e.g. 10">
+    </div>
+    <div class="form-group">
+      <label>Short Introduction</label>
+      <textarea id="kIntro" placeholder="Tell customers about your expertise..."></textarea>
+    </div>
+    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+      <button class="btn btn-primary" id="btnPreview">Preview Profile</button>
+    </div>
+  </div>
+  
+  <!-- Profile Preview View -->
+  <div id="profilePreviewView" style="display:none; width: 100%; margin-bottom: 30px;">
+    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 16px;">Profile Preview</h2>
+    <div class="preview-card">
+      <h3 id="prevName">Name</h3>
+      <div class="preview-meta"><span id="prevTrade">Trade</span> • <span id="prevArea">Area</span> • <span id="prevYears">0</span> years exp.</div>
+      <div class="preview-intro" id="prevIntro">Intro text goes here...</div>
+    </div>
+    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+      <button class="btn btn-secondary" id="btnEdit">Edit Details</button>
+      <button class="btn btn-primary" id="btnSubmit">Final Submit</button>
+    </div>
+  </div>
+  
+  <div class="stat-grid" id="statsGrid" style="display:none;">
+    <div class="stat-card">
+      <div class="stat-card-label">Jobs Completed</div>
+      <div class="stat-card-value">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Active Requests</div>
+      <div class="stat-card-value">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Profile Views</div>
+      <div class="stat-card-value">0</div>
+    </div>
+  </div>
+
+  <div id="recentJobsSection" style="display:none;">
+    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 16px;">Recent Jobs</h2>
+    <div class="job-list">
+      <div style="text-align:center; color:var(--ink-dim); padding: 20px; border: 1px dashed var(--line); border-radius: 12px;">No jobs yet. Complete your profile to get listed!</div>
+    </div>
+  </div>
+</div>
+  <div class="job-list">
+    <div class="job-item">
+      <div class="job-info">
+        <div class="job-title">Shoe Resoling (Sneakers)</div>
+        <div class="job-meta">Today, 2:30 PM • Kamla Nagar</div>
+      </div>
+      <div class="job-status">Pending</div>
+    </div>
+    <div class="job-item">
+      <div class="job-info">
+        <div class="job-title">Watch Battery Replacement</div>
+        <div class="job-meta">Yesterday, 11:00 AM • Model Town</div>
+      </div>
+      <div class="job-status done">Completed</div>
+    </div>
+    <div class="job-item">
+      <div class="job-info">
+        <div class="job-title">Mixer Grinder Motor Fix</div>
+        <div class="job-meta">Oct 12, 4:15 PM • Civil Lines</div>
+      </div>
+      <div class="job-status done">Completed</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    projectId: "repairlink-de1ta",
+    appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+    storageBucket: "repairlink-de1ta.firebasestorage.app",
+    apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+    authDomain: "repairlink-de1ta.firebaseapp.com",
+    messagingSenderId: "4711329582",
+    measurementId: "G-BQ7PBRSGH3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentKaarigarData = null;
+  let currentUser = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = 'Auth.html';
+      return;
+    }
+    currentUser = user;
+    
+    // Check role
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      const role = userDoc.data().role;
+      if (role !== 'admin' && role !== 'kaarigar') {
+        alert("You do not have access to the Kaarigar Dashboard.");
+        window.location.href = 'RepairLink.html';
+      } else {
+        document.getElementById('dashboardContainer').style.display = 'flex';
+        loadKaarigarProfile();
+      }
+    } else {
+      window.location.href = 'Auth.html';
+    }
+  });
+
+  async function loadKaarigarProfile() {
+    try {
+      const kDoc = await getDoc(doc(db, 'kaarigars', currentUser.uid));
+      if (kDoc.exists()) {
+        currentKaarigarData = kDoc.data();
+        
+        // Populate form fields
+        document.getElementById('kName').value = currentKaarigarData.name || '';
+        document.getElementById('kTrade').value = currentKaarigarData.trade || 'cobbler';
+        document.getElementById('kArea').value = currentKaarigarData.area || '';
+        document.getElementById('kYears').value = currentKaarigarData.years || '';
+        document.getElementById('kIntro').value = currentKaarigarData.intro || '';
+        
+        const statusBanner = document.getElementById('profileStatusBanner');
+        if (currentKaarigarData.verified) {
+          statusBanner.textContent = "Profile Status: Approved & Live";
+          statusBanner.className = "profile-status status-live";
+          document.getElementById('profileFormView').style.display = 'none';
+          document.getElementById('profilePreviewView').style.display = 'none';
+          document.getElementById('statsGrid').style.display = 'grid';
+          document.getElementById('recentJobsSection').style.display = 'block';
+        } else {
+          statusBanner.textContent = "Profile Status: Pending Admin Approval";
+          statusBanner.className = "profile-status status-pending";
+          document.getElementById('profileFormView').style.display = 'block';
+        }
+      } else {
+        // No profile exists yet
+        const statusBanner = document.getElementById('profileStatusBanner');
+        statusBanner.textContent = "Profile Status: Incomplete (Please fill out details below)";
+        statusBanner.className = "profile-status status-incomplete";
+        document.getElementById('profileFormView').style.display = 'block';
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  // Navigation Logic
+  document.getElementById('btnPreview').addEventListener('click', () => {
+    // Populate preview
+    document.getElementById('prevName').textContent = document.getElementById('kName').value || 'Unknown';
+    
+    const tradeMap = { 'cobbler': 'Cobbler', 'watch': 'Watch Repairer', 'appliance': 'Appliance Repairer', 'locksmith': 'Locksmith' };
+    document.getElementById('prevTrade').textContent = tradeMap[document.getElementById('kTrade').value];
+    
+    document.getElementById('prevArea').textContent = document.getElementById('kArea').value || 'Unknown Area';
+    document.getElementById('prevYears').textContent = document.getElementById('kYears').value || '0';
+    document.getElementById('prevIntro').textContent = document.getElementById('kIntro').value || 'No intro provided.';
+    
+    document.getElementById('profileFormView').style.display = 'none';
+    document.getElementById('profilePreviewView').style.display = 'block';
+  });
+
+  document.getElementById('btnEdit').addEventListener('click', () => {
+    document.getElementById('profileFormView').style.display = 'block';
+    document.getElementById('profilePreviewView').style.display = 'none';
+  });
+
+  document.getElementById('btnSubmit').addEventListener('click', async () => {
+    const btn = document.getElementById('btnSubmit');
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+    
+    const kData = {
+      name: document.getElementById('kName').value,
+      trade: document.getElementById('kTrade').value,
+      area: document.getElementById('kArea').value,
+      years: parseInt(document.getElementById('kYears').value) || 0,
+      intro: document.getElementById('kIntro').value,
+      verified: false,
+      uid: currentUser.uid,
+      lat: 28.68, // Default approx lat for North Delhi for now
+      lng: 77.20  // Default approx lng
+    };
+    
+    try {
+      await setDoc(doc(db, 'kaarigars', currentUser.uid), kData, { merge: true });
+      alert("Profile submitted! An admin will review it shortly.");
+      loadKaarigarProfile(); // Reloads and resets UI to Pending state
+      
+      document.getElementById('profilePreviewView').style.display = 'none';
+    } catch(err) {
+      console.error(err);
+      alert("Error saving profile: " + err.message);
+    } finally {
+      btn.textContent = 'Final Submit';
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
