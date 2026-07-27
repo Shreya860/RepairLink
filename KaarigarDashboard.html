@@ -133,34 +133,40 @@
     </div>
   </div>
 
-  <div id="recentJobsSection" style="display:none;">
-    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 16px;">Recent Jobs</h2>
+  <div id="activeJobsSection" style="display:none; margin-top:40px;">
+    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 16px;">Active Jobs</h2>
     <div class="job-list">
-      <div style="text-align:center; color:var(--ink-dim); padding: 20px; border: 1px dashed var(--line); border-radius: 12px;">No jobs yet. Complete your profile to get listed!</div>
-    </div>
-  </div>
-</div>
-  <div class="job-list">
-    <div class="job-item">
-      <div class="job-info">
-        <div class="job-title">Shoe Resoling (Sneakers)</div>
-        <div class="job-meta">Today, 2:30 PM • Kamla Nagar</div>
+      <div class="job-item" style="flex-direction:column; align-items:stretch; gap:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="job-info">
+            <div class="job-title">Leather Bag Stitching (Pickup from Saket)</div>
+            <div class="job-meta">Today, 2:30 PM • Needs Doorstep Delivery</div>
+          </div>
+          <select class="job-status" style="border:none; outline:none; font-family:'JetBrains Mono', monospace;">
+            <option value="pending">Picked Up</option>
+            <option value="progress">Repairing</option>
+            <option value="ready">Ready to Drop</option>
+            <option value="done">Delivered</option>
+          </select>
+        </div>
+        
+        <!-- Trust Infrastructure: Before/After Photos -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--paper-2); padding:16px; border-radius:8px;">
+          <div>
+            <div style="font-size:12px; font-weight:700; margin-bottom:8px;">BEFORE REPAIR</div>
+            <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;">
+              + Upload Photo
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; font-weight:700; margin-bottom:8px;">AFTER REPAIR</div>
+            <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;">
+              + Upload Photo
+            </div>
+          </div>
+        </div>
+        <p style="font-size:11px; color:var(--ink-dim); margin:0;">* Required for trust verification badge.</p>
       </div>
-      <div class="job-status">Pending</div>
-    </div>
-    <div class="job-item">
-      <div class="job-info">
-        <div class="job-title">Watch Battery Replacement</div>
-        <div class="job-meta">Yesterday, 11:00 AM • Model Town</div>
-      </div>
-      <div class="job-status done">Completed</div>
-    </div>
-    <div class="job-item">
-      <div class="job-info">
-        <div class="job-title">Mixer Grinder Motor Fix</div>
-        <div class="job-meta">Oct 12, 4:15 PM • Civil Lines</div>
-      </div>
-      <div class="job-status done">Completed</div>
     </div>
   </div>
 </div>
@@ -230,7 +236,7 @@
           document.getElementById('profileFormView').style.display = 'none';
           document.getElementById('profilePreviewView').style.display = 'none';
           document.getElementById('statsGrid').style.display = 'grid';
-          document.getElementById('recentJobsSection').style.display = 'block';
+          document.getElementById('activeJobsSection').style.display = 'block';
         } else {
           statusBanner.textContent = "Profile Status: Pending Admin Approval";
           statusBanner.className = "profile-status status-pending";

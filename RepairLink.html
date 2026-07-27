@@ -157,6 +157,12 @@
         <svg viewBox="0 0 24 24" fill="#083318"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.77.46 3.45 1.35 4.95L2 22l5.28-1.39a9.9 9.9 0 004.76 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.87 14.02c-.25.7-1.25 1.29-2.03 1.45-.55.12-1.26.21-3.66-.78-3.08-1.27-5.06-4.4-5.21-4.6-.15-.2-1.24-1.65-1.24-3.15s.78-2.23 1.06-2.53c.25-.27.55-.34.73-.34.19 0 .37 0 .53.01.17.01.4-.06.62.48.25.6.85 2.08.92 2.23.07.15.12.32.02.51-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.75 1.24 1.62 2.01 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.17-.2.72-.84.92-1.13.2-.29.4-.24.65-.14.27.1 1.7.8 1.99.95.3.15.5.22.57.35.07.12.07.72-.19 1.42z"/></svg>
         <span data-i18n="messageWhatsapp">Message this kaarigar on WhatsApp</span>
       </a>
+      <div class="action-row" style="margin-bottom:12px;">
+        <button class="action-btn done" id="bookPickupBtn" style="background:var(--marigold); color:var(--ink); width:100%; justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span data-i18n="bookPickup">Book Doorstep Pick-and-Drop</span>
+        </button>
+      </div>
       <div class="action-row">
         <button class="action-btn done" id="markDoneBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
@@ -176,6 +182,42 @@
       <h2 id="resultsLocality">—</h2>
     </div>
     <div class="results-list" id="resultsList"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="bookingModal" style="display:none;">
+  <div class="modal-container">
+    <button class="modal-close" onclick="document.getElementById('bookingModal').style.display='none'">&times;</button>
+    <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Book Doorstep Pick-and-Drop</h2>
+    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Our delivery partner will pick up your item, take it to the Kaarigar, and drop it back when fixed.</p>
+    
+    <div class="field-group">
+      <label>What needs fixing?</label>
+      <input type="text" id="bookingItem" placeholder="e.g. Leather boots sole replacement">
+    </div>
+    <div class="field-group">
+      <label>Pickup & Drop Address</label>
+      <textarea id="bookingAddress" placeholder="e.g. 12B, Saket Block M"></textarea>
+    </div>
+    
+    <div style="background:var(--paper-2); padding:16px; border-radius:12px; margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+        <span>Estimated Repair</span>
+        <span style="font-weight:600;">₹150 - ₹300</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:14px; color:var(--ink-dim);">
+        <span>Platform Convenience Fee</span>
+        <span>₹40</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; border-top:1px dashed var(--line); padding-top:12px;">
+        <span>Pay on completion</span>
+        <span>As per final quote + ₹40</span>
+      </div>
+    </div>
+    
+    <button class="form-submit" id="confirmBookingBtn">
+      <span style="font-weight:600; text-align:center; width:100%;">Confirm Pickup</span>
+    </button>
   </div>
 </div>
 
