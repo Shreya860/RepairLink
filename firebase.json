@@ -1,0 +1,37 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "auth": {
+    "authorizedDomains": [
+      "localhost",
+      "repairlink-de1ta.firebaseapp.com",
+      "repairlink-de1ta.web.app"
+    ],
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "RepairLink",
+        "supportEmail": "ashu.chhapra.br@gmail.com"
+      }
+    }
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "firestore.rules",
+      "firestore.indexes.json",
+      "**/.*",
+      "**/node_modules/**",
+      "RepairLink Files/**",
+      "README.md"
+    ],
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/RepairLink.html"
+      }
+    ]
+  }
+}

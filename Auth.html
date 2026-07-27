@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — RepairLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    min-height: 100vh; 
+    background-color: var(--canvas); 
+    padding: 20px;
+  }
+  .auth-container { 
+    max-width: 400px; 
+    width: 100%; 
+    background: var(--paper); 
+    border: 1px solid var(--line); 
+    border-radius: 20px; 
+    padding: 40px; 
+    box-shadow: 0 20px 50px rgba(34,29,20,0.12); 
+    text-align: center; 
+  }
+  .logo { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .logo-leaf { color: var(--leaf); }
+  .auth-title { font-family: 'Fraunces', serif; font-size: 24px; color: var(--ink); margin-bottom: 12px; margin-top: 24px; }
+  .auth-subtitle { font-size: 14px; color: var(--ink-dim); margin-bottom: 32px; line-height: 1.5; }
+  
+  .google-btn { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 12px; 
+    width: 100%; 
+    padding: 14px 20px; 
+    background: #fff; 
+    border: 1px solid var(--line); 
+    border-radius: 999px; 
+    font-family: 'Manrope', sans-serif; 
+    font-weight: 600; 
+    font-size: 15px; 
+    color: var(--ink); 
+    cursor: pointer; 
+    transition: all 0.2s; 
+  }
+  .google-btn:hover { background: var(--paper-2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .google-btn img { width: 20px; height: 20px; }
+
+  /* Role Selection UI (Hidden by default) */
+  #roleSelection { display: none; margin-top: 24px; text-align: left; }
+  .role-label { font-weight: 600; color: var(--ink); margin-bottom: 12px; display: block; }
+  .role-option {
+    display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+  }
+  .role-option:hover { border-color: var(--ink); background: var(--paper-2); }
+  .role-option input { display: none; }
+  .role-option.selected { border-color: var(--marigold); background: var(--marigold-dim); }
+  .role-title { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .role-desc { font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+  
+  .btn-submit { 
+    width: 100%; padding: 14px 20px; background: var(--ink); color: #fff; border: none; border-radius: 999px; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.2s; margin-top: 12px; 
+  }
+  .btn-submit:hover { background: #000; transform: translateY(-1px); }
+
+  #errorMessage { color: #d32f2f; font-size: 13px; margin-top: 16px; display: none; }
+</style>
+</head>
+<body>
+
+<div class="auth-container" id="authStep1">
+  <div class="logo">RepairLink<span class="logo-leaf">.</span></div>
+  <h1 class="auth-title">Welcome back</h1>
+  <p class="auth-subtitle">Sign in to find kaarigars near you or manage your repair shop profile.</p>
+  
+  <button class="google-btn" id="googleSignInBtn">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+    Continue with Google
+  </button>
+  <div id="errorMessage"></div>
+</div>
+
+<div class="auth-container" id="authStep2" style="display: none;">
+  <div class="logo">RepairLink<span class="logo-leaf">.</span></div>
+  <h1 class="auth-title">Choose your role</h1>
+  <p class="auth-subtitle">It looks like you're new here! How do you want to use RepairLink?</p>
+  
+  <div id="roleSelection" style="display: block;">
+    <label class="role-option selected" id="optUser">
+      <input type="radio" name="role" value="user" checked>
+      <div>
+        <div class="role-title">I am a Customer</div>
+        <div class="role-desc">I want to find kaarigars to repair my items.</div>
+      </div>
+    </label>
+    
+    <label class="role-option" id="optKaarigar">
+      <input type="radio" name="role" value="kaarigar">
+      <div>
+        <div class="role-title">I am a Kaarigar</div>
+        <div class="role-desc">I want to list my repair shop and manage jobs.</div>
+      </div>
+    </label>
+    
+    <button class="btn-submit" id="completeSignupBtn">Complete Signup</button>
+  </div>
+</div>
+
+<script type="module" src="auth.js"></script>
+<script>
+  function selectRole(selectedId) {
+    document.getElementById('optUser').classList.remove('selected');
+    document.getElementById('optKaarigar').classList.remove('selected');
+    
+    document.getElementById(selectedId).classList.add('selected');
+    document.getElementById(selectedId).querySelector('input').checked = true;
+  }
+
+  document.getElementById('optUser').addEventListener('click', () => selectRole('optUser'));
+  document.getElementById('optKaarigar').addEventListener('click', () => selectRole('optKaarigar'));
+</script>
+</body>
+</html>

@@ -1,3 +1,72 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+const firebaseConfig = {
+  projectId: "repairlink-de1ta",
+  appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+  storageBucket: "repairlink-de1ta.firebasestorage.app",
+  apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+  authDomain: "repairlink-de1ta.firebaseapp.com",
+  messagingSenderId: "4711329582",
+  measurementId: "G-BQ7PBRSGH3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+let windowCurrentUser = null;
+onAuthStateChanged(auth, async (user) => {
+  const navLogin = document.getElementById('navLogin');
+  const navLogout = document.getElementById('navLogout');
+  
+  if (user) {
+    windowCurrentUser = user;
+    if(navLogin) navLogin.style.display = 'none';
+    if(navLogout) navLogout.style.display = 'inline-block';
+    
+    // Check if admin to inject Admin link
+    try {
+      const { getDoc, doc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if(userDoc.exists() && userDoc.data().role === 'admin') {
+        const nav = navLogout.parentNode;
+        if(!document.getElementById('navAdmin')) {
+          const adminLink = document.createElement('a');
+          adminLink.id = 'navAdmin';
+          adminLink.href = 'Admin.html';
+          adminLink.textContent = 'Admin Panel';
+          adminLink.style.color = '#FF4C3B';
+          adminLink.style.textDecoration = 'none';
+          nav.insertBefore(adminLink, navLogout);
+        }
+      }
+    } catch(err) {
+      console.error(err);
+    }
+    
+  } else {
+    windowCurrentUser = null;
+    if(navLogin) navLogin.style.display = 'inline-block';
+    if(navLogout) navLogout.style.display = 'none';
+    const navAdmin = document.getElementById('navAdmin');
+    if(navAdmin) navAdmin.remove();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const navLogout = document.getElementById('navLogout');
+  if(navLogout) {
+    navLogout.addEventListener('click', (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.reload();
+      });
+    });
+  }
+});
+
 // ---------- Translation / Localization Helper ----------
   let currentLang = 'en';
   const translations = {
@@ -190,7 +259,7 @@
       icon:'<circle fill="CURR" cx="7.2" cy="16.8" r="3.6"/><path stroke="CURR" stroke-width="2.6" stroke-linecap="round" fill="none" d="M9.7 14.3L18.5 5.5"/><path stroke="CURR" stroke-width="2.2" stroke-linecap="round" fill="none" d="M18.5 5.5l2.3 2.3M15.9 8.1l2.1 2.1"/>' }
   };
 
-  const ARTISANS = [
+  let ARTISANS = [
     { name:"Ramesh Kumar", trade:"cobbler", phone:"919876507001", years:11, hours:"10 AM – 7 PM · Closed Sun", lat:28.6667, lng:77.2286, area:"Kashmere Gate",
       s1:"Hey! I'm Ramesh — I've been sitting right here near Kashmere Gate for the past 11 years.",
       s2:"I've repaired more than 5,000 shoes in that time and I keep my rates minimal, because everyone deserves a well-fitting pair. I sit from 10 AM to 7 PM, but not on Sundays — that's family day." },
@@ -265,29 +334,36 @@
       s2:"A lot of my work here is repairing old padlocks rather than replacing them — most can be saved with the right part." }
   ];
 
-  const localityMap = new Map();
-  ARTISANS.forEach(a => { if(!localityMap.has(a.area)) localityMap.set(a.area, {lat:a.lat, lng:a.lng}); });
-  const LOCALITIES = Array.from(localityMap, ([name, c]) => ({name, ...c})).sort((a,b)=>a.name.localeCompare(b.name));
+  let LOCALITIES = [];
+  let localityMap = new Map();
+  let map, markers = [];
 
-  const localitySelect = document.getElementById('localitySelect');
-  LOCALITIES.forEach(loc => {
-    const opt = document.createElement('option');
-    opt.value = loc.name; opt.textContent = loc.name;
-    localitySelect.appendChild(opt);
-  });
+  function initApp() {
+    localityMap = new Map();
+    ARTISANS.forEach(a => { if(!localityMap.has(a.area)) localityMap.set(a.area, {lat:a.lat, lng:a.lng}); });
+    LOCALITIES = Array.from(localityMap, ([name, c]) => ({name, ...c})).sort((a,b)=>a.name.localeCompare(b.name));
 
-  // Legend icons setup
-  document.getElementById('legendCobbler').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.cobbler.icon.replaceAll('CURR', TRADES.cobbler.color)}</svg>`;
-  document.getElementById('legendWatch').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.watch.icon.replaceAll('CURR', TRADES.watch.color)}</svg>`;
-  document.getElementById('legendAppliance').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.appliance.icon.replaceAll('CURR', TRADES.appliance.color)}</svg>`;
-  document.getElementById('legendLocksmith').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.locksmith.icon.replaceAll('CURR', TRADES.locksmith.color)}</svg>`;
-  function refreshLegendPrices(){
-    document.getElementById('legendPriceCobbler').textContent = `${t18n('estLabel')} ${TRADES.cobbler.price}`;
-    document.getElementById('legendPriceWatch').textContent = `${t18n('estLabel')} ${TRADES.watch.price}`;
-    document.getElementById('legendPriceAppliance').textContent = `${t18n('estLabel')} ${TRADES.appliance.price}`;
-    document.getElementById('legendPriceLocksmith').textContent = `${t18n('estLabel')} ${TRADES.locksmith.price}`;
-  }
-  refreshLegendPrices();
+    const localitySelect = document.getElementById('localitySelect');
+    localitySelect.innerHTML = '<option value="" data-i18n="localityPlaceholder">Choose your area in North Delhi…</option>';
+    LOCALITIES.forEach(loc => {
+      const opt = document.createElement('option');
+      opt.value = loc.name; opt.textContent = loc.name;
+      localitySelect.appendChild(opt);
+    });
+
+    // Legend icons setup
+    document.getElementById('legendCobbler').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.cobbler.icon.replaceAll('CURR', TRADES.cobbler.color)}</svg>`;
+    document.getElementById('legendWatch').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.watch.icon.replaceAll('CURR', TRADES.watch.color)}</svg>`;
+    document.getElementById('legendAppliance').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.appliance.icon.replaceAll('CURR', TRADES.appliance.color)}</svg>`;
+    document.getElementById('legendLocksmith').innerHTML = `<svg viewBox="0 0 24 24">${TRADES.locksmith.icon.replaceAll('CURR', TRADES.locksmith.color)}</svg>`;
+    
+    function refreshLegendPrices(){
+      document.getElementById('legendPriceCobbler').textContent = `${t18n('estLabel')} ${TRADES.cobbler.price}`;
+      document.getElementById('legendPriceWatch').textContent = `${t18n('estLabel')} ${TRADES.watch.price}`;
+      document.getElementById('legendPriceAppliance').textContent = `${t18n('estLabel')} ${TRADES.appliance.price}`;
+      document.getElementById('legendPriceLocksmith').textContent = `${t18n('estLabel')} ${TRADES.locksmith.price}`;
+    }
+    refreshLegendPrices();
 
   // ---------- Map Setup ----------
   const map = L.map('map', { zoomControl:false, attributionControl:true }).setView([28.74, 77.18], 11.4);
@@ -632,9 +708,42 @@
     if(!panelWasOpen){ closePanel(); }
   }
 
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentLang = btn.dataset.lang;
-      applyTranslations();
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentLang = btn.dataset.lang;
+        applyTranslations();
+      });
     });
-  });
+  } // end of initApp
+
+  // Fetch data from Firestore
+  async function loadData() {
+    try {
+      const kaarigarsCol = collection(db, 'kaarigars');
+      const snapshot = await getDocs(kaarigarsCol);
+      if (snapshot.size < 24) {
+        console.log("Firestore data is incomplete. Uploading mock data...");
+        // Seed the database
+        for (let i = 0; i < ARTISANS.length; i++) {
+          const artisan = ARTISANS[i];
+          await setDoc(doc(db, 'kaarigars', `kaarigar-${i}`), artisan);
+        }
+        console.log("Mock data uploaded successfully.");
+        // ARTISANS array is already full of the local mock data, so we proceed.
+      } else {
+        // We have data in Firestore!
+        const fetchedData = [];
+        snapshot.forEach(doc => {
+          fetchedData.push(doc.data());
+        });
+        ARTISANS = fetchedData;
+        console.log("Fetched from Firestore:", ARTISANS);
+      }
+      initApp();
+    } catch(err) {
+      console.error("Firestore fetch error, using fallback data", err);
+      initApp();
+    }
+  }
+
+  loadData();
