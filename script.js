@@ -632,45 +632,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const roleScrim = document.getElementById('roleScrim');
   const roleCustomer = document.getElementById('roleCustomer');
   const roleArtisan = document.getElementById('roleArtisan');
-  const artisanShell = document.getElementById('artisanShell');
-  const artisanBack = document.getElementById('artisanBack');
 
   roleCustomer.addEventListener('click', () => {
     roleScrim.classList.add('closed');
   });
 
   roleArtisan.addEventListener('click', () => {
-    roleScrim.classList.add('closed');
-    document.getElementById('heroScrim').classList.add('closed');
-    artisanShell.classList.add('open');
-  });
-
-  artisanBack.addEventListener('click', () => {
-    artisanShell.classList.remove('open');
-    roleScrim.classList.remove('closed');
-  });
-
-  document.getElementById('afSubmit').addEventListener('click', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('afName').value || "New Kaarigar";
-    const trade = document.getElementById('afTrade').value;
-    const years = document.getElementById('afYears').value || "1";
-    const hours = document.getElementById('afHours').value || "10 AM – 7 PM";
-    const intro = document.getElementById('afIntro').value || "Serving customers locally with reliable repairs.";
-
-    document.getElementById('afPreviewName').textContent = name;
-    document.getElementById('afPreviewTradeTag').textContent = tradeLabel(trade);
-    document.getElementById('afPreviewIntro').textContent = intro;
-    document.getElementById('afPreviewHours').textContent = hours;
-    document.getElementById('afPreviewYears').textContent = years + " " + t18n('yrsLabel');
-
-    document.getElementById('artisanFormCard').style.display = 'none';
-    document.getElementById('artisanPreviewCard').style.display = 'block';
-  });
-
-  document.getElementById('afAnother').addEventListener('click', () => {
-    document.getElementById('artisanFormCard').style.display = 'block';
-    document.getElementById('artisanPreviewCard').style.display = 'none';
+    window.location.href = 'Auth.html';
   });
 
   // Toast logic
