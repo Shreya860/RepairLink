@@ -28,6 +28,14 @@
   .nav-header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .nav-header a { font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
   .nav-header a:hover { color: var(--marigold); }
+  
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-container { background: var(--paper); border-radius: 20px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto; }
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ink-dim); }
+  .modal-close:hover { color: var(--ink); }
+  .detail-row { margin-bottom: 12px; }
+  .detail-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 4px; }
+  .detail-value { font-size: 15px; font-weight: 600; color: var(--ink); word-wrap: break-word; }
 </style>
 </head>
 <body>
@@ -75,6 +83,14 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="detailsModal">
+  <div class="modal-container">
+    <button class="modal-close" onclick="document.getElementById('detailsModal').style.display='none'">&times;</button>
+    <h2 id="modalTitle" style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:20px;">Details</h2>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
@@ -111,6 +127,9 @@
     }
   });
 
+  window.adminUsersData = {};
+  window.adminKaarigarsData = {};
+
   async function loadData() {
     const usersBody = document.getElementById('usersTableBody');
     const kaarigarsBody = document.getElementById('kaarigarsTableBody');
@@ -121,10 +140,11 @@
       usersBody.innerHTML = '';
       usersSnap.forEach(d => {
         const u = d.data();
+        window.adminUsersData[d.id] = u;
         const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
         usersBody.innerHTML += `
           <tr>
-            <td style="font-weight:600">${u.displayName || 'No Name'}</td>
+            <td style="font-weight:600"><a href="#" onclick="showUserDetails('${d.id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${u.displayName || 'No Name'}</a></td>
             <td>${u.email}</td>
             <td><span class="badge ${u.role}">${u.role}</span></td>
             <td>${dateStr}</td>
@@ -142,6 +162,7 @@
       kaarigarsSnap.forEach(d => {
         const k = d.data();
         const id = d.id;
+        window.adminKaarigarsData[id] = k;
         
         let actionHtml = '';
         if (k.verified) {
@@ -152,7 +173,7 @@
         
         kaarigarsBody.innerHTML += `
           <tr>
-            <td style="font-weight:600">${k.name || 'Unknown'}</td>
+            <td style="font-weight:600"><a href="#" onclick="showKaarigarDetails('${id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${k.name || 'Unknown'}</a></td>
             <td>${k.trade || 'N/A'}</td>
             <td>${k.area || 'N/A'}</td>
             <td>${actionHtml}</td>
@@ -174,6 +195,37 @@
     } catch(err) {
       alert("Error approving kaarigar: " + err.message);
     }
+  }
+
+  window.showUserDetails = function(id) {
+    const u = window.adminUsersData[id];
+    document.getElementById('modalTitle').textContent = "User Details";
+    document.getElementById('modalContent').innerHTML = `
+      <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${u.displayName || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${u.email || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">Role</div><div class="detail-value">${u.role || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">ID</div><div class="detail-value" style="font-family:'JetBrains Mono', monospace; font-size:12px;">${u.uid || id}</div></div>
+      <div class="detail-row"><div class="detail-label">Profile Image</div><div class="detail-value">${u.photoURL ? `<img src="${u.photoURL}" width="50" style="border-radius:50%">` : 'None'}</div></div>
+    `;
+    document.getElementById('detailsModal').style.display = 'flex';
+  }
+
+  window.showKaarigarDetails = function(id) {
+    const k = window.adminKaarigarsData[id];
+    document.getElementById('modalTitle').textContent = "Kaarigar Details";
+    let contentHtml = '';
+    
+    // Sort keys alphabetically for neatness
+    const keys = Object.keys(k).sort();
+    for(const key of keys) {
+      // Don't show raw lat/lng objects or very long data if we don't want to, but for admin it's fine.
+      let val = k[key];
+      if (typeof val === 'object') val = JSON.stringify(val);
+      contentHtml += `<div class="detail-row"><div class="detail-label">${key}</div><div class="detail-value">${val}</div></div>`;
+    }
+    
+    document.getElementById('modalContent').innerHTML = contentHtml;
+    document.getElementById('detailsModal').style.display = 'flex';
   }
 </script>
 </body>
