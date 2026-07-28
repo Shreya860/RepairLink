@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="RepairLink — Local Repair Experts">
+<meta property="og:description" content="Mapping North Delhi's kaarigars — repair first, recycle what's left. Find your nearest cobbler, mechanic, and repair shops instantly.">
+<meta property="og:image" content="https://repairlink-de1ta.web.app/logo.png">
+<meta property="og:url" content="https://repairlink-de1ta.web.app/">
+<meta name="twitter:card" content="summary_large_image">
 <title>My Dashboard — RepairLink</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -89,9 +95,10 @@
   <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 40px;">
     <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Refer & Earn Waste Points</h2>
     <p style="font-size: 14px; color: var(--ink-dim); margin-bottom: 20px; line-height: 1.5;">Invite your friends to use RepairLink and both of you will get <strong>100 bonus Waste Points</strong> when they complete their first repair!</p>
-    <div style="display: flex; gap: 12px; align-items: center;">
-      <input type="text" id="referralLink" value="https://repairlink.in/ref/USER123" readonly style="flex: 1; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #fff; color: var(--ink-dim);">
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <input type="text" id="referralLink" value="https://repairlink-de1ta.web.app" readonly style="flex: 1; min-width: 200px; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #fff; color: var(--ink-dim);">
       <button onclick="navigator.clipboard.writeText(document.getElementById('referralLink').value); alert('Referral link copied!');" style="padding: 12px 20px; background: var(--marigold); color: #2A1E00; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Copy Link</button>
+      <a href="https://wa.me/?text=I%20just%20found%20local%20repair%20experts%20in%20North%20Delhi%20on%20RepairLink!%20Check%20it%20out:%20https://repairlink-de1ta.web.app" target="_blank" style="padding: 12px 20px; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center;">Share on WhatsApp</a>
     </div>
   </div>
 
