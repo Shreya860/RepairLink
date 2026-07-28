@@ -103,6 +103,32 @@
   <span data-i18n="chatCtaText">AI Support</span>
 </button>
 
+<audio id="themeSong" loop>
+  <source src="theme-song.mp3" type="audio/mpeg">
+</audio>
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 30px; left: 30px; z-index: 1000; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); padding: 12px 20px; border-radius: 99px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink); transition: all 0.3s ease;">
+  <span id="musicIcon">🎵</span>
+  <span id="musicText">Play Theme</span>
+</button>
+<script>
+  function toggleMusic() {
+    const audio = document.getElementById('themeSong');
+    const text = document.getElementById('musicText');
+    const btn = document.getElementById('musicBtn');
+    if (audio.paused) {
+      audio.play();
+      text.innerText = 'Pause Theme';
+      btn.style.background = 'var(--leaf)';
+      btn.style.color = 'white';
+    } else {
+      audio.pause();
+      text.innerText = 'Play Theme';
+      btn.style.background = 'rgba(255,255,255,0.7)';
+      btn.style.color = 'var(--ink)';
+    }
+  }
+</script>
+
 <div class="locate-box">
   <div class="locate-eyebrow" data-i18n="locateEyebrow">Find your nearest kaarigar</div>
   <h3 data-i18n="locateHeading">Select your location and we'll show you the closest artisan of each trade — in no time.</h3>
