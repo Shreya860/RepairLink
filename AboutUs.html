@@ -66,9 +66,46 @@
       <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
     <h2 style="font-family:'Fraunces',serif; font-size: 22px; color: var(--ink); margin-bottom: 8px;">Experience the RepairLink Vibe 🎵</h2>
-    <p style="font-size: 14px; margin-bottom: 0;">We believe fixing things shouldn't be boring. Head over to our <a href="RepairLink.html" style="color:var(--leaf); font-weight:700; text-decoration:none;">Interactive Map</a> and click the floating music button to explore local kaarigars while listening to our exclusive, custom-produced theme song!</p>
+    <p style="font-size: 14px; margin-bottom: 16px;">We believe fixing things shouldn't be boring. You can listen to our exclusive, custom-produced theme song right here!</p>
+    
+    <audio id="aboutThemeSong" loop>
+      <source src="theme-song.mp3" type="audio/mpeg">
+    </audio>
+    <button id="aboutMusicBtn" onclick="toggleAboutMusic()" style="background: var(--paper); border: 1px solid var(--line); padding: 10px 16px; border-radius: 99px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; color: var(--ink); transition: background 0.3s ease, color 0.3s ease;">
+      <span id="aboutMusicIcon">▶️</span>
+      <span id="aboutMusicText">Play Theme</span>
+    </button>
   </div>
 </div>
+
+<script>
+  // Initial state: pause animations
+  document.querySelectorAll('.bar').forEach(bar => bar.style.animationPlayState = 'paused');
+
+  function toggleAboutMusic() {
+    const audio = document.getElementById('aboutThemeSong');
+    const text = document.getElementById('aboutMusicText');
+    const btn = document.getElementById('aboutMusicBtn');
+    const icon = document.getElementById('aboutMusicIcon');
+    const bars = document.querySelectorAll('.bar');
+
+    if (audio.paused) {
+      audio.play();
+      text.innerText = 'Pause Theme';
+      icon.innerText = '⏸️';
+      btn.style.background = 'var(--leaf)';
+      btn.style.color = 'white';
+      bars.forEach(bar => bar.style.animationPlayState = 'running');
+    } else {
+      audio.pause();
+      text.innerText = 'Play Theme';
+      icon.innerText = '▶️';
+      btn.style.background = 'var(--paper)';
+      btn.style.color = 'var(--ink)';
+      bars.forEach(bar => bar.style.animationPlayState = 'paused');
+    }
+  }
+</script>
 
 </body>
 </html>
