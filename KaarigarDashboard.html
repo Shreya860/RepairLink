@@ -174,7 +174,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     projectId: "repairlink-de1ta",
@@ -237,6 +237,7 @@
           document.getElementById('profilePreviewView').style.display = 'none';
           document.getElementById('statsGrid').style.display = 'grid';
           document.getElementById('activeJobsSection').style.display = 'block';
+          loadActiveJobs();
         } else {
           statusBanner.textContent = "Profile Status: Pending Admin Approval";
           statusBanner.className = "profile-status status-pending";
@@ -306,6 +307,87 @@
       btn.disabled = false;
     }
   });
+
+  async function loadActiveJobs() {
+    const jobList = document.querySelector('#activeJobsSection .job-list');
+    jobList.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">Loading active jobs...</div>';
+    
+    try {
+      const q = query(collection(db, "orders"), where("kaarigarId", "==", currentUser.uid));
+      const querySnapshot = await getDocs(q);
+      
+      if (querySnapshot.empty) {
+        jobList.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No active jobs right now.</div>';
+        return;
+      }
+
+      jobList.innerHTML = '';
+      
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const dateStr = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : 'Just now';
+        
+        const jobHTML = `
+          <div class="job-item" style="flex-direction:column; align-items:stretch; gap:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="job-info">
+                <div class="job-title">${data.item}</div>
+                <div class="job-meta">${dateStr} • ${data.address}</div>
+              </div>
+              <select class="job-status" data-id="${docSnap.id}" style="border:none; outline:none; font-family:'JetBrains Mono', monospace;" onchange="updateJobStatus(this)">
+                <option value="pending" ${data.status==='pending'?'selected':''}>Picked Up</option>
+                <option value="progress" ${data.status==='progress'?'selected':''}>Repairing</option>
+                <option value="ready" ${data.status==='ready'?'selected':''}>Ready to Drop</option>
+                <option value="done" ${data.status==='done'?'selected':''}>Delivered</option>
+              </select>
+            </div>
+            
+            <!-- Trust Infrastructure: Before/After Photos -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--paper-2); padding:16px; border-radius:8px;">
+              <div>
+                <div style="font-size:12px; font-weight:700; margin-bottom:8px;">BEFORE REPAIR</div>
+                <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;" onclick="alert('Photo upload flow will be built here!')">
+                  + Upload Photo
+                </div>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; margin-bottom:8px;">AFTER REPAIR</div>
+                <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;" onclick="alert('Photo upload flow will be built here!')">
+                  + Upload Photo
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        jobList.innerHTML += jobHTML;
+      });
+      
+    } catch (e) {
+      console.error("Error loading jobs:", e);
+      jobList.innerHTML = '<div style="text-align:center; padding:20px; color:red;">Failed to load jobs.</div>';
+    }
+  }
+
+  // Make update status function available globally
+  window.updateJobStatus = async function(selectEl) {
+    const newStatus = selectEl.value;
+    const jobId = selectEl.getAttribute('data-id');
+    try {
+      await updateDoc(doc(db, "orders", jobId), { status: newStatus });
+      
+      // Update badge color instantly
+      if(newStatus === 'done' || newStatus === 'ready') {
+         selectEl.style.background = 'var(--leaf-dim)';
+         selectEl.style.color = '#1F7A44';
+      } else {
+         selectEl.style.background = 'var(--marigold-dim)';
+         selectEl.style.color = '#8A5C00';
+      }
+    } catch(e) {
+      console.error("Failed to update status:", e);
+      alert("Failed to update job status.");
+    }
+  }
 </script>
 </body>
 </html>

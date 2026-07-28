@@ -85,6 +85,15 @@
     </div>
   </div>
 
+  <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 40px;">
+    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Refer & Earn Waste Points</h2>
+    <p style="font-size: 14px; color: var(--ink-dim); margin-bottom: 20px; line-height: 1.5;">Invite your friends to use RepairLink and both of you will get <strong>100 bonus Waste Points</strong> when they complete their first repair!</p>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <input type="text" id="referralLink" value="https://repairlink.in/ref/USER123" readonly style="flex: 1; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #fff; color: var(--ink-dim);">
+      <button onclick="navigator.clipboard.writeText(document.getElementById('referralLink').value); alert('Referral link copied!');" style="padding: 12px 20px; background: var(--marigold); color: #2A1E00; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Copy Link</button>
+    </div>
+  </div>
+
   <h2 class="section-title">Saved Kaarigars</h2>
   <div class="list-container">
     <div class="list-item">

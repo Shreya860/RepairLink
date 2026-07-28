@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -658,6 +658,65 @@ document.addEventListener('DOMContentLoaded', () => {
     this.classList.add('confirmed');
     showToast(t18n('toastReport'));
   });
+
+  // ---------- Booking Logic (Firestore) ----------
+  const bookPickupBtn = document.getElementById('bookPickupBtn');
+  const bookingModal = document.getElementById('bookingModal');
+  const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+
+  if (bookPickupBtn) {
+    bookPickupBtn.addEventListener('click', () => {
+      if (!windowCurrentUser) {
+        showToast("Please log in to book a pickup!");
+        setTimeout(() => window.location.href = 'Auth.html', 1500);
+        return;
+      }
+      bookingModal.style.display = 'flex';
+    });
+  }
+
+  if (confirmBookingBtn) {
+    confirmBookingBtn.addEventListener('click', async () => {
+      const item = document.getElementById('bookingItem').value;
+      const addr = document.getElementById('bookingAddress').value;
+      
+      if (!item || !addr) {
+        showToast("Please fill in what needs fixing and your address.");
+        return;
+      }
+      
+      if (!windowCurrentUser || !currentArtisan) {
+        showToast("Error: Missing user or artisan info.");
+        return;
+      }
+
+      confirmBookingBtn.disabled = true;
+      confirmBookingBtn.innerHTML = "Booking...";
+
+      try {
+        await addDoc(collection(db, "orders"), {
+          item: item,
+          address: addr,
+          customerId: windowCurrentUser.uid,
+          kaarigarId: currentArtisan.id || currentArtisan.name,
+          kaarigarName: currentArtisan.name,
+          status: "pending",
+          createdAt: new Date()
+        });
+
+        bookingModal.style.display = 'none';
+        showToast("Booking Confirmed! Our delivery partner will contact you shortly.");
+        document.getElementById('bookingItem').value = '';
+        document.getElementById('bookingAddress').value = '';
+      } catch (err) {
+        console.error("Booking failed:", err);
+        showToast("Failed to confirm booking.");
+      } finally {
+        confirmBookingBtn.disabled = false;
+        confirmBookingBtn.innerHTML = "<span style=\"font-weight:600; text-align:center; width:100%;\">Confirm Pickup</span>";
+      }
+    });
+  }
 
   // ---------- Language Toggle Wiring ----------
   function applyTranslations(){
