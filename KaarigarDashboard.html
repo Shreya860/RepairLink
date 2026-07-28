@@ -59,6 +59,7 @@
     </div>
     <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
       <a href="RepairLink.html" style="color: var(--ink); text-decoration: none;">Home</a>
+      <a href="Pricing.html" style="color: var(--ink); text-decoration: none;">Pricing Guide</a>
       <a href="AboutUs.html" style="color: var(--ink); text-decoration: none;">About Us</a>
       <a href="KaarigarDashboard.html" id="navDashboard" style="color: var(--leaf); text-decoration: none;">Dashboard</a>
       <a href="Contact.html" style="color: var(--ink); text-decoration: none;">Contact</a>
@@ -136,37 +137,7 @@
   <div id="activeJobsSection" style="display:none; margin-top:40px;">
     <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 16px;">Active Jobs</h2>
     <div class="job-list">
-      <div class="job-item" style="flex-direction:column; align-items:stretch; gap:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="job-info">
-            <div class="job-title">Leather Bag Stitching (Pickup from Saket)</div>
-            <div class="job-meta">Today, 2:30 PM • Needs Doorstep Delivery</div>
-          </div>
-          <select class="job-status" style="border:none; outline:none; font-family:'JetBrains Mono', monospace;">
-            <option value="pending">Picked Up</option>
-            <option value="progress">Repairing</option>
-            <option value="ready">Ready to Drop</option>
-            <option value="done">Delivered</option>
-          </select>
-        </div>
-        
-        <!-- Trust Infrastructure: Before/After Photos -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--paper-2); padding:16px; border-radius:8px;">
-          <div>
-            <div style="font-size:12px; font-weight:700; margin-bottom:8px;">BEFORE REPAIR</div>
-            <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;">
-              + Upload Photo
-            </div>
-          </div>
-          <div>
-            <div style="font-size:12px; font-weight:700; margin-bottom:8px;">AFTER REPAIR</div>
-            <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;">
-              + Upload Photo
-            </div>
-          </div>
-        </div>
-        <p style="font-size:11px; color:var(--ink-dim); margin:0;">* Required for trust verification badge.</p>
-      </div>
+      <!-- Jobs will be populated here by loadActiveJobs() -->
     </div>
   </div>
 </div>
@@ -175,6 +146,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
 
   const firebaseConfig = {
     projectId: "repairlink-de1ta",
@@ -189,6 +161,7 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   let currentKaarigarData = null;
   let currentUser = null;
@@ -346,15 +319,17 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:var(--paper-2); padding:16px; border-radius:8px;">
               <div>
                 <div style="font-size:12px; font-weight:700; margin-bottom:8px;">BEFORE REPAIR</div>
-                <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;" onclick="alert('Photo upload flow will be built here!')">
-                  + Upload Photo
-                </div>
+                <label style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:${data.beforePhotoUrl ? 'url('+data.beforePhotoUrl+') center/cover' : '#fff'};">
+                  ${data.beforePhotoUrl ? '' : '+ Upload Photo'}
+                  <input type="file" style="display:none;" onchange="uploadPhoto(this, 'before', '${docSnap.id}')" accept="image/*">
+                </label>
               </div>
               <div>
                 <div style="font-size:12px; font-weight:700; margin-bottom:8px;">AFTER REPAIR</div>
-                <div style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:#fff;" onclick="alert('Photo upload flow will be built here!')">
-                  + Upload Photo
-                </div>
+                <label style="border:1px dashed var(--line); height:80px; border-radius:6px; display:flex; justify-content:center; align-items:center; color:var(--ink-dim); font-size:12px; cursor:pointer; background:${data.afterPhotoUrl ? 'url('+data.afterPhotoUrl+') center/cover' : '#fff'};">
+                  ${data.afterPhotoUrl ? '' : '+ Upload Photo'}
+                  <input type="file" style="display:none;" onchange="uploadPhoto(this, 'after', '${docSnap.id}')" accept="image/*">
+                </label>
               </div>
             </div>
           </div>
@@ -386,6 +361,34 @@
     } catch(e) {
       console.error("Failed to update status:", e);
       alert("Failed to update job status.");
+    }
+  }
+
+  window.uploadPhoto = async function(inputEl, type, jobId) {
+    if (!inputEl.files || inputEl.files.length === 0) return;
+    const file = inputEl.files[0];
+    const labelEl = inputEl.parentElement;
+    labelEl.innerHTML = 'Uploading...';
+    
+    try {
+      const ext = file.name.split('.').pop();
+      const storageRef = ref(storage, `orders/${jobId}/${type}_photo_${Date.now()}.${ext}`);
+      await uploadBytes(storageRef, file);
+      const downloadUrl = await getDownloadURL(storageRef);
+      
+      const updateData = {};
+      updateData[`${type}PhotoUrl`] = downloadUrl;
+      await updateDoc(doc(db, "orders", jobId), updateData);
+      
+      // Update UI
+      labelEl.innerHTML = '';
+      labelEl.style.background = `url(${downloadUrl}) center/cover`;
+      labelEl.style.border = 'none';
+      alert(`${type.toUpperCase()} photo uploaded successfully!`);
+    } catch(e) {
+      console.error("Photo upload failed:", e);
+      alert("Failed to upload photo. Please try again.");
+      labelEl.innerHTML = '+ Upload Photo';
     }
   }
 </script>

@@ -81,6 +81,24 @@
       </tbody>
     </table>
   </div>
+  
+  <div class="data-section">
+    <h2>All Orders (Live Bookings)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Customer UID</th>
+          <th>Kaarigar Name</th>
+          <th>Status</th>
+          <th>Photos</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTableBody">
+        <tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal-overlay" id="detailsModal">
@@ -184,6 +202,39 @@
       });
     } catch(err) {
       kaarigarsBody.innerHTML = `<tr><td colspan="4">Error loading kaarigars: ${err.message}</td></tr>`;
+    }
+    
+    // Load Orders
+    const ordersBody = document.getElementById('ordersTableBody');
+    try {
+      const ordersSnap = await getDocs(collection(db, 'orders'));
+      ordersBody.innerHTML = '';
+      if (ordersSnap.empty) {
+         ordersBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No orders found.</td></tr>`;
+      }
+      ordersSnap.forEach(d => {
+        const o = d.data();
+        let statusBadge = `<span class="badge" style="background:#e0e0e0; color:#333;">${o.status || 'unknown'}</span>`;
+        if (o.status === 'pending') statusBadge = `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending</span>`;
+        if (o.status === 'done') statusBadge = `<span class="badge" style="background:var(--leaf-dim); color:#1F7A44;">Done</span>`;
+        
+        let photosHtml = '';
+        if (o.beforePhotoUrl) photosHtml += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
+        if (o.afterPhotoUrl) photosHtml += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
+        if (!photosHtml) photosHtml = '<span style="color:var(--ink-dim); font-size:11px;">None</span>';
+        
+        ordersBody.innerHTML += `
+          <tr>
+            <td style="font-weight:600">${o.item || 'N/A'}</td>
+            <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
+            <td>${o.kaarigarName || o.kaarigarId || 'N/A'}</td>
+            <td>${statusBadge}</td>
+            <td>${photosHtml}</td>
+          </tr>
+        `;
+      });
+    } catch(err) {
+      ordersBody.innerHTML = `<tr><td colspan="5">Error loading orders: ${err.message}</td></tr>`;
     }
   }
 

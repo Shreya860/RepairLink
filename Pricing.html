@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing Guide — RepairLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  .container { max-width: 500px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 32px; margin-bottom: 8px; color: var(--ink); }
+  p.sub { font-size: 14px; color: var(--ink-dim); margin-bottom: 24px; }
+  
+  .field-group { margin-bottom: 16px; }
+  .field-group label { display: block; font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .field-group input, .field-group textarea {
+    width: 100%; background: var(--paper-2); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 9px; padding: 10px 12px; font-family: 'Manrope', sans-serif; font-size: 13px;
+  }
+  .field-group textarea { resize: vertical; min-height: 100px; }
+  
+  .submit-btn {
+    width: 100%; margin-top: 8px; background: var(--marigold); color: #2A1E00; font-weight: 700; font-size: 14px;
+    padding: 13px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .submit-btn:hover { background: #ffc935; }
+</style>
+</head>
+<body>
+
+<header style="position: relative; padding: 0; align-items: center; justify-content: center; margin-bottom: 30px;">
+  <div class="brand" style="pointer-events: auto;">
+    <div class="brand-mark">
+      <svg class="stitch" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M2 12h3M7 12h3M12 12h3M17 12h3" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 5"/>
+        <circle cx="12" cy="12" r="9" stroke="#FF4C3B" stroke-width="1.4" opacity="0.55"/>
+      </svg>
+      <h1 style="margin:0; font-size: 21px;">RepairLink</h1>
+    </div>
+    <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
+      <a href="RepairLink.html" style="color: var(--ink); text-decoration: none;">Home</a>
+      <a href="Pricing.html" style="color: var(--leaf); text-decoration: none;">Pricing Guide</a>
+      <a href="AboutUs.html" style="color: var(--ink); text-decoration: none;">About Us</a>
+      <a href="Contact.html" style="color: var(--ink); text-decoration: none;">Contact</a>
+      <a href="#" id="navLogin" style="color: var(--ink); text-decoration: none;" onclick="document.getElementById('roleScrim').classList.remove('closed')">Login</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <h1>Electronics Pricing Estimator</h1>
+  <p style="color: var(--ink-dim); font-size: 15px; margin-bottom: 30px;">Select your device and issue to get a transparent price estimate. No hidden fees!</p>
+  
+  <div class="form-group">
+    <label>Device Type</label>
+    <select id="deviceSelect">
+      <option value="">Select Device...</option>
+      <option value="laptop">Laptop / PC</option>
+      <option value="mobile">Mobile Phone</option>
+      <option value="appliance">Home Appliance (Mixer, Fan, etc.)</option>
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label>Issue</label>
+    <select id="issueSelect" disabled>
+      <option value="">Select Issue...</option>
+    </select>
+  </div>
+  
+  <div id="priceResult" style="display:none; background: var(--paper-2); padding: 24px; border-radius: 12px; border: 1px solid var(--line); margin-top: 24px;">
+    <h3 style="font-family:'Fraunces',serif; margin-top:0; margin-bottom:12px;">Estimated Cost</h3>
+    <div style="font-size: 32px; font-weight: 700; color: var(--leaf); font-family: 'JetBrains Mono', monospace; margin-bottom: 16px;" id="priceValue">₹0 - ₹0</div>
+    
+    <div style="font-size: 13px; color: var(--ink-dim); display: flex; flex-direction: column; gap: 8px;">
+      <div style="display:flex; justify-content:space-between;"><span>Estimated Parts:</span> <strong id="priceParts">₹0</strong></div>
+      <div style="display:flex; justify-content:space-between;"><span>Estimated Labor:</span> <strong id="priceLabor">₹0</strong></div>
+      <div style="display:flex; justify-content:space-between; border-top: 1px solid var(--line); padding-top: 8px; color: var(--ink);"><span>Platform Convenience Fee (Flat):</span> <strong>₹50</strong></div>
+    </div>
+  </div>
+</div>
+
+  <script>
+    const issuesData = {
+      laptop: [
+        { id: "screen", label: "Screen Replacement", parts: "₹2,500 - ₹4,000", labor: "₹500", total: "₹3,050 - ₹4,550" },
+        { id: "battery", label: "Battery Replacement", parts: "₹1,500 - ₹2,500", labor: "₹300", total: "₹1,850 - ₹2,850" },
+        { id: "format", label: "OS Install / Format", parts: "₹0", labor: "₹400", total: "₹450" }
+      ],
+      mobile: [
+        { id: "screen", label: "Screen Replacement", parts: "₹1,200 - ₹3,000", labor: "₹400", total: "₹1,650 - ₹3,450" },
+        { id: "battery", label: "Battery Replacement", parts: "₹800 - ₹1,500", labor: "₹300", total: "₹1,150 - ₹1,850" },
+        { id: "port", label: "Charging Port Repair", parts: "₹300 - ₹600", labor: "₹350", total: "₹700 - ₹1,000" }
+      ],
+      appliance: [
+        { id: "motor", label: "Motor Repair / Rewinding", parts: "₹400 - ₹800", labor: "₹300", total: "₹750 - ₹1,150" },
+        { id: "switch", label: "Switch/Cord Replacement", parts: "₹100 - ₹250", labor: "₹150", total: "₹300 - ₹450" },
+        { id: "general", label: "General Servicing", parts: "₹0", labor: "₹200", total: "₹250" }
+      ]
+    };
+
+    const deviceSelect = document.getElementById('deviceSelect');
+    const issueSelect = document.getElementById('issueSelect');
+    const priceResult = document.getElementById('priceResult');
+
+    deviceSelect.addEventListener('change', (e) => {
+      const device = e.target.value;
+      issueSelect.innerHTML = '<option value="">Select Issue...</option>';
+      priceResult.style.display = 'none';
+      
+      if (device && issuesData[device]) {
+        issueSelect.disabled = false;
+        issuesData[device].forEach(issue => {
+          const opt = document.createElement('option');
+          opt.value = issue.id;
+          opt.textContent = issue.label;
+          issueSelect.appendChild(opt);
+        });
+      } else {
+        issueSelect.disabled = true;
+      }
+    });
+
+    issueSelect.addEventListener('change', (e) => {
+      const device = deviceSelect.value;
+      const issueId = e.target.value;
+      
+      if (device && issueId) {
+        const issue = issuesData[device].find(i => i.id === issueId);
+        if (issue) {
+          document.getElementById('priceValue').textContent = issue.total;
+          document.getElementById('priceParts').textContent = issue.parts;
+          document.getElementById('priceLabor').textContent = issue.labor;
+          priceResult.style.display = 'block';
+        }
+      } else {
+        priceResult.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
