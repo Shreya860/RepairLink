@@ -30,5 +30,10 @@ service cloud.firestore {
           (resource != null && (resource.data.customerId == request.auth.uid || resource.data.kaarigarId == request.auth.uid))
         ));
     }
+    
+    match /messages/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
   }
 }

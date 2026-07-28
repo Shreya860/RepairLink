@@ -53,25 +53,80 @@
   <h1>Get in Touch</h1>
   <p class="sub">Have a question or need to report an issue? Send us a message and our team will get back to you shortly.</p>
   
-  <form onsubmit="event.preventDefault(); alert('Message sent! Our team will contact you shortly.'); this.reset();">
+  <div id="successState" style="display:none; text-align:center; padding: 40px 20px;">
+    <div style="width: 60px; height: 60px; border-radius: 30px; background: var(--leaf-dim); color: var(--leaf); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2 style="font-family:'Fraunces', serif; font-size:24px; color:var(--ink); margin-bottom:12px;">Message Sent!</h2>
+    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Thank you for getting in touch. Our team will review your message and reach out shortly.</p>
+    <button onclick="window.location.href='RepairLink.html'" class="submit-btn" style="width:auto; margin:0 auto; padding: 12px 24px;">Return Home</button>
+  </div>
+
+  <form id="contactForm">
     <div class="field-group">
       <label>Your Name</label>
-      <input type="text" placeholder="e.g. Ramesh Kumar" required>
+      <input type="text" id="contactName" placeholder="e.g. Ramesh Kumar" required>
     </div>
     <div class="field-group">
       <label>Phone or Email</label>
-      <input type="text" placeholder="How can we reach you?" required>
+      <input type="text" id="contactContact" placeholder="How can we reach you?" required>
     </div>
     <div class="field-group">
       <label>Message</label>
-      <textarea placeholder="Tell us how we can help..." required></textarea>
+      <textarea id="contactMessage" placeholder="Tell us how we can help..." required></textarea>
     </div>
-    <button type="submit" class="submit-btn">
+    <button type="submit" id="submitBtn" class="submit-btn">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
       Send Message
     </button>
   </form>
 </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    projectId: "repairlink-de1ta",
+    appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+    storageBucket: "repairlink-de1ta.firebasestorage.app",
+    apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+    authDomain: "repairlink-de1ta.firebaseapp.com",
+    messagingSenderId: "4711329582",
+    measurementId: "G-BQ7PBRSGH3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const btn = document.getElementById('submitBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "Sending...";
+    btn.disabled = true;
+
+    try {
+      await addDoc(collection(db, "messages"), {
+        name: document.getElementById('contactName').value,
+        contactInfo: document.getElementById('contactContact').value,
+        message: document.getElementById('contactMessage').value,
+        createdAt: serverTimestamp(),
+        status: 'unread'
+      });
+
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send message: " + err.message);
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  });
+</script>
 
 </body>
 </html>
