@@ -1,80 +1,84 @@
-# RepairLink
+<div align="center">
+  <img src="logo.png" alt="RepairLink Logo" width="120" />
+  
+  # 🛠️ RepairLink
+  **Mapping North Delhi's kaarigars — repair first, recycle what's left.**
 
-RepairLink connects local Kaarigars (repair workers) with customers who need their services, empowering local tradesmen and making everyday repairs highly accessible. 
+  [![Website Live](https://img.shields.io/badge/Live-repairlink--de1ta.web.app-success?style=for-the-badge&logo=firebase)](https://repairlink-de1ta.web.app)
+  [![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
+  [![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)](https://html.com/)
+  [![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/Overview.en.html)
+  [![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+</div>
 
-🌍 **Live Website:** [https://repairlink-de1ta.web.app](https://repairlink-de1ta.web.app)
+<br/>
 
----
-
-## 🚀 Key Features
-
-### 🔹 1. Role-Based Access Control & Dashboards
-The platform supports three distinct roles with secure Google Authentication:
-- **Customers (Users):** Can browse an interactive map to find nearby Kaarigars, view their profiles, book repair jobs, and leave ratings.
-- **Kaarigars (Tradesmen):** Get a dedicated dashboard to build their public profile (Name, Trade, Area, Experience, Intro). They can submit their profile for approval, view active repair jobs, and mark jobs as completed.
-- **Admin:** A secure command center to oversee the entire platform. Admins can view all registered users and Kaarigars, approve/reject profiles before they go live on the map, and monitor customer support messages.
-
-### 🔹 2. Concierge Booking Flow & Payments
-- Users can click on a Kaarigar's map marker to request a service.
-- The platform features a concierge-style flow where a ₹9 booking fee is collected via a QR code (PhonePe) before the job is officially assigned.
-- Admins verify the payment and manually assign the job to the Kaarigar in the backend, completing the trust loop.
-
-### 🔹 3. Trust & Rating System
-- Once a job is marked as "Completed" by the Kaarigar, it moves to the user's dashboard for review.
-- Users can leave a 1 to 5-star rating and a written review.
-- The platform automatically calculates the Kaarigar's average rating in real-time, displaying a beautiful gold star UI on their public profile map marker.
-
-### 🔹 4. AI Support Chatbot Integration
-- The main map page features a floating "AI Support" button.
-- Clicking it opens a sleek, glassmorphic modal containing a fully integrated Streamlit AI Chatbot to assist users with finding exactly what they need.
-
-### 🔹 5. Premium UI & Glassmorphism
-- The entire application uses a modern, high-end design system.
-- It features subtle mesh-gradient backgrounds, frosted-glass (`backdrop-filter`) panels, scale-up entrance animations, custom webkit scrollbars, and toast notifications.
-
-### 🔹 6. Marketing & Viral Growth Ready
-- **Social Sharing:** Includes an integrated "Share on WhatsApp" referral system for quick user acquisition.
-- **SEO & Social Previews:** Fully configured with Open Graph (OG) and Twitter Card meta tags so sharing links generates beautiful, branded preview cards on all major social networks.
-- **Marketing Analytics:** Firebase Analytics is built directly into the client to track user acquisition, button clicks, and conversions natively from the Firebase Console.
-
-### 🔹 7. Progressive Web App (PWA)
-- Features a `manifest.json` ensuring the website acts as a fully installable app. Mobile users tapping on social media ads are prompted to "Add to Home Screen," improving long-term retention.
-
-### 🔹 8. Custom Theme Song (Immersive Vibe)
-- The main map interface features an interactive, glassmorphic "Play Theme" button.
-- Users can toggle a custom-produced looping theme song (`theme-song.mp3`) while exploring the local kaarigar network, creating a uniquely immersive startup experience.
+RepairLink connects local *Kaarigars* (repair workers) with customers who need their services, empowering local tradesmen and making everyday repairs highly accessible. 
 
 ---
 
-## 🛠 Tech Stack
-- **Frontend:** HTML5, CSS3, Vanilla JavaScript
-- **Backend/Database:** Firebase (Cloud Firestore)
-- **Authentication:** Firebase Auth (Google Provider)
-- **Hosting:** Firebase Hosting
-- **Mapping:** Mapbox GL JS
-- **AI Chatbot:** Python, Streamlit, Langchain, Groq
+## ✨ Why RepairLink?
+
+We believe in a circular economy. Instead of throwing away that broken mixer or torn shoe, RepairLink instantly connects you with verified local artisans capable of fixing it. 
+
+### 🚀 Key Features
+
+*   🗺️ **Interactive Artisan Map:** Browse an interactive Mapbox-powered map to find nearby Kaarigars (cobblers, watch repairers, mechanics, etc.).
+*   🛡️ **Role-Based Dashboards:** 
+    *   **Customers:** Book repairs, leave ratings, and track job status.
+    *   **Kaarigars:** Manage public profiles, accept incoming jobs, and mark them as completed.
+    *   **Admins:** Oversee the platform, verify Kaarigar profiles before they go live, and assign concierge jobs.
+*   💳 **Concierge Booking & Payments:** Request a service directly from the map. A small ₹9 booking fee is collected via QR code, which admins manually verify before assigning the job.
+*   ⭐ **Trust & Rating System:** Verified users can leave 1-5 star reviews. Kaarigar profiles automatically display dynamic, real-time gold star ratings.
+*   🤖 **AI Support Chatbot:** A fully integrated, floating AI chatbot (powered by Streamlit & Groq) is available on the main page to assist users instantly.
+*   💎 **Premium Glassmorphism UI:** Built with a stunning, high-end design system featuring mesh-gradient backgrounds, frosted-glass panels, custom scrollbars, and scale-up entrance animations.
+
+### 📈 Marketing & Viral Growth
+*   **Social Sharing:** Integrated "Share on WhatsApp" system to drive viral user acquisition.
+*   **SEO & Open Graph:** Fully configured OG and Twitter Card tags. Sharing links on social media automatically generates beautiful branded preview cards.
+*   **Analytics:** Native Firebase Analytics integration to track user behavior and conversions.
+*   **PWA Ready:** Fully installable Progressive Web App with a custom `manifest.json`.
+
+### 🎵 Immersive Vibe
+*   **Custom Theme Song:** The platform features an exclusive, custom-produced theme song. Users can toggle the music via a floating, draggable glass button on the main map, or via the interactive equalizer on the *About Us* page.
 
 ---
 
-## 🤝 How to setup locally
+## 🛠️ Tech Stack
+
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=html,css,js,firebase,python" />
+</div>
+
+*   **Frontend:** HTML5, CSS3, Vanilla JavaScript (No heavy frameworks!)
+*   **Backend & DB:** Firebase (Cloud Firestore & Auth)
+*   **Hosting:** Firebase Hosting
+*   **Mapping:** Mapbox GL JS
+*   **AI Chatbot:** Python, Streamlit, LangChain, Groq
+
+---
+
+## 🚀 Run it Locally
 
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Shreya860/RepairLink.git
    ```
+
 2. **Install Firebase CLI:**
    ```bash
    npm install -g firebase-tools
    ```
-3. **Run the local frontend server:**
+
+3. **Serve the Frontend:**
    You can serve the HTML files using any local web server. For example:
    ```bash
    npx serve . -p 3000
    ```
-4. **Run the AI Chatbot (Optional):**
+
+4. **(Optional) Run the AI Chatbot:**
    Navigate to the chatbot folder (if applicable) and run:
    ```bash
    pip install -r requirements.txt
    streamlit run app.py
    ```
-   *(Note: The `RepairLink.html` file expects the chatbot to be hosted at the configured iframe URL).*
