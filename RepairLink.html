@@ -106,27 +106,70 @@
 <audio id="themeSong" loop>
   <source src="theme-song.mp3" type="audio/mpeg">
 </audio>
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()" style="position: fixed; bottom: 30px; left: 30px; z-index: 1000; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); padding: 12px 20px; border-radius: 99px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink); transition: all 0.3s ease;">
+<button class="music-btn" id="musicBtn" style="position: fixed; bottom: 30px; left: 30px; z-index: 1000; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); padding: 12px 20px; border-radius: 99px; cursor: grab; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink); transition: background 0.3s ease, color 0.3s ease; user-select: none;">
   <span id="musicIcon">🎵</span>
   <span id="musicText">Play Theme</span>
 </button>
 <script>
-  function toggleMusic() {
-    const audio = document.getElementById('themeSong');
-    const text = document.getElementById('musicText');
-    const btn = document.getElementById('musicBtn');
-    if (audio.paused) {
-      audio.play();
-      text.innerText = 'Pause Theme';
-      btn.style.background = 'var(--leaf)';
-      btn.style.color = 'white';
-    } else {
-      audio.pause();
-      text.innerText = 'Play Theme';
-      btn.style.background = 'rgba(255,255,255,0.7)';
-      btn.style.color = 'var(--ink)';
+  const musicBtn = document.getElementById('musicBtn');
+  const audio = document.getElementById('themeSong');
+  const text = document.getElementById('musicText');
+  
+  let isDragging = false;
+  let hasDragged = false;
+  let offsetX, offsetY;
+
+  const dragStart = (e) => {
+    isDragging = true;
+    hasDragged = false;
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    offsetX = clientX - musicBtn.getBoundingClientRect().left;
+    offsetY = clientY - musicBtn.getBoundingClientRect().top;
+    musicBtn.style.cursor = 'grabbing';
+    musicBtn.style.transition = 'none'; // remove transition during drag
+  };
+
+  const drag = (e) => {
+    if (!isDragging) return;
+    hasDragged = true;
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    musicBtn.style.left = (clientX - offsetX) + 'px';
+    musicBtn.style.top = (clientY - offsetY) + 'px';
+    musicBtn.style.bottom = 'auto';
+    musicBtn.style.right = 'auto';
+  };
+
+  const dragEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    musicBtn.style.cursor = 'grab';
+    musicBtn.style.transition = 'background 0.3s ease, color 0.3s ease';
+    
+    // If it was just a click and not a drag, toggle the music
+    if (!hasDragged) {
+      if (audio.paused) {
+        audio.play();
+        text.innerText = 'Pause Theme';
+        musicBtn.style.background = 'var(--leaf)';
+        musicBtn.style.color = 'white';
+      } else {
+        audio.pause();
+        text.innerText = 'Play Theme';
+        musicBtn.style.background = 'rgba(255,255,255,0.7)';
+        musicBtn.style.color = 'var(--ink)';
+      }
     }
-  }
+  };
+
+  musicBtn.addEventListener('mousedown', dragStart);
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', dragEnd);
+
+  musicBtn.addEventListener('touchstart', dragStart, {passive: true});
+  document.addEventListener('touchmove', drag, {passive: true});
+  document.addEventListener('touchend', dragEnd);
 </script>
 
 <div class="locate-box">
