@@ -100,6 +100,24 @@
       </tbody>
     </table>
   </div>
+  
+  <div class="data-section">
+    <h2>Customer Messages (Contact Us)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact Info</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Status / Actions</th>
+        </tr>
+      </thead>
+      <tbody id="messagesTableBody">
+        <tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="modal-overlay" id="detailsModal">
@@ -138,8 +156,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     projectId: "repairlink-de1ta",
@@ -154,6 +172,10 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  window.adminUsersData = {};
+  window.adminKaarigarsData = {};
+  window.adminMessagesData = {};
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -171,9 +193,6 @@
       window.location.href = 'RepairLink.html';
     }
   });
-
-  window.adminUsersData = {};
-  window.adminKaarigarsData = {};
 
   async function loadData() {
     const usersBody = document.getElementById('usersTableBody');
@@ -269,11 +288,49 @@
     } catch(err) {
       ordersBody.innerHTML = `<tr><td colspan="5">Error loading orders: ${err.message}</td></tr>`;
     }
+    
+    // Load Messages
+    const messagesBody = document.getElementById('messagesTableBody');
+    try {
+      const msgsSnap = await getDocs(collection(db, 'messages'));
+      messagesBody.innerHTML = '';
+      if (msgsSnap.empty) {
+         messagesBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No messages found.</td></tr>`;
+      } else {
+        msgsSnap.forEach(d => {
+          const m = d.data();
+          const id = d.id;
+          window.adminMessagesData[id] = m;
+          
+          let actionHtml = '';
+          if (m.status === 'read' || m.status === 'resolved') {
+            actionHtml = `<span style="color:var(--leaf); font-weight:700;">Resolved</span>`;
+          } else {
+            actionHtml = `<span style="color:#F57F17; font-weight:700; margin-right:8px;">Unread</span>
+              <button onclick="markMessageResolved('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Mark Resolved</button>`;
+          }
+          
+          let dateStr = m.createdAt ? new Date(m.createdAt.seconds * 1000).toLocaleString() : 'Unknown';
+          
+          messagesBody.innerHTML += `
+            <tr style="${m.status === 'read' || m.status === 'resolved' ? 'opacity:0.6;' : 'font-weight:500;'}">
+              <td>${m.name || 'Unknown'}</td>
+              <td>${m.contactInfo || '-'}</td>
+              <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${m.message || ''}</td>
+              <td>${dateStr}</td>
+              <td>${actionHtml}</td>
+            </tr>
+          `;
+        });
+      }
+    } catch(err) {
+      messagesBody.innerHTML = `<tr><td colspan="5">Error loading messages: ${err.message}</td></tr>`;
+    }
+    
   }
 
   window.approveKaarigar = async function(id) {
     try {
-      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
       await updateDoc(doc(db, 'kaarigars', id), {
         verified: true
       });
@@ -314,7 +371,6 @@
     
     try {
       const kData = window.adminKaarigarsData[kaarigarId];
-      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
       await updateDoc(doc(db, 'orders', orderId), {
         status: 'pending',
         kaarigarId: kaarigarId,
@@ -336,7 +392,6 @@
   window.revokeKaarigar = async function(id) {
     if(!confirm("Are you sure you want to revoke this kaarigar's verification?")) return;
     try {
-      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
       await updateDoc(doc(db, 'kaarigars', id), {
         verified: false
       });
@@ -353,6 +408,18 @@
       loadData();
     } catch(err) {
       alert("Error rejecting kaarigar: " + err.message);
+    }
+  }
+
+  window.markMessageResolved = async function(id) {
+    if(!confirm("Mark this message as resolved?")) return;
+    try {
+      await updateDoc(doc(db, 'messages', id), {
+        status: 'resolved'
+      });
+      loadData();
+    } catch(err) {
+      alert("Error updating message: " + err.message);
     }
   }
 
