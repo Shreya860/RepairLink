@@ -434,3 +434,43 @@
     border-radius: 50%; animation: spin 1s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ================== PREMIUM UI / VISUAL UPGRADES ================== */
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(34, 29, 20, 0.2); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(34, 29, 20, 0.4); }
+
+  /* Mesh Gradient Background */
+  .mesh-bg {
+    background-color: #f6ecd8;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(43, 100%, 85%, 1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(145, 56%, 85%, 1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(207, 72%, 85%, 1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(7, 100%, 88%, 1) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  /* Glassmorphism Card */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 24px 60px rgba(34, 29, 20, 0.08);
+  }
+
+  /* Entrance Animations */
+  .fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0; transform: translateY(20px);
+  }
+  .fade-in-up.delay-1 { animation-delay: 0.1s; }
+  .fade-in-up.delay-2 { animation-delay: 0.2s; }
+
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }

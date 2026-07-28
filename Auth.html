@@ -9,51 +9,27 @@
 <link rel="stylesheet" href="style.css">
 <style>
   body { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    min-height: 100vh; 
-    background-color: var(--canvas); 
-    padding: 20px;
+    display: flex; align-items: center; justify-content: center; 
+    min-height: 100vh; overflow: hidden; position: relative;
+    font-family: 'Manrope', sans-serif;
   }
-  .auth-container { 
-    max-width: 400px; 
-    width: 100%; 
-    background: var(--paper); 
-    border: 1px solid var(--line); 
-    border-radius: 20px; 
-    padding: 40px; 
-    box-shadow: 0 20px 50px rgba(34,29,20,0.12); 
-    text-align: center; 
+  .auth-container {
+    max-width: 440px; width: 100%; text-align: center;
+    border-radius: 24px; padding: 48px 40px; margin: 20px;
   }
-  .logo { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .logo { display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; color: var(--ink); margin-bottom: 24px; }
   .logo-leaf { color: var(--leaf); }
-  .auth-title { font-family: 'Fraunces', serif; font-size: 24px; color: var(--ink); margin-bottom: 12px; margin-top: 24px; }
-  .auth-subtitle { font-size: 14px; color: var(--ink-dim); margin-bottom: 32px; line-height: 1.5; }
+  .auth-title { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+  .auth-subtitle { font-size: 15px; color: var(--ink-dim); line-height: 1.6; margin-bottom: 32px; padding: 0 20px; }
   
   .google-btn { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 12px; 
-    width: 100%; 
-    padding: 14px 20px; 
-    background: #fff; 
-    border: 1px solid var(--line); 
-    border-radius: 999px; 
-    font-family: 'Manrope', sans-serif; 
-    font-weight: 600; 
-    font-size: 15px; 
-    color: var(--ink); 
-    cursor: pointer; 
-    transition: all 0.2s; 
+    display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px 20px; 
+    background: #fff; border: 1px solid var(--line); border-radius: 999px; font-family: 'Manrope', sans-serif; 
+    font-weight: 600; font-size: 15px; color: var(--ink); cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(34,29,20,0.05);
   }
-  .google-btn:hover { background: var(--paper-2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .google-btn:hover { background: var(--paper-2); transform: translateY(-1px); box-shadow: 0 8px 16px rgba(34,29,20,0.08); }
   .google-btn img { width: 20px; height: 20px; }
 
-  /* Role Selection UI (Hidden by default) */
-  #roleSelection { display: none; margin-top: 24px; text-align: left; }
-  .role-label { font-weight: 600; color: var(--ink); margin-bottom: 12px; display: block; }
   .role-option {
     display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
   }
@@ -71,10 +47,10 @@
   #errorMessage { color: #d32f2f; font-size: 13px; margin-top: 16px; display: none; }
 </style>
 </head>
-<body>
+<body class="mesh-bg">
 
-<div class="auth-container" id="authStep1">
-  <div class="logo" style="display:flex; align-items:center; gap:8px;">
+<div class="auth-container glass-card fade-in-up" id="authStep1">
+  <div class="logo">
     <img src="logo.png" style="width: 32px; height: 32px; object-fit: contain;">
     RepairLink<span class="logo-leaf">.</span>
   </div>
@@ -88,8 +64,8 @@
   <div id="errorMessage"></div>
 </div>
 
-<div class="auth-container" id="authStep2" style="display: none;">
-  <div class="logo" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+<div class="auth-container glass-card fade-in-up" id="authStep2" style="display: none;">
+  <div class="logo">
     <img src="logo.png" style="width: 32px; height: 32px; object-fit: contain;">
     RepairLink<span class="logo-leaf">.</span>
   </div>

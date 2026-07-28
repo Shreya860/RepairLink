@@ -6,19 +6,31 @@ RepairLink connects local Kaarigars (repair workers) with customers who need the
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-### 🔹 1. Role-Based Access Control
-The platform supports three distinct roles, each with custom dashboards and unique capabilities:
-- **Customers (Users):** Can browse an interactive map to find nearby Kaarigars, view their profiles, and (coming soon) book repair jobs.
-- **Kaarigars (Tradesmen):** Get a dedicated dashboard to build their public profile (Name, Trade, Area, Experience, Intro). They can preview how they look to customers and submit their profile for approval.
-- **Admin:** A secure command center to oversee the entire platform. Admins can view all registered users and Kaarigars, edit Kaarigar details to fix typos, and approve or reject profiles before they go live on the map.
+### 🔹 1. Role-Based Access Control & Dashboards
+The platform supports three distinct roles with secure Google Authentication:
+- **Customers (Users):** Can browse an interactive map to find nearby Kaarigars, view their profiles, book repair jobs, and leave ratings.
+- **Kaarigars (Tradesmen):** Get a dedicated dashboard to build their public profile (Name, Trade, Area, Experience, Intro). They can submit their profile for approval, view active repair jobs, and mark jobs as completed.
+- **Admin:** A secure command center to oversee the entire platform. Admins can view all registered users and Kaarigars, approve/reject profiles before they go live on the map, and monitor customer support messages.
 
-### 🔹 2. Interactive Discovery Map
-Powered by Mapbox GL JS, the homepage features a dynamic, location-based map that instantly plots verified Kaarigars in the user's vicinity, complete with custom map markers.
+### 🔹 2. Concierge Booking Flow & Payments
+- Users can click on a Kaarigar's map marker to request a service.
+- The platform features a concierge-style flow where a ₹9 booking fee is collected via a QR code (PhonePe) before the job is officially assigned.
+- Admins verify the payment and manually assign the job to the Kaarigar in the backend, completing the trust loop.
 
-### 🔹 3. Secure Authentication & Database
-Seamless and secure login through **Firebase Google Authentication**. All user profiles, roles, and Kaarigar listings are stored securely in **Cloud Firestore**, with real-time updates across the platform.
+### 🔹 3. Trust & Rating System
+- Once a job is marked as "Completed" by the Kaarigar, it moves to the user's dashboard for review.
+- Users can leave a 1 to 5-star rating and a written review.
+- The platform automatically calculates the Kaarigar's average rating in real-time, displaying a beautiful gold star UI on their public profile map marker.
+
+### 🔹 4. AI Support Chatbot Integration
+- The main map page features a floating "AI Support" button.
+- Clicking it opens a sleek, glassmorphic modal containing a fully integrated Streamlit AI Chatbot to assist users with finding exactly what they need.
+
+### 🔹 5. Premium UI & Glassmorphism
+- The entire application uses a modern, high-end design system.
+- It features subtle mesh-gradient backgrounds, frosted-glass (`backdrop-filter`) panels, scale-up entrance animations, custom webkit scrollbars, and toast notifications.
 
 ---
 
@@ -28,9 +40,29 @@ Seamless and secure login through **Firebase Google Authentication**. All user p
 - **Authentication:** Firebase Auth (Google Provider)
 - **Hosting:** Firebase Hosting
 - **Mapping:** Mapbox GL JS
+- **AI Chatbot:** Python, Streamlit, Langchain, Groq
 
 ---
 
-## 🤝 How to use (For Admins)
-1. **Admin Access:** To become an admin, a user's Firestore document in the `users` collection must have their `role` field manually set to `"admin"`.
-2. **Reviewing Kaarigars:** Navigate to the Admin Dashboard to see all pending applications. Click on a Kaarigar's name to view their full details, edit them if necessary, and click **Approve** to push their profile live to the map.
+## 🤝 How to setup locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Shreya860/RepairLink.git
+   ```
+2. **Install Firebase CLI:**
+   ```bash
+   npm install -g firebase-tools
+   ```
+3. **Run the local frontend server:**
+   You can serve the HTML files using any local web server. For example:
+   ```bash
+   npx serve . -p 3000
+   ```
+4. **Run the AI Chatbot (Optional):**
+   Navigate to the chatbot folder (if applicable) and run:
+   ```bash
+   pip install -r requirements.txt
+   streamlit run app.py
+   ```
+   *(Note: The `RepairLink.html` file expects the chatbot to be hosted at the configured iframe URL).*
