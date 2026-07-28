@@ -32,6 +32,18 @@ The platform supports three distinct roles with secure Google Authentication:
 - The entire application uses a modern, high-end design system.
 - It features subtle mesh-gradient backgrounds, frosted-glass (`backdrop-filter`) panels, scale-up entrance animations, custom webkit scrollbars, and toast notifications.
 
+### 🔹 6. Marketing & Viral Growth Ready
+- **Social Sharing:** Includes an integrated "Share on WhatsApp" referral system for quick user acquisition.
+- **SEO & Social Previews:** Fully configured with Open Graph (OG) and Twitter Card meta tags so sharing links generates beautiful, branded preview cards on all major social networks.
+- **Marketing Analytics:** Firebase Analytics is built directly into the client to track user acquisition, button clicks, and conversions natively from the Firebase Console.
+
+### 🔹 7. Progressive Web App (PWA)
+- Features a `manifest.json` ensuring the website acts as a fully installable app. Mobile users tapping on social media ads are prompted to "Add to Home Screen," improving long-term retention.
+
+### 🔹 8. Custom Theme Song (Immersive Vibe)
+- The main map interface features an interactive, glassmorphic "Play Theme" button.
+- Users can toggle a custom-produced looping theme song (`theme-song.mp3`) while exploring the local kaarigar network, creating a uniquely immersive startup experience.
+
 ---
 
 ## 🛠 Tech Stack
