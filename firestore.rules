@@ -22,5 +22,13 @@ service cloud.firestore {
         (request.resource == null || request.resource.data.uid == request.auth.uid)
       );
     }
+    
+    match /orders/{docId} {
+      allow read, write: if isAdmin() || 
+        (request.auth != null && (
+          (resource == null && request.resource.data.customerId == request.auth.uid) ||
+          (resource != null && (resource.data.customerId == request.auth.uid || resource.data.kaarigarId == request.auth.uid))
+        ));
+    }
   }
 }
