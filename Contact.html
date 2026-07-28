@@ -83,6 +83,20 @@
 </div>
 
 <script type="module">
+  window.showToast = function(message, type = 'success') {
+    let toast = document.getElementById('globalToast');
+    if(!toast) {
+      toast = document.createElement('div');
+      toast.id = 'globalToast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  };
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
@@ -104,7 +118,7 @@
     
     const btn = document.getElementById('submitBtn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = "Sending...";
+    btn.innerHTML = `<div class="spinner"></div> Sending...`;
     btn.disabled = true;
 
     try {
@@ -121,7 +135,7 @@
 
     } catch (err) {
       console.error(err);
-      alert("Failed to send message: " + err.message);
+      showToast("Failed to send message: " + err.message, 'error');
       btn.innerHTML = originalText;
       btn.disabled = false;
     }

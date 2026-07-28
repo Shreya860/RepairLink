@@ -197,6 +197,20 @@
 </div>
 
 <script type="module">
+  window.showToast = function(message, type = 'success') {
+    let toast = document.getElementById('globalToast');
+    if(!toast) {
+      toast = document.createElement('div');
+      toast.id = 'globalToast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  };
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, query, where, getDocs, increment } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
@@ -337,10 +351,22 @@
       });
       
       if (!hasLive) {
-        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No active requests.</div>';
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+            <h3>No active requests</h3>
+            <p>You don't have any repairs in progress. Need something fixed? Request a service above!</p>
+          </div>
+        `;
       }
       if (!hasRecent) {
-        recentEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No completed repairs yet.</div>';
+        recentEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon" style="background:var(--leaf-dim); color:var(--leaf);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+            <h3>No completed repairs</h3>
+            <p>Your past repairs and ratings will appear here.</p>
+          </div>
+        `;
       }
     } catch(err) {
       console.error(err);
@@ -354,11 +380,11 @@
     const btn = document.getElementById('submitRequestBtn');
     
     if (!item || !address) {
-      alert("Please fill in what needs fixing and your address.");
+      showToast("Please fill in what needs fixing and your address.", 'error');
       return;
     }
     
-    btn.textContent = 'Submitting...';
+    btn.innerHTML = `<div class="spinner"></div> Submitting...`;
     btn.disabled = true;
     
     try {
@@ -373,11 +399,11 @@
         date: new Date().toLocaleDateString('en-GB')
       });
       
-      alert("Request submitted successfully! We are verifying your payment.");
+      showToast("Request submitted successfully! We are verifying your payment.");
       document.getElementById('serviceModal').style.display = 'none';
       loadLiveRequests(auth.currentUser.uid);
     } catch(err) {
-      alert("Error submitting request: " + err.message);
+      showToast("Error submitting request: " + err.message, 'error');
     } finally {
       btn.innerHTML = '<span style="font-weight:600; text-align:center; width:100%;">I have paid, submit request</span>';
       btn.disabled = false;
@@ -419,12 +445,12 @@
     const reviewText = document.getElementById('ratingText').value;
     
     if (ratingValue === 0) {
-      alert("Please select a star rating.");
+      showToast("Please select a star rating.", 'error');
       return;
     }
     
     const btn = document.getElementById('submitRatingBtn');
-    btn.innerHTML = 'Submitting...';
+    btn.innerHTML = `<div class="spinner"></div> Submitting...`;
     btn.disabled = true;
     
     try {
@@ -454,13 +480,13 @@
         }
       }
       
-      alert("Review submitted successfully! Thank you.");
+      showToast("Review submitted successfully! Thank you.");
       document.getElementById('ratingModal').style.display = 'none';
       loadLiveRequests(auth.currentUser.uid); // reload lists
       
     } catch(err) {
       console.error(err);
-      alert("Failed to submit review: " + err.message);
+      showToast("Failed to submit review: " + err.message, 'error');
     } finally {
       btn.innerHTML = '<span style="font-weight:600; text-align:center; width:100%;">Submit Review</span>';
       btn.disabled = false;

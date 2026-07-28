@@ -144,6 +144,20 @@
 </div>
 
 <script type="module">
+  window.showToast = function(message, type = 'success') {
+    let toast = document.getElementById('globalToast');
+    if(!toast) {
+      toast = document.createElement('div');
+      toast.id = 'globalToast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  };
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
@@ -172,6 +186,7 @@
       window.location.href = 'Auth.html';
       return;
     }
+    
     currentUser = user;
     
     // Check role
@@ -256,7 +271,16 @@
 
   document.getElementById('btnSubmit').addEventListener('click', async () => {
     const btn = document.getElementById('btnSubmit');
-    btn.textContent = 'Submitting...';
+    const name = document.getElementById('kName').value;
+    const trade = document.getElementById('kTrade').value;
+    const area = document.getElementById('kArea').value;
+    
+    if (!name || !trade || !area) {
+      showToast("Please fill in Name, Trade, and Area.", 'error');
+      return;
+    }
+    
+    btn.innerHTML = `<div class="spinner"></div> Submitting...`;
     btn.disabled = true;
     
     const kData = {
@@ -273,15 +297,15 @@
     
     try {
       await setDoc(doc(db, 'kaarigars', currentUser.uid), kData, { merge: true });
-      alert("Profile submitted! An admin will review it shortly.");
+      showToast("Profile submitted! An admin will review it shortly.");
       loadKaarigarProfile(); // Reloads and resets UI to Pending state
       
       document.getElementById('profilePreviewView').style.display = 'none';
     } catch(err) {
       console.error(err);
-      alert("Error saving profile: " + err.message);
+      showToast("Error saving profile: " + err.message, 'error');
     } finally {
-      btn.textContent = 'Final Submit';
+      btn.innerHTML = 'Final Submit';
       btn.disabled = false;
     }
   });
@@ -295,7 +319,13 @@
       const querySnapshot = await getDocs(q);
       
       if (querySnapshot.empty) {
-        jobList.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No active jobs right now.</div>';
+        jobList.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+            <h3>No jobs assigned</h3>
+            <p>You don't have any repairs right now. Once an admin assigns a repair to you, it will appear here.</p>
+          </div>
+        `;
         return;
       }
 
@@ -376,7 +406,7 @@
       }
     } catch(e) {
       console.error("Failed to update status:", e);
-      alert("Failed to update job status.");
+      showToast("Failed to update job status.", 'error');
     }
   }
 
@@ -400,10 +430,10 @@
       labelEl.innerHTML = '';
       labelEl.style.background = `url(${downloadUrl}) center/cover`;
       labelEl.style.border = 'none';
-      alert(`${type.toUpperCase()} photo uploaded successfully!`);
+      showToast(`${type.toUpperCase()} photo uploaded successfully!`);
     } catch(e) {
       console.error("Photo upload failed:", e);
-      alert("Failed to upload photo. Please try again.");
+      showToast("Failed to upload photo. Please try again.", 'error');
       labelEl.innerHTML = '+ Upload Photo';
     }
   }
