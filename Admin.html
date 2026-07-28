@@ -91,7 +91,8 @@
           <th>Customer UID</th>
           <th>Kaarigar Name</th>
           <th>Status</th>
-          <th>Photos</th>
+          <th>Status</th>
+          <th>Actions / Photos</th>
         </tr>
       </thead>
       <tbody id="ordersTableBody">
@@ -106,6 +107,32 @@
     <button class="modal-close" onclick="document.getElementById('detailsModal').style.display='none'">&times;</button>
     <h2 id="modalTitle" style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:20px;">Details</h2>
     <div id="modalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="assignModal" style="display:none;">
+  <div class="modal-container">
+    <button class="modal-close" onclick="document.getElementById('assignModal').style.display='none'">&times;</button>
+    <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Approve Payment & Assign</h2>
+    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Verify the ₹9 payment and assign a Kaarigar to this request.</p>
+    
+    <input type="hidden" id="assignOrderId">
+    
+    <div class="field-group" style="margin-bottom:16px;">
+      <label>Select Kaarigar</label>
+      <select id="assignKaarigarSelect" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px;">
+        <option value="">Loading Kaarigars...</option>
+      </select>
+    </div>
+    
+    <div class="field-group" style="margin-bottom:24px;">
+      <label>Admin Note / Location Coordinates (Sent to User)</label>
+      <textarea id="assignComments" placeholder="e.g. Assigned to Raju. Location: 28.6139, 77.2090" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px; min-height:80px;"></textarea>
+    </div>
+    
+    <button class="form-submit" id="confirmAssignBtn" onclick="submitAssignment()" style="background:var(--marigold); color:var(--ink); border:none; padding:12px 24px; border-radius:8px; font-weight:700; width:100%; cursor:pointer;">
+      Approve & Assign
+    </button>
   </div>
 </div>
 
@@ -214,22 +241,28 @@
       }
       ordersSnap.forEach(d => {
         const o = d.data();
+        const oid = d.id;
         let statusBadge = `<span class="badge" style="background:#e0e0e0; color:#333;">${o.status || 'unknown'}</span>`;
-        if (o.status === 'pending') statusBadge = `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending</span>`;
+        if (o.status === 'pending_payment') statusBadge = `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Payment</span>`;
+        if (o.status === 'pending') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Assigned</span>`;
         if (o.status === 'done') statusBadge = `<span class="badge" style="background:var(--leaf-dim); color:#1F7A44;">Done</span>`;
         
-        let photosHtml = '';
-        if (o.beforePhotoUrl) photosHtml += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
-        if (o.afterPhotoUrl) photosHtml += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
-        if (!photosHtml) photosHtml = '<span style="color:var(--ink-dim); font-size:11px;">None</span>';
+        let actionHtml = '';
+        if (o.status === 'pending_payment') {
+          actionHtml = `<button onclick="openAssignModal('${oid}', '${o.trade}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-size:12px;">Approve & Assign</button>`;
+        } else {
+          if (o.beforePhotoUrl) actionHtml += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
+          if (o.afterPhotoUrl) actionHtml += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
+          if (!actionHtml) actionHtml = '<span style="color:var(--ink-dim); font-size:11px;">None</span>';
+        }
         
         ordersBody.innerHTML += `
           <tr>
             <td style="font-weight:600">${o.item || 'N/A'}</td>
             <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
-            <td>${o.kaarigarName || o.kaarigarId || 'N/A'}</td>
+            <td>${o.kaarigarName || o.kaarigarId || 'Unassigned'}</td>
             <td>${statusBadge}</td>
-            <td>${photosHtml}</td>
+            <td>${actionHtml}</td>
           </tr>
         `;
       });
@@ -247,6 +280,56 @@
       loadData();
     } catch(err) {
       alert("Error approving kaarigar: " + err.message);
+    }
+  }
+
+  window.openAssignModal = function(orderId, trade) {
+    document.getElementById('assignOrderId').value = orderId;
+    const select = document.getElementById('assignKaarigarSelect');
+    select.innerHTML = '<option value="">Select a Kaarigar...</option>';
+    
+    // Populate verified kaarigars matching the trade
+    for (const [id, k] of Object.entries(window.adminKaarigarsData)) {
+      if (k.verified) { // Only verified ones
+        select.innerHTML += `<option value="${id}">${k.name} (${k.trade} - ${k.area})</option>`;
+      }
+    }
+    document.getElementById('assignComments').value = '';
+    document.getElementById('assignModal').style.display = 'flex';
+  }
+
+  window.submitAssignment = async function() {
+    const orderId = document.getElementById('assignOrderId').value;
+    const kaarigarId = document.getElementById('assignKaarigarSelect').value;
+    const comments = document.getElementById('assignComments').value;
+    const btn = document.getElementById('confirmAssignBtn');
+    
+    if (!kaarigarId) {
+      alert("Please select a Kaarigar.");
+      return;
+    }
+    
+    btn.textContent = 'Assigning...';
+    btn.disabled = true;
+    
+    try {
+      const kData = window.adminKaarigarsData[kaarigarId];
+      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
+      await updateDoc(doc(db, 'orders', orderId), {
+        status: 'pending',
+        kaarigarId: kaarigarId,
+        kaarigarName: kData.name,
+        adminComments: comments
+      });
+      
+      alert("Kaarigar assigned successfully!");
+      document.getElementById('assignModal').style.display = 'none';
+      loadData();
+    } catch(err) {
+      alert("Error assigning kaarigar: " + err.message);
+    } finally {
+      btn.textContent = 'Approve & Assign';
+      btn.disabled = false;
     }
   }
 

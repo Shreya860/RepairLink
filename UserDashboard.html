@@ -62,6 +62,9 @@
       <div class="profile-name" id="profileName">Loading...</div>
       <div class="profile-email" id="profileEmail"></div>
     </div>
+    <button onclick="document.getElementById('serviceModal').style.display='flex'" style="background:var(--marigold); color:var(--ink); border:none; padding:12px 24px; border-radius:12px; font-weight:700; font-family:'Manrope', sans-serif; cursor:pointer; font-size:16px;">
+      + Request a Service
+    </button>
   </div>
 
   <div style="background:linear-gradient(135deg, var(--leaf), #083318); border-radius:16px; padding:24px; color:white; margin-bottom:32px; display:flex; justify-content:space-between; align-items:center;">
@@ -95,6 +98,11 @@
     </div>
   </div>
 
+  <h2 class="section-title">My Live Requests</h2>
+  <div class="list-container" id="liveRequestsList">
+    <div style="text-align:center; padding:20px; color:var(--ink-dim);">No active requests.</div>
+  </div>
+
   <h2 class="section-title">Saved Kaarigars</h2>
   <div class="list-container">
     <div class="list-item">
@@ -125,10 +133,49 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="serviceModal" style="display:none;">
+  <div class="modal-container">
+    <button class="modal-close" onclick="document.getElementById('serviceModal').style.display='none'">&times;</button>
+    <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Request a Service</h2>
+    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.</p>
+    
+    <div class="field-group">
+      <label>Service Type</label>
+      <select id="requestTrade">
+        <option value="cobbler">Cobbler / Shoe Repair</option>
+        <option value="watch">Watch Repair</option>
+        <option value="appliance">Appliance Repair</option>
+        <option value="locksmith">Locksmith</option>
+      </select>
+    </div>
+    
+    <div class="field-group">
+      <label>What needs fixing?</label>
+      <input type="text" id="requestItem" placeholder="e.g. Broken mixer grinder jar">
+    </div>
+
+    <div class="field-group">
+      <label>Your Address</label>
+      <textarea id="requestAddress" placeholder="e.g. 12B, Saket Block M"></textarea>
+    </div>
+    
+    <div style="background:var(--paper-2); padding:24px; border-radius:12px; margin-bottom:24px; text-align:center;">
+      <h3 style="margin-top:0; margin-bottom:16px;">Scan to Pay ₹9</h3>
+      <!-- Mock QR Code -->
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=admin@repairlink&pn=RepairLink&am=9.00&cu=INR" alt="QR Code" style="border-radius:8px; margin-bottom:12px;">
+      <div style="font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--ink-dim);">UPI ID: admin@repairlink</div>
+    </div>
+    
+    <button class="form-submit" id="submitRequestBtn">
+      <span style="font-weight:600; text-align:center; width:100%;">I have paid, submit request</span>
+    </button>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     projectId: "repairlink-de1ta",
@@ -172,6 +219,8 @@
           document.getElementById('profileInitials').textContent = (data.displayName || '?').charAt(0).toUpperCase();
         }
         
+        loadLiveRequests(user.uid);
+        
       } else {
         alert("You are registered as a Kaarigar. Redirecting to your dashboard.");
         window.location.href = 'KaarigarDashboard.html';
@@ -186,6 +235,94 @@
     signOut(auth).then(() => {
       window.location.href = 'RepairLink.html';
     });
+  });
+
+  async function loadLiveRequests(uid) {
+    try {
+      const q = query(collection(db, "orders"), where("customerId", "==", uid));
+      const snap = await getDocs(q);
+      const listEl = document.getElementById('liveRequestsList');
+      listEl.innerHTML = '';
+      
+      let hasLive = false;
+      snap.forEach(d => {
+        const o = d.data();
+        if (o.status === 'done') return; // Skip completed ones
+        hasLive = true;
+        
+        let statusBadge = `<span class="status-badge" style="background:#e0e0e0; color:#333;">${o.status}</span>`;
+        let adminNotes = '';
+        
+        if (o.status === 'pending_payment') {
+          statusBadge = `<span class="status-badge" style="background:#FFF9C4; color:#F57F17;">Awaiting Payment Approval</span>`;
+          adminNotes = `<div style="font-size:12px; color:var(--ink-dim); margin-top:8px;">Your payment of ₹9 is being verified by our admin.</div>`;
+        } else if (o.status === 'pending') {
+          statusBadge = `<span class="status-badge" style="background:#E3F2FD; color:#1565C0;">Kaarigar Assigned</span>`;
+          adminNotes = `
+            <div style="margin-top:12px; background:var(--paper-2); padding:12px; border-radius:8px; font-size:13px;">
+              <strong>Assigned:</strong> ${o.kaarigarName || 'Unknown Kaarigar'}<br>
+              <strong>Admin Note:</strong> ${o.adminComments || 'None'}<br>
+            </div>
+          `;
+        }
+        
+        listEl.innerHTML += `
+          <div class="list-item" style="flex-direction:column; align-items:stretch;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="list-info">
+                <div class="list-title">${o.item}</div>
+                <div class="list-meta">${o.date || 'Today'}</div>
+              </div>
+              ${statusBadge}
+            </div>
+            ${adminNotes}
+          </div>
+        `;
+      });
+      
+      if (!hasLive) {
+        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No active requests.</div>';
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  document.getElementById('submitRequestBtn').addEventListener('click', async () => {
+    const item = document.getElementById('requestItem').value;
+    const address = document.getElementById('requestAddress').value;
+    const trade = document.getElementById('requestTrade').value;
+    const btn = document.getElementById('submitRequestBtn');
+    
+    if (!item || !address) {
+      alert("Please fill in what needs fixing and your address.");
+      return;
+    }
+    
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+    
+    try {
+      await addDoc(collection(db, "orders"), {
+        customerId: auth.currentUser.uid,
+        customerName: auth.currentUser.displayName || 'Customer',
+        item: item,
+        trade: trade,
+        address: address,
+        status: 'pending_payment',
+        paymentAmount: 9,
+        date: new Date().toLocaleDateString('en-GB')
+      });
+      
+      alert("Request submitted successfully! We are verifying your payment.");
+      document.getElementById('serviceModal').style.display = 'none';
+      loadLiveRequests(auth.currentUser.uid);
+    } catch(err) {
+      alert("Error submitting request: " + err.message);
+    } finally {
+      btn.innerHTML = '<span style="font-weight:600; text-align:center; width:100%;">I have paid, submit request</span>';
+      btn.disabled = false;
+    }
   });
 </script>
 </body>

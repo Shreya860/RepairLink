@@ -159,9 +159,9 @@
         <span data-i18n="messageWhatsapp">Message this kaarigar on WhatsApp</span>
       </a>
       <div class="action-row" style="margin-bottom:12px;">
-        <button class="action-btn done" id="bookPickupBtn" style="background:var(--marigold); color:var(--ink); width:100%; justify-content:center;">
+        <button class="action-btn done" id="bookPickupBtn" style="background:var(--marigold); color:var(--ink); width:100%; justify-content:center;" onclick="window.location.href='UserDashboard.html'">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          <span data-i18n="bookPickup">Book Doorstep Pick-and-Drop</span>
+          <span data-i18n="bookPickup">Request Service via Dashboard</span>
         </button>
       </div>
       <div class="action-row">
@@ -186,41 +186,6 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="bookingModal" style="display:none;">
-  <div class="modal-container">
-    <button class="modal-close" onclick="document.getElementById('bookingModal').style.display='none'">&times;</button>
-    <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Book Doorstep Pick-and-Drop</h2>
-    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Our delivery partner will pick up your item, take it to the Kaarigar, and drop it back when fixed.</p>
-    
-    <div class="field-group">
-      <label>What needs fixing?</label>
-      <input type="text" id="bookingItem" placeholder="e.g. Leather boots sole replacement">
-    </div>
-    <div class="field-group">
-      <label>Pickup & Drop Address</label>
-      <textarea id="bookingAddress" placeholder="e.g. 12B, Saket Block M"></textarea>
-    </div>
-    
-    <div style="background:var(--paper-2); padding:16px; border-radius:12px; margin-bottom:24px;">
-      <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-        <span>Estimated Repair</span>
-        <span style="font-weight:600;">₹150 - ₹300</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:14px; color:var(--ink-dim);">
-        <span>Platform Convenience Fee</span>
-        <span>₹40</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; border-top:1px dashed var(--line); padding-top:12px;">
-        <span>Pay on completion</span>
-        <span>As per final quote + ₹40</span>
-      </div>
-    </div>
-    
-    <button class="form-submit" id="confirmBookingBtn">
-      <span style="font-weight:600; text-align:center; width:100%;">Confirm Pickup</span>
-    </button>
-  </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script type="module" src="script.js"></script>
