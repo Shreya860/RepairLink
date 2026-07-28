@@ -457,8 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   function trustData(a, idx){
     const r1 = seededRand(idx * 7 + 1), r2 = seededRand(idx * 13 + 3), r3 = seededRand(idx * 23 + 5);
-    const rating = Math.round((4.2 + r1 * 0.75) * 10) / 10;
-    const reviewCount = 18 + Math.floor(r2 * 140) + a.years * 3;
+    const rating = a.avgRating !== undefined ? a.avgRating : Math.round((4.2 + r1 * 0.75) * 10) / 10;
+    const reviewCount = a.totalRatings !== undefined ? a.totalRatings : 18 + Math.floor(r2 * 140) + a.years * 3;
     const jobsCompleted = Math.round(a.years * 40 + r3 * 220);
     const pool = REVIEW_POOL[a.trade];
     const i1 = idx % pool.length, i2 = (idx + 2) % pool.length;
