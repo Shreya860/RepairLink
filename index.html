@@ -1275,6 +1275,54 @@
   document.addEventListener('touchmove', drag, {passive: false});
   document.addEventListener('touchend', dragEnd);
 
+  // Chatbot Button Draggable Logic
+  const chatbotBtn = document.getElementById('chatbotBtn');
+  let isChatDragging = false;
+  let hasChatDragged = false;
+  let chatOffsetX, chatOffsetY;
+
+  const chatDragStart = (e) => {
+    isChatDragging = true;
+    hasChatDragged = false;
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    chatOffsetX = clientX - chatbotBtn.getBoundingClientRect().left;
+    chatOffsetY = clientY - chatbotBtn.getBoundingClientRect().top;
+    chatbotBtn.style.cursor = 'grabbing';
+    chatbotBtn.style.transition = 'none';
+  };
+
+  const chatDrag = (e) => {
+    if (!isChatDragging) return;
+    hasChatDragged = true;
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    chatbotBtn.style.left = (clientX - chatOffsetX) + 'px';
+    chatbotBtn.style.top = (clientY - chatOffsetY) + 'px';
+    chatbotBtn.style.bottom = 'auto';
+    chatbotBtn.style.right = 'auto';
+  };
+
+  const chatDragEnd = () => {
+    if (!isChatDragging) return;
+    isChatDragging = false;
+    chatbotBtn.style.cursor = 'pointer';
+    chatbotBtn.style.transition = 'transform 0.3s, box-shadow 0.3s';
+    if (!hasChatDragged) {
+      openChatbot();
+    }
+  };
+
+  chatbotBtn.addEventListener('mousedown', chatDragStart);
+  document.addEventListener('mousemove', chatDrag);
+  document.addEventListener('mouseup', chatDragEnd);
+  chatbotBtn.addEventListener('touchstart', chatDragStart, {passive: true});
+  document.addEventListener('touchmove', chatDrag, {passive: false});
+  document.addEventListener('touchend', chatDragEnd);
+
+  // Overwrite the inline onclick for chatbotBtn to prevent double-firing
+  chatbotBtn.removeAttribute('onclick');
+
   // Slider Logic
   const slider = document.getElementById('repairSlider');
   const sliderImg = document.getElementById('sliderAfterImg');
@@ -1327,7 +1375,7 @@
   setInterval(spawnTicker, 8000);
 
 </script>
-<a href="#cta" class="floating-book-now">
+<a href="RepairLink.html?role=customer" class="floating-book-now">
   <div class="pulse-ring"></div>
   <span>Book Now</span>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
