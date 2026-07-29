@@ -523,9 +523,43 @@
     border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     background: #fff;
   }
+  /* ================= WOW FEATURES CSS ================= */
+  .typewriter-cursor { animation: blink 0.7s infinite; font-weight: normal; margin-left: 2px; color: var(--rust-deep); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .typewriter-text { display: inline-block; min-width: 200px; }
+
+  #scrollProgressBar {
+    position: fixed; top: 0; left: 0; height: 5px; background: linear-gradient(90deg, #e6683c, #bc1888); z-index: 9999; width: 0%;
+    transition: width 0.1s ease-out;
+  }
+
+  .floating-book-now {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9998;
+    background: var(--rust-deep); color: #fff; padding: 14px 28px; border-radius: 99px;
+    display: flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 16px;
+  }
+  .floating-book-now:hover { transform: translateX(-50%) scale(1.05); color: white; }
+  .pulse-ring {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 99px;
+    animation: pulse-ring 2s infinite; z-index: -1; border: 2px solid var(--rust-deep);
+  }
+  @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.3); opacity: 0; } }
+
+  .trust-marquee { background: var(--ink-deep); color: #fff; padding: 18px 0; overflow: hidden; white-space: nowrap; position: relative; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .marquee-content { display: inline-flex; animation: marquee-anim 35s linear infinite; gap: 60px; padding-left: 60px; }
+  .marquee-content span { display: inline-flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; font-family: var(--font-sans); letter-spacing: 0.5px; }
+  @keyframes marquee-anim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  #social-reels { position: relative; z-index: 1; overflow: hidden; }
+  #social-reels::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(230, 104, 60, 0.08) 0%, transparent 60%); z-index: -1; pointer-events: none; }
+  .reel-wrapper a > div { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease; position: relative; }
+  .reel-wrapper a:hover > div { transform: translateY(-12px) scale(1.02); box-shadow: 0 25px 50px rgba(188, 24, 136, 0.25), 0 0 40px rgba(230, 104, 60, 0.25); }
 </style>
 </head>
 <body>
+<div id="scrollProgressBar"></div>
 
 <div class="disclaimer-bar" id="disclaimerBar">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
@@ -563,7 +597,7 @@
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="eyebrow hero-eyebrow">A repair-first marketplace</p>
-      <h2 class="fr">Before you throw it out, <em>let someone mend it.</em></h2>
+      <h2 class="fr">Before you throw it out, <br><em class="typewriter-text">let someone mend it.</em><span class="typewriter-cursor">|</span></h2>
       <p class="lede">RepairLink puts a verified kaarigar — cobbler, watch repairer, appliance technician, locksmith or tailor — from your own neighbourhood one message away. No showroom, no markup, no guessing who to trust.</p>
       <div class="hero-actions">
         <a href="#cta" class="btn-primary">
@@ -955,12 +989,31 @@
   </div>
 </section>
 
+<!-- ============ TRUST MARQUEE ============ -->
+<section class="trust-marquee">
+  <div class="marquee-content">
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> 100% Verified Kaarigars</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Secure Payments</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Zero Markup Fees</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Buyer Protection</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 4.12A1 1 0 0019 6.81V21h-4v-6H9v6H5V6.81a1 1 0 00-.66-1L12 2.69z"/></svg> Neighborhood Support</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg> Eco-Friendly Choice</span>
+    <!-- DUPLICATE FOR INFINITE LOOP -->
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> 100% Verified Kaarigars</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Secure Payments</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Zero Markup Fees</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Buyer Protection</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 4.12A1 1 0 0019 6.81V21h-4v-6H9v6H5V6.81a1 1 0 00-.66-1L12 2.69z"/></svg> Neighborhood Support</span>
+    <span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg> Eco-Friendly Choice</span>
+  </div>
+</section>
+
 <!-- ============ INSTAGRAM REELS ============ -->
 <section id="social-reels" style="background: var(--paper-2); padding-top: 20px; padding-bottom: 60px;">
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">Feko Mat, Fix Karo</p>
-      <h3 class="fr">#RepairLink #sparkfellowship</h3>
+      <h3 class="fr">Featured on Instagram</h3>
       <p>Watch our latest reels and follow our journey on Instagram.</p>
     </div>
     <div class="reels-grid">
@@ -1285,6 +1338,68 @@
   // Spawn one immediately, then every 8 seconds
   setTimeout(spawnTicker, 2000);
   setInterval(spawnTicker, 8000);
+
+</script>
+<a href="#cta" class="floating-book-now">
+  <div class="pulse-ring"></div>
+  <span>Book Now</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</a>
+
+<script>
+  // TYPEWRITER EFFECT
+  const words = ["let someone mend it.", "fix your favorite shoes.", "restore your leather bag.", "repair that old fan.", "stitch that torn shirt."];
+  let wordIndex = 0, charIndex = 0;
+  let isDeleting = false;
+  const typeText = document.querySelector(".typewriter-text");
+  
+  function typeWord() {
+    if (!typeText) return;
+    const currentWord = words[wordIndex];
+    if (isDeleting) {
+      typeText.textContent = currentWord.substring(0, charIndex - 1);
+      charIndex--;
+    } else {
+      typeText.textContent = currentWord.substring(0, charIndex + 1);
+      charIndex++;
+    }
+    let typeSpeed = 80;
+    if (isDeleting) typeSpeed /= 2;
+    if (!isDeleting && charIndex === currentWord.length) {
+      typeSpeed = 2000;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      wordIndex = (wordIndex + 1) % words.length;
+      typeSpeed = 500;
+    }
+    setTimeout(typeWord, typeSpeed);
+  }
+  setTimeout(typeWord, 1000);
+
+  // SCROLL PROGRESS BAR
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const bar = document.getElementById("scrollProgressBar");
+    if(bar) bar.style.width = scrolled + "%";
+  }, {passive: true});
+
+  // HIDE FLOATING BUTTON ON FOOTER OR HEADER
+  const floatBtn = document.querySelector('.floating-book-now');
+  window.addEventListener('scroll', () => {
+    if(!floatBtn) return;
+    const scrollY = window.scrollY;
+    // hide if very top or very bottom
+    if(scrollY < 300) {
+      floatBtn.style.opacity = '0';
+      floatBtn.style.pointerEvents = 'none';
+    } else {
+      floatBtn.style.opacity = '1';
+      floatBtn.style.pointerEvents = 'all';
+    }
+  }, {passive: true});
 
 </script>
 <script async src="https://www.instagram.com/embed.js"></script>
