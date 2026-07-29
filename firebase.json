@@ -30,7 +30,7 @@
     "rewrites": [
       {
         "source": "/",
-        "destination": "/RepairLink.html"
+        "destination": "/index.html"
       }
     ]
   }
