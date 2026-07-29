@@ -841,29 +841,7 @@
       <div class="impact-card reveal reveal-delay-3"><b class="fr">0%</b><span>Commission taken from any kaarigar's price</span></div>
     </div>
     
-    <!-- Interactive Savings Calculator -->
-    <div class="calc-container reveal reveal-delay-2">
-      <div style="text-align:center;">
-        <h4 style="margin:0; font-size:20px;">Savings Calculator</h4>
-        <p style="margin:5px 0 0; color:var(--ink-soft); font-size:14px;">See how much you save by repairing instead of replacing.</p>
-      </div>
-      <div class="calc-row">
-        <select class="calc-select" id="calcItem">
-          <option value="shoe">Leather Shoes</option>
-          <option value="watch">Wristwatch</option>
-          <option value="fan">Ceiling Fan</option>
-          <option value="bag">Leather Bag</option>
-        </select>
-        <select class="calc-select" id="calcCondition">
-          <option value="minor">Minor Damage</option>
-          <option value="major">Major Repair</option>
-        </select>
-      </div>
-      <div class="calc-result">
-        <h4 id="calcSavings">₹2,500 Saved</h4>
-        <p id="calcCarbon">and 5kg of CO₂ prevented</p>
-      </div>
-    </div>
+    <!-- Calculator removed per user request -->
     
     <p class="illustrative-tag">We're a young platform — this is a live, growing count, not a projection.</p>
 
@@ -1290,25 +1268,6 @@
     if (isSliderDragging) moveSlider(e.touches[0].clientX);
   });
 
-  // Calculator Logic
-  const calcData = {
-    shoe: { new: 3000, minor: 200, major: 600, co2: 8 },
-    watch: { new: 5000, minor: 150, major: 800, co2: 2 },
-    fan: { new: 2500, minor: 300, major: 800, co2: 12 },
-    bag: { new: 4000, minor: 250, major: 900, co2: 15 }
-  };
-  const updateCalc = () => {
-    const item = document.getElementById('calcItem').value;
-    const cond = document.getElementById('calcCondition').value;
-    const data = calcData[item];
-    const repCost = data[cond];
-    const savings = data.new - repCost;
-    document.getElementById('calcSavings').innerHTML = `<span style="font-size: 15px; color: var(--ink-soft); font-weight: 500;">Cost of New: ₹${data.new.toLocaleString('en-IN')} | Repair: ₹${repCost.toLocaleString('en-IN')}</span><br>₹${savings.toLocaleString('en-IN')} Saved`;
-    document.getElementById('calcCarbon').innerText = `and ${data.co2}kg of CO₂ prevented`;
-  };
-  document.getElementById('calcItem').addEventListener('change', updateCalc);
-  document.getElementById('calcCondition').addEventListener('change', updateCalc);
-  updateCalc();
 
   // Ticker Logic
   const tickerWrap = document.getElementById('tickerWrap');
