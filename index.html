@@ -332,14 +332,18 @@
     .foot-top{flex-direction:column;}
   }
   @media (max-width:560px){
-    section{padding:64px 20px;}
-    .hero{padding-top:56px;}
+    section{padding:54px 16px;}
+    .hero{padding-top:40px; padding-left:16px; padding-right:16px;}
+    .hero-copy h1{font-size:32px; margin-bottom:12px;}
+    .hero-copy .lede{font-size:16px; line-height:1.4;}
+    .sec-head h3, .about-head h3{font-size:28px;}
     .services-grid{grid-template-columns:1fr;}
     .impact-grid{grid-template-columns:1fr;}
-    .hero-stats{gap:20px; flex-wrap:wrap;}
-    .hc-ticket{transform:rotate(-3deg) scale(0.75); top:0px; right:-15px;}
+    .hero-stats{gap:16px; flex-wrap:wrap;}
+    .hc-ticket{transform:rotate(-3deg) scale(0.65); top:0px; right:-20px;}
     .hc-p1,.hc-p3{display:none;}
     .join-copy h3{font-size:23px;}
+    .logostrip .ls-items{gap:15px; justify-content:center;}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
