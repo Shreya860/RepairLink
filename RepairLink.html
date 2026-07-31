@@ -90,6 +90,12 @@
     <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span><span data-i18n="legendWatchName">Watch repairers</span> <span style="color:var(--ink-dim)" data-i18n="legendWatchDesc">— horologists</span><span class="legend-price" id="legendPriceWatch"></span></span></div>
     <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span><span data-i18n="legendApplianceName">Appliance repair</span> <span style="color:var(--ink-dim)" data-i18n="legendApplianceDesc">— mixers & grinders</span><span class="legend-price" id="legendPriceAppliance"></span></span></div>
     <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span><span data-i18n="legendLocksmithName">Locksmiths</span> <span style="color:var(--ink-dim)" data-i18n="legendLocksmithDesc">— keys & locks</span><span class="legend-price" id="legendPriceLocksmith"></span></span></div>
+    <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+      <button class="music-btn" id="musicBtn" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); padding: 12px 20px; border-radius: 99px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink); transition: background 0.3s ease, color 0.3s ease; user-select: none;">
+        <span id="musicIcon">🎵</span>
+        <span id="musicText">Play Theme</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -106,70 +112,25 @@
 <audio id="themeSong" loop>
   <source src="theme-song.mp3" type="audio/mpeg">
 </audio>
-<button class="music-btn" id="musicBtn" style="position: fixed; bottom: 30px; left: 30px; z-index: 1000; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); padding: 12px 20px; border-radius: 99px; cursor: grab; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink); transition: background 0.3s ease, color 0.3s ease; user-select: none;">
-  <span id="musicIcon">🎵</span>
-  <span id="musicText">Play Theme</span>
-</button>
+
 <script>
   const musicBtn = document.getElementById('musicBtn');
   const audio = document.getElementById('themeSong');
   const text = document.getElementById('musicText');
   
-  let isDragging = false;
-  let hasDragged = false;
-  let offsetX, offsetY;
-
-  const dragStart = (e) => {
-    isDragging = true;
-    hasDragged = false;
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    offsetX = clientX - musicBtn.getBoundingClientRect().left;
-    offsetY = clientY - musicBtn.getBoundingClientRect().top;
-    musicBtn.style.cursor = 'grabbing';
-    musicBtn.style.transition = 'none'; // remove transition during drag
-  };
-
-  const drag = (e) => {
-    if (!isDragging) return;
-    hasDragged = true;
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    musicBtn.style.left = (clientX - offsetX) + 'px';
-    musicBtn.style.top = (clientY - offsetY) + 'px';
-    musicBtn.style.bottom = 'auto';
-    musicBtn.style.right = 'auto';
-  };
-
-  const dragEnd = () => {
-    if (!isDragging) return;
-    isDragging = false;
-    musicBtn.style.cursor = 'grab';
-    musicBtn.style.transition = 'background 0.3s ease, color 0.3s ease';
-    
-    // If it was just a click and not a drag, toggle the music
-    if (!hasDragged) {
-      if (audio.paused) {
-        audio.play();
-        text.innerText = 'Pause Theme';
-        musicBtn.style.background = 'var(--leaf)';
-        musicBtn.style.color = 'white';
-      } else {
-        audio.pause();
-        text.innerText = 'Play Theme';
-        musicBtn.style.background = 'rgba(255,255,255,0.7)';
-        musicBtn.style.color = 'var(--ink)';
-      }
+  musicBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      text.innerText = 'Pause Theme';
+      musicBtn.style.background = 'var(--leaf)';
+      musicBtn.style.color = 'white';
+    } else {
+      audio.pause();
+      text.innerText = 'Play Theme';
+      musicBtn.style.background = 'rgba(255,255,255,0.7)';
+      musicBtn.style.color = 'var(--ink)';
     }
-  };
-
-  musicBtn.addEventListener('mousedown', dragStart);
-  document.addEventListener('mousemove', drag);
-  document.addEventListener('mouseup', dragEnd);
-
-  musicBtn.addEventListener('touchstart', dragStart, {passive: true});
-  document.addEventListener('touchmove', drag, {passive: true});
-  document.addEventListener('touchend', dragEnd);
+  });
 </script>
 
 <div class="locate-box">
