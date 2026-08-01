@@ -14,27 +14,67 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
-  .container { max-width: 1000px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
-  h1 { font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 24px; color: var(--ink); }
-  
-  .data-section { margin-bottom: 40px; }
-  .data-section h2 { font-family: 'Fraunces', serif; font-size: 20px; margin-bottom: 16px; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
-  
-  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+  body { overflow: auto; }
+
+  /* ---------- Sidebar shell ---------- */
+  .admin-shell { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 240px; flex-shrink: 0; background: var(--paper); border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; padding: 24px 16px; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto;
+  }
+  .sidebar-brand { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 0 8px; margin-bottom: 28px; color: var(--ink); }
+  .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .sidebar-nav button {
+    display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none;
+    padding: 11px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .sidebar-nav button:hover { background: var(--paper-2); color: var(--ink); }
+  .sidebar-nav button.active { background: var(--marigold-dim); color: #8A5C00; }
+  .sidebar-nav button svg { flex-shrink: 0; }
+  .sidebar-nav .nav-badge { margin-left: auto; background: var(--vermilion-dim); color: #B23A2B; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 999px; font-family: 'JetBrains Mono', monospace; }
+  .sidebar-footer { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .sidebar-footer a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-dim); text-decoration: none; }
+  .sidebar-footer a:hover { background: var(--paper-2); color: var(--ink); }
+
+  .main-area { margin-left: 240px; flex: 1; padding: 36px 40px; max-width: 1200px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .page-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+  .page-head h1 { font-family: 'Fraunces', serif; font-size: 26px; color: var(--ink); }
+  .page-head p { font-size: 13px; color: var(--ink-dim); margin-top: 4px; }
+
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+  .search-input { flex: 1; max-width: 320px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; font-family: 'Manrope', sans-serif; font-size: 13px; background: #fff; }
+  .btn-primary { background: var(--marigold); color: #2A1E00; border: none; padding: 10px 20px; border-radius: 999px; font-weight: 700; font-family: 'Manrope', sans-serif; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-small { padding: 4px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-family: 'Manrope', sans-serif; font-size: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); }
+  .btn-small:hover { background: var(--paper-2); }
+  .btn-small.danger { background: #FFF0F0; color: #D32F2F; border-color: #FFCDD2; }
+  .btn-small.marigold { background: var(--marigold); color: #2A1E00; border: none; }
+  .btn-small.ghost { background: #f5f5f5; color: #555; }
+  .actions-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+  .stat-card .stat-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; color: var(--ink-dim); letter-spacing: 0.04em; margin-bottom: 8px; }
+  .stat-card .stat-num { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 700; color: var(--ink); }
+  .stat-card .stat-sub { font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+
+  .panel-block { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+  .panel-block h3 { font-family: 'Fraunces', serif; font-size: 17px; margin-bottom: 14px; color: var(--ink); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); }
   th { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--ink-dim); letter-spacing: 0.05em; }
   tr:hover { background: var(--paper-2); }
-  
+
   .badge { padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
   .badge.admin { background: var(--marigold-dim); color: #8A5C00; }
   .badge.user { background: #E3F2FD; color: #1565C0; }
   .badge.kaarigar { background: var(--leaf-dim); color: #1F7A44; }
-  
-  .nav-header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .nav-header a { font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-  .nav-header a:hover { color: var(--marigold); }
-  
+
   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
   .modal-container { background: var(--paper); border-radius: 20px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto; }
   .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ink-dim); }
@@ -42,107 +82,145 @@
   .detail-row { margin-bottom: 12px; }
   .detail-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--ink-dim); text-transform: uppercase; margin-bottom: 4px; }
   .detail-value { font-size: 15px; font-weight: 600; color: var(--ink); word-wrap: break-word; }
+
+  .field-group { margin-bottom: 16px; }
+  .field-group label { display: block; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; letter-spacing: 0.03em; }
+  .field-group input, .field-group select, .field-group textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font-family: 'Manrope', sans-serif; font-size: 14px; color: var(--ink); background: #fff;
+  }
+  .field-group textarea { resize: vertical; min-height: 60px; }
+  .form-submit { background: var(--marigold); color: #2A1E00; border: none; padding: 12px 24px; border-radius: 999px; font-weight: 700; font-family: 'Manrope', sans-serif; font-size: 14px; cursor: pointer; }
+
+  @media (max-width: 860px) {
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; }
+    .sidebar-brand { display: none; }
+    .sidebar-nav { flex-direction: row; }
+    .sidebar-footer { display: none; }
+    .admin-shell { flex-direction: column; }
+    .main-area { margin-left: 0; padding: 24px 16px; }
+  }
 </style>
 <link rel="icon" type="image/png" href="logo.png?v=2">
 <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
 </head>
 <body class="mesh-bg">
 
-<div class="nav-header">
-  <div style="font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; display:flex; align-items:center; gap:8px;">
-    <img src="logo.png" style="width: 24px; height: 24px; object-fit: contain;">
-    RepairLink<span style="color:var(--leaf)">.</span> Admin
+<div class="admin-shell" id="adminShell" style="display:none;">
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <img src="logo.png" style="width: 32px; height: 32px; object-fit: cover; border-radius: 50%;">
+      RepairLink
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button data-tab="overview" class="active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Overview
+      </button>
+      <button data-tab="users">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Users
+      </button>
+      <button data-tab="kaarigars">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.1-3.1a5 5 0 01-6.6 6.6L4.7 22.3a1.5 1.5 0 01-2.1-2.1L12.8 9.7a5 5 0 016.6-6.6l-3.1 3.1z"/></svg>
+        Kaarigars
+        <span class="nav-badge" id="pendingKaarigarBadge" style="display:none;">0</span>
+      </button>
+      <button data-tab="orders">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+        Orders
+      </button>
+      <button data-tab="messages">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+        <span class="nav-badge" id="unreadMsgBadge" style="display:none;">0</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Return to Home
+      </a>
+      <a href="RepairLink.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Map
+      </a>
+    </div>
   </div>
-  <a href="RepairLink.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Map</a>
-</div>
 
-<div class="container glass-card fade-in-up" id="adminContainer" style="display:none;">
-  <h1>Admin Dashboard</h1>
-  
-  <div class="data-section">
-    <h2>Analytics: Page Visits</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Page Name</th>
-          <th>Total Visits</th>
-        </tr>
-      </thead>
-      <tbody id="analyticsTableBody">
-        <tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="main-area">
 
-  <div class="data-section">
-    <h2>All Users</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Joined</th>
-        </tr>
-      </thead>
-      <tbody id="usersTableBody">
-        <tr><td colspan="4" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
-  
-  <div class="data-section">
-    <h2>All Kaarigars (Listings)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Trade</th>
-          <th>Area</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="kaarigarsTableBody">
-        <tr><td colspan="4" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
-  
-  <div class="data-section">
-    <h2>All Orders (Live Bookings)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Customer UID</th>
-          <th>Kaarigar Name</th>
-          <th>Status</th>
-          <th>Status</th>
-          <th>Actions / Photos</th>
-        </tr>
-      </thead>
-      <tbody id="ordersTableBody">
-        <tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
-      </tbody>
-    </table>
-  </div>
-  
-  <div class="data-section">
-    <h2>Customer Messages (Contact Us)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Contact Info</th>
-          <th>Message</th>
-          <th>Date</th>
-          <th>Status / Actions</th>
-        </tr>
-      </thead>
-      <tbody id="messagesTableBody">
-        <tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
-      </tbody>
-    </table>
+    <!-- ===== OVERVIEW ===== -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="page-head"><div><h1>Overview</h1><p>A quick snapshot of what's happening on RepairLink right now.</p></div></div>
+      <div class="card-grid" id="overviewCards">
+        <div class="stat-card"><div class="stat-label">Loading…</div></div>
+      </div>
+      <div class="panel-block">
+        <h3>Page Visits</h3>
+        <table>
+          <thead><tr><th>Page Name</th><th>Total Visits</th></tr></thead>
+          <tbody id="analyticsTableBody"><tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== USERS ===== -->
+    <div class="tab-content" id="tab-users">
+      <div class="page-head"><div><h1>Users</h1><p>Everyone registered on RepairLink, across all roles.</p></div></div>
+      <div class="toolbar">
+        <input type="text" class="search-input" id="userSearchInput" placeholder="Search by name or email…">
+      </div>
+      <div class="panel-block" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="usersTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== KAARIGARS ===== -->
+    <div class="tab-content" id="tab-kaarigars">
+      <div class="page-head">
+        <div><h1>Kaarigars</h1><p>All kaarigar listings from your fieldwork data.</p></div>
+        <a href="AddKaarigar.html" class="btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add Kaarigar
+        </a>
+      </div>
+      <div class="toolbar">
+        <input type="text" class="search-input" id="kaarigarSearchInput" placeholder="Search by name, trade, or area…">
+      </div>
+      <div class="panel-block" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead><tr><th>Name</th><th>Trade</th><th>Area</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="kaarigarsTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== ORDERS ===== -->
+    <div class="tab-content" id="tab-orders">
+      <div class="page-head"><div><h1>Orders</h1><p>Live repair bookings coming through the platform.</p></div></div>
+      <div class="panel-block" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead><tr><th>Item</th><th>Customer UID</th><th>Kaarigar Name</th><th>Status</th><th>Actions / Photos</th></tr></thead>
+          <tbody id="ordersTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== MESSAGES ===== -->
+    <div class="tab-content" id="tab-messages">
+      <div class="page-head"><div><h1>Messages</h1><p>Contact-us submissions from the website.</p></div></div>
+      <div class="panel-block" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead><tr><th>Name</th><th>Contact Info</th><th>Message</th><th>Date</th><th>Status / Actions</th></tr></thead>
+          <tbody id="messagesTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -159,24 +237,18 @@
     <button class="modal-close" onclick="document.getElementById('assignModal').style.display='none'">&times;</button>
     <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Approve Payment & Assign</h2>
     <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Verify the ₹9 payment and assign a Kaarigar to this request.</p>
-    
     <input type="hidden" id="assignOrderId">
-    
     <div class="field-group" style="margin-bottom:16px;">
       <label>Select Kaarigar</label>
       <select id="assignKaarigarSelect" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px;">
         <option value="">Loading Kaarigars...</option>
       </select>
     </div>
-    
     <div class="field-group" style="margin-bottom:24px;">
       <label>Admin Note / Location Coordinates (Sent to User)</label>
       <textarea id="assignComments" placeholder="e.g. Assigned to Raju. Location: 28.6139, 77.2090" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px; min-height:80px;"></textarea>
     </div>
-    
-    <button class="form-submit" id="confirmAssignBtn" onclick="submitAssignment()" style="background:var(--marigold); color:var(--ink); border:none; padding:12px 24px; border-radius:8px; font-weight:700; width:100%; cursor:pointer;">
-      Approve & Assign
-    </button>
+    <button class="form-submit" id="confirmAssignBtn" onclick="submitAssignment()" style="width:100%;">Approve & Assign</button>
   </div>
 </div>
 
@@ -216,17 +288,29 @@
   window.adminUsersData = {};
   window.adminKaarigarsData = {};
   window.adminMessagesData = {};
+  window.adminOrdersData = {};
+
+  // ---------- Sidebar tab switching ----------
+  const tabButtons = document.querySelectorAll('.sidebar-nav button');
+  function switchTab(tabName) {
+    tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === 'tab-' + tabName));
+    const url = new URL(window.location);
+    url.searchParams.set('tab', tabName);
+    window.history.replaceState({}, '', url);
+  }
+  tabButtons.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+  const initialTab = new URLSearchParams(window.location.search).get('tab');
+  if (initialTab && document.getElementById('tab-' + initialTab)) switchTab(initialTab);
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = 'Auth.html';
       return;
     }
-    
-    // Check role
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists() && userDoc.data().role === 'admin') {
-      document.getElementById('adminContainer').style.display = 'block';
+      document.getElementById('adminShell').style.display = 'flex';
       loadData();
     } else {
       alert("Access Denied. Admins only.");
@@ -235,274 +319,300 @@
   });
 
   async function loadData() {
-    const usersBody = document.getElementById('usersTableBody');
-    const kaarigarsBody = document.getElementById('kaarigarsTableBody');
-    
-    // Load Analytics
+    // ---- Analytics ----
     const analyticsBody = document.getElementById('analyticsTableBody');
+    let sortedStats = [];
     try {
       const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
-      
-      const allPages = [
-        'index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 
-        'RepairLink.html', 'Auth.html', 'UserDashboard.html', 
-        'KaarigarDashboard.html', 'Admin.html'
-      ];
-      
+      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'AddKaarigar.html'];
       let mergedStats = {};
       allPages.forEach(p => mergedStats[p] = 0);
-      
       if (statsDoc.exists()) {
         const statsData = statsDoc.data();
-        for(const [p, c] of Object.entries(statsData)) {
-          mergedStats[p] = c;
-        }
+        for (const [p, c] of Object.entries(statsData)) mergedStats[p] = c;
       }
-      
-      // Sort by visits descending
-      const sortedStats = Object.entries(mergedStats).sort((a,b) => b[1] - a[1]);
+      sortedStats = Object.entries(mergedStats).sort((a, b) => b[1] - a[1]);
       let html = '';
       for (const [page, count] of sortedStats) {
-        html += `<tr>
-          <td style="font-weight:600; font-family:'JetBrains Mono', monospace;">${page}</td>
-          <td><span class="badge kaarigar" style="font-size:13px; background:${count === 0 ? '#f0f0f0' : 'var(--leaf-dim)'}; color:${count === 0 ? '#999' : '#1F7A44'}">${count}</span></td>
-        </tr>`;
+        html += `<tr><td style="font-weight:600; font-family:'JetBrains Mono', monospace;">${page}</td>
+          <td><span class="badge kaarigar" style="font-size:13px; background:${count === 0 ? '#f0f0f0' : 'var(--leaf-dim)'}; color:${count === 0 ? '#999' : '#1F7A44'}">${count}</span></td></tr>`;
       }
       analyticsBody.innerHTML = html;
-      
-    } catch(err) {
+    } catch (err) {
       analyticsBody.innerHTML = `<tr><td colspan="2">Error loading analytics: ${err.message}</td></tr>`;
     }
 
-    // Load Users
+    // ---- Users ----
     try {
       const usersSnap = await getDocs(collection(db, 'users'));
-      usersBody.innerHTML = '';
-      usersSnap.forEach(d => {
-        const u = d.data();
-        window.adminUsersData[d.id] = u;
-        const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
-        usersBody.innerHTML += `
-          <tr>
-            <td style="font-weight:600"><a href="#" onclick="showUserDetails('${d.id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${u.displayName || 'No Name'}</a></td>
-            <td>${u.email}</td>
-            <td><span class="badge ${u.role}">${u.role}</span></td>
-            <td>${dateStr}</td>
-          </tr>
-        `;
-      });
-    } catch(err) {
-      usersBody.innerHTML = `<tr><td colspan="4">Error loading users: ${err.message}</td></tr>`;
+      window.adminUsersData = {};
+      usersSnap.forEach(d => { window.adminUsersData[d.id] = d.data(); });
+      renderUsersTable();
+    } catch (err) {
+      document.getElementById('usersTableBody').innerHTML = `<tr><td colspan="5">Error loading users: ${err.message}</td></tr>`;
     }
-    
-    // Load Kaarigars
+
+    // ---- Kaarigars ----
     try {
       const kaarigarsSnap = await getDocs(collection(db, 'kaarigars'));
-      kaarigarsBody.innerHTML = '';
-      kaarigarsSnap.forEach(d => {
-        const k = d.data();
-        const id = d.id;
-        window.adminKaarigarsData[id] = k;
-        
-        let actionHtml = '';
-        if (k.verified) {
-          actionHtml = `<span style="color:var(--leaf); font-weight:700; display:inline-block; margin-right:8px;">Verified</span>
-          <button onclick="revokeKaarigar('${id}')" style="background:#f5f5f5; color:#555; border:1px solid var(--line); padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Revoke</button>`;
-        } else {
-          actionHtml = `<button onclick="approveKaarigar('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Approve</button>
-          <button onclick="rejectKaarigar('${id}')" style="background:#FFF0F0; color:#D32F2F; border:1px solid #FFCDD2; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif; margin-left: 8px;">Reject</button>`;
-        }
-        
-        kaarigarsBody.innerHTML += `
-          <tr>
-            <td style="font-weight:600"><a href="#" onclick="showKaarigarDetails('${id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${k.name || 'Unknown'}</a></td>
-            <td>${k.trade || 'N/A'}</td>
-            <td>${k.area || 'N/A'}</td>
-            <td>${actionHtml}</td>
-          </tr>
-        `;
-      });
-    } catch(err) {
-      kaarigarsBody.innerHTML = `<tr><td colspan="4">Error loading kaarigars: ${err.message}</td></tr>`;
+      window.adminKaarigarsData = {};
+      kaarigarsSnap.forEach(d => { window.adminKaarigarsData[d.id] = d.data(); });
+      renderKaarigarsTable();
+    } catch (err) {
+      document.getElementById('kaarigarsTableBody').innerHTML = `<tr><td colspan="5">Error loading kaarigars: ${err.message}</td></tr>`;
     }
-    
-    // Load Orders
+
+    // ---- Orders ----
     const ordersBody = document.getElementById('ordersTableBody');
     try {
       const ordersSnap = await getDocs(collection(db, 'orders'));
+      window.adminOrdersData = {};
       ordersBody.innerHTML = '';
       if (ordersSnap.empty) {
-         ordersBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No orders found.</td></tr>`;
+        ordersBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No orders found.</td></tr>`;
       }
       ordersSnap.forEach(d => {
         const o = d.data();
         const oid = d.id;
+        window.adminOrdersData[oid] = o;
         let statusBadge = `<span class="badge" style="background:#e0e0e0; color:#333;">${o.status || 'unknown'}</span>`;
         if (o.status === 'pending_payment') statusBadge = `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Payment</span>`;
         if (o.status === 'pending') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Assigned</span>`;
         if (o.status === 'done') statusBadge = `<span class="badge" style="background:var(--leaf-dim); color:#1F7A44;">Done</span>`;
-        
+
         let actionHtml = '';
         if (o.status === 'pending_payment') {
-          actionHtml = `<button onclick="openAssignModal('${oid}', '${o.trade}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-size:12px;">Approve & Assign</button>`;
+          actionHtml = `<button class="btn-small marigold" onclick="openAssignModal('${oid}', '${o.trade}')">Approve & Assign</button>`;
         } else {
           if (o.beforePhotoUrl) actionHtml += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
           if (o.afterPhotoUrl) actionHtml += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
           if (!actionHtml) actionHtml = '<span style="color:var(--ink-dim); font-size:11px;">None</span>';
         }
-        
-        ordersBody.innerHTML += `
-          <tr>
-            <td style="font-weight:600">${o.item || 'N/A'}</td>
-            <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
-            <td>${o.kaarigarName || o.kaarigarId || 'Unassigned'}</td>
-            <td>${statusBadge}</td>
-            <td>${actionHtml}</td>
-          </tr>
-        `;
+
+        ordersBody.innerHTML += `<tr>
+          <td style="font-weight:600">${o.item || 'N/A'}</td>
+          <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
+          <td>${o.kaarigarName || o.kaarigarId || 'Unassigned'}</td>
+          <td>${statusBadge}</td>
+          <td>${actionHtml}</td>
+        </tr>`;
       });
-    } catch(err) {
+    } catch (err) {
       ordersBody.innerHTML = `<tr><td colspan="5">Error loading orders: ${err.message}</td></tr>`;
     }
-    
-    // Load Messages
+
+    // ---- Messages ----
     const messagesBody = document.getElementById('messagesTableBody');
+    let unreadCount = 0;
     try {
       const msgsSnap = await getDocs(collection(db, 'messages'));
+      window.adminMessagesData = {};
       messagesBody.innerHTML = '';
       if (msgsSnap.empty) {
-         messagesBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No messages found.</td></tr>`;
+        messagesBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No messages found.</td></tr>`;
       } else {
         msgsSnap.forEach(d => {
           const m = d.data();
           const id = d.id;
           window.adminMessagesData[id] = m;
-          
-          let actionHtml = '';
-          if (m.status === 'read' || m.status === 'resolved') {
-            actionHtml = `<span style="color:var(--leaf); font-weight:700;">Resolved</span>`;
-          } else {
-            actionHtml = `<span style="color:#F57F17; font-weight:700; margin-right:8px;">Unread</span>
-              <button onclick="markMessageResolved('${id}')" style="background:var(--marigold); color:#2A1E00; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:700; font-family:'Manrope', sans-serif;">Mark Resolved</button>`;
-          }
-          
+          const isResolved = (m.status === 'read' || m.status === 'resolved');
+          if (!isResolved) unreadCount++;
+          let actionHtml = isResolved
+            ? `<span style="color:var(--leaf); font-weight:700;">Resolved</span>`
+            : `<span style="color:#F57F17; font-weight:700; margin-right:8px;">Unread</span>
+               <button class="btn-small marigold" onclick="markMessageResolved('${id}')">Mark Resolved</button>`;
           let dateStr = m.createdAt ? new Date(m.createdAt.seconds * 1000).toLocaleString() : 'Unknown';
-          
-          messagesBody.innerHTML += `
-            <tr style="${m.status === 'read' || m.status === 'resolved' ? 'opacity:0.6;' : 'font-weight:500;'}">
-              <td>${m.name || 'Unknown'}</td>
-              <td>${m.contactInfo || '-'}</td>
-              <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${m.message || ''}</td>
-              <td>${dateStr}</td>
-              <td>${actionHtml}</td>
-            </tr>
-          `;
+          messagesBody.innerHTML += `<tr style="${isResolved ? 'opacity:0.6;' : 'font-weight:500;'}">
+            <td>${m.name || 'Unknown'}</td>
+            <td>${m.contactInfo || '-'}</td>
+            <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${m.message || ''}</td>
+            <td>${dateStr}</td>
+            <td>${actionHtml}</td>
+          </tr>`;
         });
       }
-    } catch(err) {
+    } catch (err) {
       messagesBody.innerHTML = `<tr><td colspan="5">Error loading messages: ${err.message}</td></tr>`;
     }
-    
+
+    renderOverview(sortedStats, unreadCount);
   }
 
+  // ---------- Overview ----------
+  function renderOverview(sortedStats, unreadCount) {
+    const users = Object.values(window.adminUsersData);
+    const kaarigars = Object.values(window.adminKaarigarsData);
+    const orders = Object.values(window.adminOrdersData);
+
+    const verifiedCount = kaarigars.filter(k => k.verified).length;
+    const pendingCount = kaarigars.length - verifiedCount;
+    const pendingPayment = orders.filter(o => o.status === 'pending_payment').length;
+    const topPage = sortedStats && sortedStats.length ? sortedStats[0] : null;
+
+    document.getElementById('overviewCards').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Kaarigars</div>
+        <div class="stat-num">${kaarigars.length}</div>
+        <div class="stat-sub">${verifiedCount} verified · ${pendingCount} pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Users</div>
+        <div class="stat-num">${users.length}</div>
+        <div class="stat-sub">${users.filter(u => u.role === 'kaarigar').length} kaarigar accounts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Orders</div>
+        <div class="stat-num">${orders.length}</div>
+        <div class="stat-sub">${pendingPayment} awaiting approval</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Messages</div>
+        <div class="stat-num">${Object.keys(window.adminMessagesData).length}</div>
+        <div class="stat-sub">${unreadCount} unread</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Most visited page</div>
+        <div class="stat-num" style="font-size:18px;">${topPage ? topPage[0] : '—'}</div>
+        <div class="stat-sub">${topPage ? topPage[1] + ' visits' : ''}</div>
+      </div>
+    `;
+
+    const kBadge = document.getElementById('pendingKaarigarBadge');
+    if (pendingCount > 0) { kBadge.style.display = 'inline-block'; kBadge.textContent = pendingCount; }
+    else { kBadge.style.display = 'none'; }
+
+    const mBadge = document.getElementById('unreadMsgBadge');
+    if (unreadCount > 0) { mBadge.style.display = 'inline-block'; mBadge.textContent = unreadCount; }
+    else { mBadge.style.display = 'none'; }
+  }
+
+  // ---------- Users tab: search + render ----------
+  function renderUsersTable() {
+    const filter = (document.getElementById('userSearchInput').value || '').toLowerCase();
+    const body = document.getElementById('usersTableBody');
+    body.innerHTML = '';
+    const entries = Object.entries(window.adminUsersData).filter(([id, u]) =>
+      !filter || (u.displayName || '').toLowerCase().includes(filter) || (u.email || '').toLowerCase().includes(filter)
+    );
+    if (entries.length === 0) {
+      body.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--ink-dim);">No users match your search.</td></tr>`;
+      return;
+    }
+    entries.forEach(([id, u]) => {
+      const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
+      body.innerHTML += `<tr>
+        <td style="font-weight:600"><a href="#" onclick="showUserDetails('${id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${u.displayName || 'No Name'}</a></td>
+        <td>${u.email || ''}</td>
+        <td><span class="badge ${u.role}">${u.role}</span></td>
+        <td>${dateStr}</td>
+        <td class="actions-cell">
+          <button class="btn-small" onclick="editUserRole('${id}')">Edit</button>
+          <button class="btn-small danger" onclick="deleteUser('${id}')">Delete</button>
+        </td>
+      </tr>`;
+    });
+  }
+  document.getElementById('userSearchInput').addEventListener('input', renderUsersTable);
+
+  // ---------- Kaarigars tab: search + render ----------
+  function renderKaarigarsTable() {
+    const filter = (document.getElementById('kaarigarSearchInput').value || '').toLowerCase();
+    const body = document.getElementById('kaarigarsTableBody');
+    body.innerHTML = '';
+    const entries = Object.entries(window.adminKaarigarsData).filter(([id, k]) =>
+      !filter || (k.name || '').toLowerCase().includes(filter) || (k.trade || '').toLowerCase().includes(filter) || (k.area || '').toLowerCase().includes(filter)
+    );
+    if (entries.length === 0) {
+      body.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--ink-dim);">No kaarigars match your search.</td></tr>`;
+      return;
+    }
+    entries.forEach(([id, k]) => {
+      let statusHtml = k.verified
+        ? `<span style="color:var(--leaf); font-weight:700;">Verified</span> <button class="btn-small ghost" onclick="revokeKaarigar('${id}')">Revoke</button>`
+        : `<button class="btn-small marigold" onclick="approveKaarigar('${id}')">Approve</button>`;
+      body.innerHTML += `<tr>
+        <td style="font-weight:600"><a href="#" onclick="showKaarigarDetails('${id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${k.name || 'Unknown'}</a></td>
+        <td>${k.trade || 'N/A'}</td>
+        <td>${k.area || 'N/A'}</td>
+        <td>${statusHtml}</td>
+        <td class="actions-cell">
+          <button class="btn-small" onclick="editKaarigarDetails('${id}')">Edit</button>
+          <button class="btn-small danger" onclick="deleteKaarigar('${id}')">Delete</button>
+        </td>
+      </tr>`;
+    });
+  }
+  document.getElementById('kaarigarSearchInput').addEventListener('input', renderKaarigarsTable);
+
+  // ---------- Kaarigar actions ----------
   window.approveKaarigar = async function(id) {
     try {
-      await updateDoc(doc(db, 'kaarigars', id), {
-        verified: true
-      });
+      await updateDoc(doc(db, 'kaarigars', id), { verified: true });
       showToast("Kaarigar verified successfully!");
       loadData();
-    } catch(err) {
-      showToast("Error approving kaarigar: " + err.message, 'error');
-    }
-  }
+    } catch (err) { showToast("Error approving kaarigar: " + err.message, 'error'); }
+  };
+
+  window.revokeKaarigar = async function(id) {
+    if (!confirm("Are you sure you want to revoke this kaarigar's verification?")) return;
+    try {
+      await updateDoc(doc(db, 'kaarigars', id), { verified: false });
+      showToast("Kaarigar verification revoked.");
+      loadData();
+    } catch (err) { showToast("Error revoking kaarigar: " + err.message, 'error'); }
+  };
+
+  window.deleteKaarigar = async function(id) {
+    const k = window.adminKaarigarsData[id];
+    if (!confirm(`Delete ${k?.name || 'this kaarigar'} permanently? This can't be undone.`)) return;
+    try {
+      await deleteDoc(doc(db, 'kaarigars', id));
+      showToast("Kaarigar deleted.");
+      loadData();
+    } catch (err) { showToast("Error deleting kaarigar: " + err.message, 'error'); }
+  };
 
   window.openAssignModal = function(orderId, trade) {
     document.getElementById('assignOrderId').value = orderId;
     const select = document.getElementById('assignKaarigarSelect');
     select.innerHTML = '<option value="">Select a Kaarigar...</option>';
-    
-    // Populate verified kaarigars matching the trade
     for (const [id, k] of Object.entries(window.adminKaarigarsData)) {
-      if (k.verified) { // Only verified ones
-        select.innerHTML += `<option value="${id}">${k.name} (${k.trade} - ${k.area})</option>`;
-      }
+      if (k.verified) select.innerHTML += `<option value="${id}">${k.name} (${k.trade} - ${k.area})</option>`;
     }
     document.getElementById('assignComments').value = '';
     document.getElementById('assignModal').style.display = 'flex';
-  }
+  };
 
   window.submitAssignment = async function() {
     const orderId = document.getElementById('assignOrderId').value;
     const kaarigarId = document.getElementById('assignKaarigarSelect').value;
     const comments = document.getElementById('assignComments').value;
     const btn = document.getElementById('confirmAssignBtn');
-    
-    if (!kaarigarId) {
-      showToast("Please select a Kaarigar.", 'error');
-      return;
-    }
-    
-    btn.textContent = 'Assigning...';
-    btn.disabled = true;
-    
+    if (!kaarigarId) { showToast("Please select a Kaarigar.", 'error'); return; }
+    btn.textContent = 'Assigning...'; btn.disabled = true;
     try {
       const kData = window.adminKaarigarsData[kaarigarId];
-      await updateDoc(doc(db, 'orders', orderId), {
-        status: 'pending',
-        kaarigarId: kaarigarId,
-        kaarigarName: kData.name,
-        adminComments: comments
-      });
-      
+      await updateDoc(doc(db, 'orders', orderId), { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments });
       showToast("Kaarigar assigned successfully!");
       document.getElementById('assignModal').style.display = 'none';
       loadData();
-    } catch(err) {
+    } catch (err) {
       showToast("Error assigning kaarigar: " + err.message, 'error');
     } finally {
-      btn.textContent = 'Approve & Assign';
-      btn.disabled = false;
+      btn.textContent = 'Approve & Assign'; btn.disabled = false;
     }
-  }
-
-  window.revokeKaarigar = async function(id) {
-    if(!confirm("Are you sure you want to revoke this kaarigar's verification?")) return;
-    try {
-      await updateDoc(doc(db, 'kaarigars', id), {
-        verified: false
-      });
-      showToast("Kaarigar verification revoked.");
-      loadData();
-    } catch(err) {
-      showToast("Error revoking kaarigar: " + err.message, 'error');
-    }
-  }
-
-  window.rejectKaarigar = async function(id) {
-    if(!confirm("Are you sure you want to reject and delete this kaarigar's application? They will need to re-apply.")) return;
-    try {
-      await deleteDoc(doc(db, 'kaarigars', id));
-      showToast("Kaarigar application deleted.");
-      loadData();
-    } catch(err) {
-      showToast("Error rejecting kaarigar: " + err.message, 'error');
-    }
-  }
+  };
 
   window.markMessageResolved = async function(id) {
-    if(!confirm("Mark this message as resolved?")) return;
+    if (!confirm("Mark this message as resolved?")) return;
     try {
-      await updateDoc(doc(db, 'messages', id), {
-        status: 'resolved'
-      });
+      await updateDoc(doc(db, 'messages', id), { status: 'resolved' });
       showToast("Message marked as resolved!");
       loadData();
-    } catch(err) {
-      showToast("Error updating message: " + err.message, 'error');
-    }
-  }
+    } catch (err) { showToast("Error updating message: " + err.message, 'error'); }
+  };
 
+  // ---------- User details / edit / delete ----------
   window.showUserDetails = function(id) {
     const u = window.adminUsersData[id];
     document.getElementById('modalTitle').textContent = "User Details";
@@ -512,133 +622,117 @@
       <div class="detail-row"><div class="detail-label">Role</div><div class="detail-value">${u.role || '-'}</div></div>
       <div class="detail-row"><div class="detail-label">ID</div><div class="detail-value" style="font-family:'JetBrains Mono', monospace; font-size:12px;">${u.uid || id}</div></div>
       <div class="detail-row"><div class="detail-label">Profile Image</div><div class="detail-value">${u.photoURL ? `<img src="${u.photoURL}" width="50" style="border-radius:50%">` : 'None'}</div></div>
+      <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-small marigold" onclick="editUserRole('${id}')">Edit Role</button>
+      </div>
     `;
     document.getElementById('detailsModal').style.display = 'flex';
-  }
+  };
 
+  window.editUserRole = function(id) {
+    const u = window.adminUsersData[id];
+    document.getElementById('modalTitle').textContent = "Edit User Role";
+    document.getElementById('modalContent').innerHTML = `
+      <div class="detail-row"><div class="detail-label">Name</div><div class="detail-value">${u.displayName || '-'}</div></div>
+      <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${u.email || '-'}</div></div>
+      <div class="field-group" style="margin-top:16px;">
+        <label>Role</label>
+        <select id="editUserRoleSelect">
+          <option value="user" ${u.role === 'user' ? 'selected' : ''}>Customer</option>
+          <option value="kaarigar" ${u.role === 'kaarigar' ? 'selected' : ''}>Kaarigar</option>
+          <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+        </select>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
+        <button class="btn-small" onclick="showUserDetails('${id}')">Cancel</button>
+        <button class="btn-small marigold" onclick="saveUserRole('${id}')">Save Changes</button>
+      </div>
+    `;
+    document.getElementById('detailsModal').style.display = 'flex';
+  };
+
+  window.saveUserRole = async function(id) {
+    const role = document.getElementById('editUserRoleSelect').value;
+    try {
+      await updateDoc(doc(db, 'users', id), { role });
+      showToast("User role updated!");
+      document.getElementById('detailsModal').style.display = 'none';
+      loadData();
+    } catch (err) { showToast("Error saving: " + err.message, 'error'); }
+  };
+
+  window.deleteUser = async function(id) {
+    const u = window.adminUsersData[id];
+    if (!confirm(`Delete ${u?.displayName || 'this user'}'s profile? This removes their RepairLink profile only — it does not delete their Google sign-in, so they can still log back in and will be treated as a new user.`)) return;
+    try {
+      await deleteDoc(doc(db, 'users', id));
+      showToast("User profile deleted.");
+      loadData();
+    } catch (err) { showToast("Error deleting user: " + err.message, 'error'); }
+  };
+
+  // ---------- Kaarigar details / edit ----------
   window.showKaarigarDetails = function(id) {
     const k = window.adminKaarigarsData[id];
     document.getElementById('modalTitle').textContent = "Kaarigar Details";
     let contentHtml = '';
-    
-    // Sort keys alphabetically for neatness
     const keys = Object.keys(k).sort();
-    for(const key of keys) {
-      // Don't show raw lat/lng objects or very long data if we don't want to, but for admin it's fine.
+    for (const key of keys) {
       let val = k[key];
       if (typeof val === 'object') val = JSON.stringify(val);
       contentHtml += `<div class="detail-row"><div class="detail-label">${key}</div><div class="detail-value">${val}</div></div>`;
     }
-    
-    contentHtml += `
-      <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
-        <button onclick="editKaarigarDetails('${id}')" style="background:var(--marigold); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Edit Details</button>
-      </div>
-    `;
-    
+    contentHtml += `<div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
+      <button class="btn-small marigold" onclick="editKaarigarDetails('${id}')">Edit Details</button>
+    </div>`;
     document.getElementById('modalContent').innerHTML = contentHtml;
     document.getElementById('detailsModal').style.display = 'flex';
-  }
+  };
 
   window.editKaarigarDetails = function(id) {
     const k = window.adminKaarigarsData[id];
     document.getElementById('modalTitle').textContent = "Edit Kaarigar Details";
     document.getElementById('modalContent').innerHTML = `
-      <div class="detail-row" style="margin-bottom:12px;">
-        <label class="detail-label" style="display:block;">Name</label>
-        <input type="text" id="editKName" value="${k.name || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
+      <div class="field-group"><label>Name</label><input type="text" id="editKName" value="${k.name || ''}"></div>
+      <div class="field-group"><label>Trade</label><input type="text" id="editKTrade" value="${k.trade || ''}"></div>
+      <div class="field-group"><label>Area</label><input type="text" id="editKArea" value="${k.area || ''}"></div>
+      <div class="field-group"><label>Phone / WhatsApp number</label><input type="tel" id="editKPhone" value="${k.phone || ''}"></div>
+      <div class="field-group"><label>Years of Experience</label><input type="number" id="editKYears" value="${k.years || ''}"></div>
+      <div class="field-group"><label>Working Hours</label><input type="text" id="editKHours" value="${k.hours || ''}"></div>
+      <div style="display:flex; gap:12px;">
+        <div class="field-group" style="flex:1;"><label>Latitude</label><input type="number" step="any" id="editKLat" value="${k.lat ?? ''}"></div>
+        <div class="field-group" style="flex:1;"><label>Longitude</label><input type="number" step="any" id="editKLng" value="${k.lng ?? ''}"></div>
       </div>
-      <div class="detail-row" style="margin-bottom:12px;">
-        <label class="detail-label" style="display:block;">Trade</label>
-        <input type="text" id="editKTrade" value="${k.trade || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
-      </div>
-      <div class="detail-row" style="margin-bottom:12px;">
-        <label class="detail-label" style="display:block;">Area</label>
-        <input type="text" id="editKArea" value="${k.area || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
-      </div>
-      <div class="detail-row" style="margin-bottom:12px;">
-        <label class="detail-label" style="display:block;">Years of Experience</label>
-        <input type="number" id="editKYears" value="${k.years || ''}" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif;">
-      </div>
-      <div class="detail-row" style="margin-bottom:12px;">
-        <label class="detail-label" style="display:block;">Intro</label>
-        <textarea id="editKIntro" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif; min-height:80px; resize:vertical;">${k.intro || ''}</textarea>
-      </div>
+      <div class="field-group"><label>Intro line 1</label><textarea id="editKS1">${k.s1 || ''}</textarea></div>
+      <div class="field-group"><label>Intro line 2</label><textarea id="editKS2">${k.s2 || ''}</textarea></div>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
-        <button onclick="showKaarigarDetails('${id}')" style="background:var(--paper-2); border:1px solid var(--line); padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:700;">Cancel</button>
-        <button onclick="saveKaarigarDetails('${id}')" style="background:var(--marigold); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Save Changes</button>
+        <button class="btn-small" onclick="showKaarigarDetails('${id}')">Cancel</button>
+        <button class="btn-small marigold" onclick="saveKaarigarDetails('${id}')">Save Changes</button>
       </div>
     `;
-  }
+  };
 
   window.saveKaarigarDetails = async function(id) {
     try {
-      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js");
       await updateDoc(doc(db, 'kaarigars', id), {
         name: document.getElementById('editKName').value,
         trade: document.getElementById('editKTrade').value,
         area: document.getElementById('editKArea').value,
+        phone: document.getElementById('editKPhone').value,
         years: parseInt(document.getElementById('editKYears').value) || 0,
-        intro: document.getElementById('editKIntro').value
+        hours: document.getElementById('editKHours').value,
+        lat: parseFloat(document.getElementById('editKLat').value),
+        lng: parseFloat(document.getElementById('editKLng').value),
+        s1: document.getElementById('editKS1').value,
+        s2: document.getElementById('editKS2').value
       });
-      alert("Kaarigar details updated successfully!");
+      showToast("Kaarigar details updated successfully!");
       document.getElementById('detailsModal').style.display = 'none';
       loadData();
-    } catch(err) {
-      alert("Error saving: " + err.message);
-    }
-  }
+    } catch (err) { showToast("Error saving: " + err.message, 'error'); }
+  };
 </script>
 
-<!-- Return to Home Draggable Button -->
-<a href="index.html" class="return-home-btn" id="returnHomeBtn" style="position:fixed; bottom:100px; left:30px; z-index:9999; display:flex; align-items:center; gap:8px; background:var(--ink, #1F1B13); color:#fff; padding:12px 20px; border-radius:99px; text-decoration:none; font-weight:700; font-family:'Manrope', sans-serif; font-size:14px; box-shadow:0 10px 30px rgba(0,0,0,0.15); cursor:grab; user-select:none; transition: transform 0.3s, box-shadow 0.3s;">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-  <span>Return to Home</span>
-</a>
-<script>
-  (function(){
-    const btn = document.getElementById('returnHomeBtn');
-    if(!btn) return;
-    let isDragging = false, hasDragged = false, offsetX, offsetY;
-
-    const dragStart = (e) => {
-      isDragging = true;
-      hasDragged = false;
-      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-      offsetX = clientX - btn.getBoundingClientRect().left;
-      offsetY = clientY - btn.getBoundingClientRect().top;
-      btn.style.cursor = 'grabbing';
-      btn.style.transition = 'none';
-    };
-
-    const drag = (e) => {
-      if (!isDragging) return;
-      hasDragged = true;
-      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-      btn.style.left = (clientX - offsetX) + 'px';
-      btn.style.top = (clientY - offsetY) + 'px';
-      btn.style.bottom = 'auto';
-      btn.style.right = 'auto';
-    };
-
-    const dragEnd = (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      btn.style.cursor = 'grab';
-      btn.style.transition = 'transform 0.3s, box-shadow 0.3s';
-    };
-
-    btn.addEventListener('mousedown', dragStart);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', dragEnd);
-    btn.addEventListener('click', (e) => { if(hasDragged) e.preventDefault(); });
-    btn.addEventListener('touchstart', dragStart, {passive: true});
-    document.addEventListener('touchmove', drag, {passive: false});
-    document.addEventListener('touchend', dragEnd);
-  })();
-</script>
 <!-- PAGE TRACKER SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
@@ -663,5 +757,4 @@
   setDoc(docRef, { [pageName]: increment(1) }, { merge: true }).catch(e => console.error("Error tracking visit:", e));
 </script>
 </body>
-
 </html>

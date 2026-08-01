@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="RepairLink — Local Repair Experts">
+<meta property="og:description" content="Mapping North Delhi's kaarigars — repair first, recycle what's left. Find your nearest cobbler, mechanic, and repair shops instantly.">
+<meta property="og:image" content="https://repairlink-de1ta.web.app/logo.png">
+<meta property="og:url" content="https://repairlink-de1ta.web.app/">
+<meta name="twitter:card" content="summary_large_image">
+<title>Add Kaarigar — RepairLink Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+  .container { max-width: 800px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
+  h1 { font-family: 'Fraunces', serif; font-size: 26px; margin-bottom: 6px; color: var(--ink); }
+  .subtitle { font-size: 13px; color: var(--ink-dim); margin-bottom: 28px; }
+
+  .nav-header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .nav-header a { font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-header a:hover { color: var(--marigold); }
+  .nav-header .brand { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+  .field-group { margin-bottom: 16px; }
+  .field-group label { display: block; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; letter-spacing: 0.03em; }
+  .field-group input, .field-group select, .field-group textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font-family: 'Manrope', sans-serif; font-size: 14px; color: var(--ink); background: #fff;
+  }
+  .field-group textarea { resize: vertical; min-height: 60px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field-hint { font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+  .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .checkbox-row input { width: auto; }
+  .checkbox-row label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 0; text-transform: none; font-family: 'Manrope', sans-serif; }
+  #addKaarigarMap { height: 280px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 8px; }
+  .form-submit { background: var(--marigold); color: #2A1E00; border: none; padding: 12px 24px; border-radius: 999px; font-weight: 700; font-family: 'Manrope', sans-serif; font-size: 14px; cursor: pointer; }
+  .form-submit:hover { transform: translateY(-1px); }
+  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  @media (max-width: 860px) {
+    .container { padding: 24px; }
+  }
+</style>
+<link rel="icon" type="image/png" href="logo.png?v=2">
+<link rel="shortcut icon" type="image/png" href="logo.png?v=2">
+</head>
+<body class="mesh-bg">
+
+<div class="nav-header">
+  <div class="brand">
+    <img src="logo.png" style="width: 24px; height: 24px; object-fit: contain;">
+    RepairLink<span style="color:var(--leaf)">.</span> Admin
+  </div>
+  <a href="Admin.html?tab=kaarigars"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to Admin</a>
+</div>
+
+<div class="container glass-card fade-in-up" id="addKaarigarContainer" style="display:none;">
+  <h1>Add New Kaarigar</h1>
+  <p class="subtitle">Add a kaarigar from your fieldwork data. Click the map to drop a pin, or type coordinates directly — both stay in sync. New listings are added as unverified; verify them from the Kaarigars tab once you've confirmed their details.</p>
+
+  <form id="addKaarigarForm">
+    <div class="field-row">
+      <div class="field-group">
+        <label for="newKName">Full name</label>
+        <input type="text" id="newKName" placeholder="e.g. Ramesh Kumar" required>
+      </div>
+      <div class="field-group">
+        <label for="newKTrade">Trade</label>
+        <select id="newKTrade" required>
+          <option value="">Select a trade…</option>
+          <option value="cobbler">Cobbler</option>
+          <option value="watch">Watch repairer</option>
+          <option value="appliance">Appliance repairer</option>
+          <option value="locksmith">Locksmith</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label for="newKPhone">Phone / WhatsApp number</label>
+        <input type="tel" id="newKPhone" placeholder="e.g. 919876500001" required>
+        <div class="field-hint">Country code + 10 digits, no spaces or +, e.g. 91XXXXXXXXXX.</div>
+      </div>
+      <div class="field-group">
+        <label for="newKYears">Years of experience</label>
+        <input type="number" id="newKYears" min="0" placeholder="e.g. 11" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label for="newKArea">Area / locality</label>
+        <input type="text" id="newKArea" placeholder="e.g. Kamla Nagar" required>
+      </div>
+      <div class="field-group">
+        <label for="newKHours">Working hours</label>
+        <input type="text" id="newKHours" placeholder="e.g. 10 AM – 7 PM · Closed Sun" required>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="newKS1">Intro line 1 (shown in their profile chat)</label>
+      <textarea id="newKS1" placeholder="e.g. Hey! I'm Ramesh - I've been sitting right here near Kashmere Gate for the past 11 years."></textarea>
+    </div>
+    <div class="field-group">
+      <label for="newKS2">Intro line 2</label>
+      <textarea id="newKS2" placeholder="e.g. I've repaired more than 5,000 shoes in that time..."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label>Location - click the map to drop a pin, or enter coordinates directly</label>
+      <div id="addKaarigarMap"></div>
+      <div class="field-row">
+        <div class="field-group" style="margin-bottom:0;">
+          <label for="newKLat">Latitude</label>
+          <input type="number" step="any" id="newKLat" placeholder="e.g. 28.6667" required>
+        </div>
+        <div class="field-group" style="margin-bottom:0;">
+          <label for="newKLng">Longitude</label>
+          <input type="number" step="any" id="newKLng" placeholder="e.g. 77.2286" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="newKVerified">
+      <label for="newKVerified">Mark as verified now (leave unchecked to verify later from the Kaarigars tab)</label>
+    </div>
+
+    <button type="submit" class="form-submit" id="addKaarigarBtn">Add Kaarigar</button>
+  </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script type="module">
+  window.showToast = function(message, type = 'success') {
+    let toast = document.getElementById('globalToast');
+    if(!toast) {
+      toast = document.createElement('div');
+      toast.id = 'globalToast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    toast.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  };
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    projectId: "repairlink-de1ta",
+    appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+    storageBucket: "repairlink-de1ta.firebasestorage.app",
+    apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+    authDomain: "repairlink-de1ta.firebaseapp.com",
+    messagingSenderId: "4711329582",
+    measurementId: "G-BQ7PBRSGH3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = 'Auth.html';
+      return;
+    }
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists() && userDoc.data().role === 'admin') {
+      document.getElementById('addKaarigarContainer').style.display = 'block';
+      initAddKaarigarMap();
+    } else {
+      alert("Access Denied. Admins only.");
+      window.location.href = 'RepairLink.html';
+    }
+  });
+
+  // ---------- Location picker map ----------
+  let addKMap, addKMarker;
+  function initAddKaarigarMap() {
+    // Centered on North Delhi, same default view as the public map.
+    addKMap = L.map('addKaarigarMap').setView([28.74, 77.18], 11.4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      maxZoom: 17, minZoom: 10
+    }).addTo(addKMap);
+
+    const latInput = document.getElementById('newKLat');
+    const lngInput = document.getElementById('newKLng');
+
+    function setMarker(lat, lng) {
+      if (addKMarker) { addKMarker.setLatLng([lat, lng]); }
+      else { addKMarker = L.marker([lat, lng], { draggable: true }).addTo(addKMap); }
+      addKMarker.on('dragend', () => {
+        const pos = addKMarker.getLatLng();
+        latInput.value = pos.lat.toFixed(6);
+        lngInput.value = pos.lng.toFixed(6);
+      });
+    }
+
+    // Click the map to drop/move the pin, and fill the fields.
+    addKMap.on('click', (e) => {
+      const { lat, lng } = e.latlng;
+      latInput.value = lat.toFixed(6);
+      lngInput.value = lng.toFixed(6);
+      setMarker(lat, lng);
+    });
+
+    // Typing coordinates directly also moves the pin.
+    function syncFromInputs() {
+      const lat = parseFloat(latInput.value);
+      const lng = parseFloat(lngInput.value);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        setMarker(lat, lng);
+        addKMap.panTo([lat, lng]);
+      }
+    }
+    latInput.addEventListener('change', syncFromInputs);
+    lngInput.addEventListener('change', syncFromInputs);
+  }
+
+  // ---------- Form submit ----------
+  const addKaarigarForm = document.getElementById('addKaarigarForm');
+  addKaarigarForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('addKaarigarBtn');
+
+    const name = document.getElementById('newKName').value.trim();
+    const trade = document.getElementById('newKTrade').value;
+    const phone = document.getElementById('newKPhone').value.trim();
+    const years = parseInt(document.getElementById('newKYears').value) || 0;
+    const area = document.getElementById('newKArea').value.trim();
+    const hours = document.getElementById('newKHours').value.trim();
+    const s1 = document.getElementById('newKS1').value.trim();
+    const s2 = document.getElementById('newKS2').value.trim();
+    const lat = parseFloat(document.getElementById('newKLat').value);
+    const lng = parseFloat(document.getElementById('newKLng').value);
+    const verified = document.getElementById('newKVerified').checked;
+
+    if (!name || !trade || !phone || !area || !hours || isNaN(lat) || isNaN(lng)) {
+      showToast("Please fill in all required fields, including a location.", 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Adding...';
+
+    try {
+      await addDoc(collection(db, 'kaarigars'), {
+        name, trade, phone, years, area, hours, s1, s2, lat, lng, verified,
+        createdAt: new Date()
+      });
+      showToast(`${name} added successfully!`);
+      addKaarigarForm.reset();
+      if (addKMarker) { addKMap.removeLayer(addKMarker); addKMarker = null; }
+      // Send the admin back to the Kaarigars tab to see the new listing.
+      setTimeout(() => { window.location.href = 'Admin.html?tab=kaarigars'; }, 900);
+    } catch (err) {
+      showToast("Error adding kaarigar: " + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Add Kaarigar';
+    }
+  });
+</script>
+
+<!-- PAGE TRACKER SCRIPT -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    projectId: "repairlink-de1ta",
+    appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+    storageBucket: "repairlink-de1ta.firebasestorage.app",
+    apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+    authDomain: "repairlink-de1ta.firebaseapp.com",
+    messagingSenderId: "4711329582",
+    measurementId: "G-BQ7PBRSGH3"
+  };
+
+  const app = initializeApp(firebaseConfig, "TrackerApp-" + Math.random().toString(36).substring(7));
+  const db = getFirestore(app);
+
+  let pageName = window.location.pathname.split('/').pop();
+  if (!pageName || pageName === '') pageName = 'index.html';
+  const docRef = doc(db, 'stats', 'page_visits');
+  setDoc(docRef, { [pageName]: increment(1) }, { merge: true }).catch(e => console.error("Error tracking visit:", e));
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-analytics.js";
-import { getFirestore, collection, getDocs, doc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -273,80 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
       icon:'<circle fill="CURR" cx="7.2" cy="16.8" r="3.6"/><path stroke="CURR" stroke-width="2.6" stroke-linecap="round" fill="none" d="M9.7 14.3L18.5 5.5"/><path stroke="CURR" stroke-width="2.2" stroke-linecap="round" fill="none" d="M18.5 5.5l2.3 2.3M15.9 8.1l2.1 2.1"/>' }
   };
 
-  let ARTISANS = [
-    { name:"Ramesh Kumar", trade:"cobbler", phone:"919876507001", years:11, hours:"10 AM – 7 PM · Closed Sun", lat:28.6667, lng:77.2286, area:"Kashmere Gate",
-      s1:"Hey! I'm Ramesh - I've been sitting right here near Kashmere Gate for the past 11 years.",
-      s2:"I've repaired more than 5,000 shoes in that time and I keep my rates minimal, because everyone deserves a well-fitting pair. I sit from 10 AM to 7 PM, but not on Sundays - that's family day." },
-    { name:"Suresh Lal", trade:"cobbler", phone:"919876507002", years:6, hours:"9 AM – 6:30 PM · Closed Sun", lat:28.6580, lng:77.2100, area:"Sadar Bazaar",
-      s1:"Namaste, I'm Suresh, working out of a small corner in Sadar Bazaar for 6 years now.",
-      s2:"My father taught me this trade, and before him, my grandfather. Nothing goes to waste if it can still be mended. Come by 9 to 6:30, except Sundays." },
-    { name:"Iqbal Ahmed", trade:"watch", phone:"919876507003", years:19, hours:"11 AM – 8 PM · Closed Sun", lat:28.6800, lng:77.2220, area:"Civil Lines",
-      s1:"I'm Iqbal - I've kept time for this part of Civil Lines for 19 years now.",
-      s2:"Battery changes, strap repairs, old mechanical pieces no showroom wants to touch anymore - I take them all. I'm here 11 to 8, every day but Sunday." },
-    { name:"Harbhajan Singh", trade:"watch", phone:"919876507004", years:8, hours:"10:30 AM – 7:30 PM · Closed Sun", lat:28.6800, lng:77.2050, area:"Kamla Nagar",
-      s1:"Hello, I'm Harbhajan, and I've had my little watch counter in Kamla Nagar for 8 years.",
-      s2:"Students from the college nearby are half my customers. I charge what's fair, especially for students. Find me 10:30 to 7:30, closed Sundays." },
-    { name:"Farooq Sheikh", trade:"appliance", phone:"919876507005", years:14, hours:"10 AM – 7 PM · Closed Sun", lat:28.6600, lng:77.2050, area:"Azad Market",
-      s1:"I'm Farooq - for 14 years I've been fixing mixers, grinders and small kitchen motors near Azad Market.",
-      s2:"Most people think a mixer with a dead motor is trash. Nine times out of ten, it isn't. I take minimal charges. Open 10 to 7, not Sundays." },
-    { name:"Deepak Chauhan", trade:"appliance", phone:"919876507006", years:9, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.7100, lng:77.1900, area:"Model Town",
-      s1:"Hi, I'm Deepak, running a small repair stall in Model Town for the past 9 years.",
-      s2:"Mixies, grinders, table fans, irons - if it plugs in and it's stopped working, bring it over. Open 9:30 to 6:30, closed Sundays." },
-    { name:"Rafiq Malik", trade:"locksmith", phone:"919876507007", years:16, hours:"9 AM – 9 PM · Open all week", lat:28.6660, lng:77.2170, area:"Tis Hazari",
-      s1:"I'm Rafiq - I've been cutting keys and fixing locks near Tis Hazari courts for 16 years.",
-      s2:"Court days keep this area busy, so I stay open all week, 9 AM to 9 PM. Old almirah locks, padlocks, house locks - always for the right reasons." },
-    { name:"Meena Devi", trade:"locksmith", phone:"919876507008", years:7, hours:"10 AM – 6 PM · Closed Sun", lat:28.6870, lng:77.2010, area:"Roshanara Road",
-      s1:"Hello, I'm Meena - one of the few women locksmiths you'll find in this trade, working near Roshanara Road for 7 years.",
-      s2:"Duplicate keys, jammed locks, gate repairs - I handle it all, and I keep my rates the same for everyone. Here 10 to 6, closed Sundays." },
-    { name:"Vinod Kashyap", trade:"cobbler", phone:"919876507009", years:5, hours:"10 AM – 8 PM · Closed Sun", lat:28.7040, lng:77.2110, area:"Mukherjee Nagar",
-      s1:"I'm Vinod, and I've had my stool outside the coaching lane in Mukherjee Nagar for 5 years now.",
-      s2:"Half my customers are students who've worn one pair of shoes into the ground. I keep prices student-friendly and turn most repairs around same-day." },
-    { name:"Nasir Khan", trade:"watch", phone:"919876507010", years:12, hours:"10 AM – 7:30 PM · Closed Sun", lat:28.6995, lng:77.2080, area:"GTB Nagar",
-      s1:"Hello, I'm Nasir - I've run a small watch counter outside GTB Nagar metro for 12 years.",
-      s2:"Mostly strap changes and battery swaps for people rushing to catch a train, but I enjoy the occasional old mechanical watch too." },
-    { name:"Ashok Verma", trade:"appliance", phone:"919876507011", years:10, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.6960, lng:77.2260, area:"Timarpur",
-      s1:"I'm Ashok, fixing mixers and grinders out of a small shop in Timarpur for the past 10 years.",
-      s2:"If the jar is cracked or the blade's gone blunt, I can usually source a replacement part rather than telling you to buy new." },
-    { name:"Salim Qureshi", trade:"locksmith", phone:"919876507012", years:13, hours:"9 AM – 8 PM · Open all week", lat:28.7130, lng:77.2280, area:"Wazirabad",
-      s1:"I'm Salim, working near Wazirabad for 13 years now, mostly gate and shutter locks.",
-      s2:"This area has a lot of old iron gates that jam in the monsoon - that's most of my calls in July and August." },
-    { name:"Balwant Singh", trade:"cobbler", phone:"919876507013", years:8, hours:"10 AM – 7 PM · Closed Sun", lat:28.7160, lng:77.1720, area:"Adarsh Nagar",
-      s1:"Sat Sri Akal, I'm Balwant - I've been repairing shoes in Adarsh Nagar market for 8 years.",
-      s2:"Sports shoes are my specialty - kids wear through soles fast here and I can resole them for a fraction of a new pair." },
-    { name:"Prakash Yadav", trade:"watch", phone:"919876507014", years:6, hours:"10:30 AM – 7 PM · Closed Sun", lat:28.6920, lng:77.1570, area:"Keshav Puram",
-      s1:"Hi, I'm Prakash, at a small counter in Keshav Puram for 6 years now.",
-      s2:"Straps, glass, batteries, and small repairs on quartz watches - quick and fair, every time." },
-    { name:"Zaheer Ahmed", trade:"appliance", phone:"919876507015", years:7, hours:"10 AM – 7 PM · Closed Sun", lat:28.7050, lng:77.2270, area:"Majnu ka Tilla",
-      s1:"I'm Zaheer - I've fixed household appliances near Majnu ka Tilla for 7 years.",
-      s2:"Mixers, grinders, and the occasional rice cooker - if the motor still turns, I can usually bring it back." },
-    { name:"Om Prakash", trade:"locksmith", phone:"919876507016", years:10, hours:"9 AM – 8 PM · Open all week", lat:28.7550, lng:77.2000, area:"Burari",
-      s1:"I'm Om Prakash, cutting keys and repairing locks in Burari for 10 years.",
-      s2:"New duplicate keys usually take me ten minutes. If you're locked out, call ahead and I'll try to reach you within the hour." },
-    { name:"Chhotu Ram", trade:"cobbler", phone:"919876507017", years:9, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.8530, lng:77.0920, area:"Narela",
-      s1:"I'm Chhotu Ram, working from a small stall near Narela market for 9 years.",
-      s2:"This is a working-class area, so I keep my rates as low as I can - a resole rarely costs more than a cup of chai." },
-    { name:"Aslam Sheikh", trade:"watch", phone:"919876507018", years:15, hours:"10 AM – 7 PM · Closed Sun", lat:28.7960, lng:77.1360, area:"Alipur",
-      s1:"I'm Aslam - I've run a small watch repair table in Alipur for 15 years.",
-      s2:"I still keep spare parts for a few older mechanical brands that most repairers won't touch anymore." },
-    { name:"Kishan Lal", trade:"appliance", phone:"919876507019", years:11, hours:"9 AM – 7 PM · Closed Sun", lat:28.6720, lng:77.1980, area:"Sabzi Mandi",
-      s1:"I'm Kishan, fixing mixers and grinders near Sabzi Mandi for 11 years.",
-      s2:"Vendors here bring me their crushers and juicers when they break down mid-morning - I try to get them running before the lunch rush." },
-    { name:"Radha Devi", trade:"locksmith", phone:"919876507020", years:5, hours:"10:30 AM – 6:30 PM · Closed Sun", lat:28.6960, lng:77.1980, area:"Shakti Nagar",
-      s1:"Hello, I'm Radha - one of the newer locksmiths around, working in Shakti Nagar for 5 years.",
-      s2:"I learned the trade at a training centre and set up on my own after. Duplicate keys and small lock repairs are my main work." },
-    { name:"Mahesh Prasad", trade:"cobbler", phone:"919876507021", years:7, hours:"10 AM – 7 PM · Closed Sun", lat:28.6920, lng:77.2100, area:"Malka Ganj",
-      s1:"I'm Mahesh, mending shoes near Malka Ganj for the past 7 years.",
-      s2:"College students and office-goers both stop by here - I keep a price list on display so nobody has to ask twice." },
-    { name:"Yusuf Malik", trade:"watch", phone:"919876507022", years:9, hours:"10 AM – 7:30 PM · Closed Sun", lat:28.6980, lng:77.1930, area:"Rana Pratap Bagh",
-      s1:"I'm Yusuf, running a small watch stall in Rana Pratap Bagh for 9 years.",
-      s2:"Battery changes take five minutes, most strap repairs under fifteen - I keep common straps in stock so you rarely come back twice." },
-    { name:"Devendra Kumar", trade:"appliance", phone:"919876507023", years:6, hours:"10 AM – 7 PM · Closed Sun", lat:28.7020, lng:77.2070, area:"Kingsway Camp",
-      s1:"I'm Devendra, repairing mixers and small appliances in Kingsway Camp for 6 years.",
-      s2:"I studied basic electricals before I started this, so I can usually diagnose a fault on the spot." },
-    { name:"Naseem Akhtar", trade:"locksmith", phone:"919876507024", years:8, hours:"9:30 AM – 7:30 PM · Closed Sun", lat:28.7370, lng:77.1620, area:"Bhalswa",
-      s1:"I'm Naseem, working with locks and keys near Bhalswa for 8 years.",
-      s2:"A lot of my work here is repairing old padlocks rather than replacing them - most can be saved with the right part." }
-  ];
+  // Populated from Firestore in loadData() below - no local mock data.
+  let ARTISANS = [];
 
   let LOCALITIES = [];
   let localityMap = new Map();
@@ -432,8 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return x - Math.floor(x);
   }
   function isVerified(a){
-    if(a.pending) return false;
-    return a.years > 6;
+    return a.verified === true;
   }
   const REVIEW_POOL = {
     cobbler: [
@@ -594,8 +521,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function resetHighlights(){ markers.forEach((m, i) => m.setIcon(buildIcon(ARTISANS[i].trade, false, isVerified(ARTISANS[i])))); }
 
-  const bounds = L.latLngBounds(ARTISANS.map(a => [a.lat, a.lng]));
-  map.fitBounds(bounds, { padding:[60,60] });
+  if (ARTISANS.length > 0) {
+    const bounds = L.latLngBounds(ARTISANS.map(a => [a.lat, a.lng]));
+    map.fitBounds(bounds, { padding:[60,60] });
+  }
 
   let currentLocality = null;
 
@@ -778,34 +707,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   } // end of initApp
 
-  // Fetch data from Firestore
+  // Fetch real kaarigar data from Firestore - no seeding, no mock fallback.
   async function loadData() {
     try {
       const kaarigarsCol = collection(db, 'kaarigars');
       const snapshot = await getDocs(kaarigarsCol);
-      if (snapshot.size < 24) {
-        console.log("Firestore data is incomplete. Uploading mock data...");
-        // Seed the database
-        for (let i = 0; i < ARTISANS.length; i++) {
-          const artisan = ARTISANS[i];
-          await setDoc(doc(db, 'kaarigars', `kaarigar-${i}`), artisan);
-        }
-        console.log("Mock data uploaded successfully.");
-        // ARTISANS array is already full of the local mock data, so we proceed.
-      } else {
-        // We have data in Firestore!
-        const fetchedData = [];
-        snapshot.forEach(doc => {
-          fetchedData.push(doc.data());
-        });
-        ARTISANS = fetchedData;
-        console.log("Fetched from Firestore:", ARTISANS);
-      }
-      initApp();
+      const fetchedData = [];
+      snapshot.forEach(docSnap => {
+        fetchedData.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      ARTISANS = fetchedData;
+      console.log(`Loaded ${ARTISANS.length} kaarigars from Firestore.`);
     } catch(err) {
-      console.error("Firestore fetch error, using fallback data", err);
-      initApp();
+      console.error("Firestore fetch error - showing an empty map.", err);
+      ARTISANS = [];
     }
+    initApp();
   }
 
   loadData();
