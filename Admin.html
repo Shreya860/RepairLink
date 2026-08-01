@@ -242,21 +242,34 @@
     const analyticsBody = document.getElementById('analyticsTableBody');
     try {
       const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
+      
+      const allPages = [
+        'index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 
+        'RepairLink.html', 'Auth.html', 'UserDashboard.html', 
+        'KaarigarDashboard.html', 'Admin.html'
+      ];
+      
+      let mergedStats = {};
+      allPages.forEach(p => mergedStats[p] = 0);
+      
       if (statsDoc.exists()) {
         const statsData = statsDoc.data();
-        // Sort by visits descending
-        const sortedStats = Object.entries(statsData).sort((a,b) => b[1] - a[1]);
-        let html = '';
-        for (const [page, count] of sortedStats) {
-          html += `<tr>
-            <td style="font-weight:600; font-family:'JetBrains Mono', monospace;">${page}</td>
-            <td><span class="badge kaarigar" style="font-size:13px;">${count}</span></td>
-          </tr>`;
+        for(const [p, c] of Object.entries(statsData)) {
+          mergedStats[p] = c;
         }
-        analyticsBody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">No data yet.</td></tr>';
-      } else {
-        analyticsBody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">No data yet.</td></tr>';
       }
+      
+      // Sort by visits descending
+      const sortedStats = Object.entries(mergedStats).sort((a,b) => b[1] - a[1]);
+      let html = '';
+      for (const [page, count] of sortedStats) {
+        html += `<tr>
+          <td style="font-weight:600; font-family:'JetBrains Mono', monospace;">${page}</td>
+          <td><span class="badge kaarigar" style="font-size:13px; background:${count === 0 ? '#f0f0f0' : 'var(--leaf-dim)'}; color:${count === 0 ? '#999' : '#1F7A44'}">${count}</span></td>
+        </tr>`;
+      }
+      analyticsBody.innerHTML = html;
+      
     } catch(err) {
       analyticsBody.innerHTML = `<tr><td colspan="2">Error loading analytics: ${err.message}</td></tr>`;
     }
