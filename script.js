@@ -18,6 +18,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const analytics = getAnalytics(app);
 
+window.windowUserRole = null;
 let windowCurrentUser = null;
 onAuthStateChanged(auth, async (user) => {
   const navLogin = document.getElementById('navLogin');
@@ -34,6 +35,7 @@ onAuthStateChanged(auth, async (user) => {
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if(userDoc.exists()) {
         const role = userDoc.data().role;
+        window.windowUserRole = role;
         const navDashboard = document.getElementById('navDashboard');
         if (navDashboard) {
           if (role === 'kaarigar') navDashboard.href = 'KaarigarDashboard.html';
@@ -83,11 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentLang = 'en';
   const translations = {
     en: {
-      disclaimer: "Prototype demo — names, phone numbers, ratings & reviews shown here are placeholder data, not real people.",
+      disclaimer: "Prototype demo - names, phone numbers, ratings & reviews shown here are placeholder data, not real people.",
       roleTitle: "Welcome to RepairLink",
       roleSub: "Tell us who you are, so we can show you the right screen.",
       roleCustomerTitle: "I need something repaired",
-      roleCustomerDesc: "Find a trusted kaarigar near you — cobbler, watch repairer, appliance technician or locksmith.",
+      roleCustomerDesc: "Find a trusted kaarigar near you - cobbler, watch repairer, appliance technician or locksmith.",
       roleArtisanTitle: "I repair things for a living",
       roleArtisanDesc: "List yourself on RepairLink so customers nearby can find and message you directly.",
       backToStart: "Back",
@@ -105,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fieldPhone: "Phone / WhatsApp number",
       fieldHours: "Working hours",
       fieldIntro: "A line about your work",
-      fieldId: "ID for verification (mock — nothing is uploaded in this prototype)",
+      fieldId: "ID for verification (mock - nothing is uploaded in this prototype)",
       uploadText: "Tap to attach Aadhaar / shop ID photo",
       submitListing: "Submit for verification",
       pendingTag: "⏳ Pending verification",
@@ -126,24 +128,24 @@ document.addEventListener('DOMContentLoaded', () => {
       reportIssue: "Report an issue",
       heroEyebrow: "What is RepairLink?",
       heroTitle: "We give your broken things a second chance.",
-      heroP1: "We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.",
+      heroP1: "We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar - cobbler, watch repairer, appliance technician or locksmith - who can fix what you already own.",
       heroP2: "Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.",
       heroRegion: "Currently live only in North Delhi",
       heroBtnText: "Explore the map",
-      brandTagline: "Mapping North Delhi's kaarigars — repair first, recycle what's left",
+      brandTagline: "Mapping North Delhi's kaarigars - repair first, recycle what's left",
       legendTitle: "Services We Provide",
       legendSub: "Tap a symbol on the map to meet the kaarigar",
       legendCobblerName: "Cobblers",
-      legendCobblerDesc: "— shoe & leather repair",
+      legendCobblerDesc: "- shoe & leather repair",
       legendWatchName: "Watch repairers",
-      legendWatchDesc: "— horologists",
+      legendWatchDesc: "- horologists",
       legendApplianceName: "Appliance repair",
-      legendApplianceDesc: "— mixers & grinders",
+      legendApplianceDesc: "- mixers & grinders",
       legendLocksmithName: "Locksmiths",
-      legendLocksmithDesc: "— keys & locks",
+      legendLocksmithDesc: "- keys & locks",
       chatCtaText: "Chat with a RepairLink helper",
       locateEyebrow: "Find your nearest kaarigar",
-      locateHeading: "Select your location and we'll show you the closest artisan of each trade — in no time.",
+      locateHeading: "Select your location and we'll show you the closest artisan of each trade - in no time.",
       localityPlaceholder: "Choose your area in North Delhi…",
       locateBtnText: "Find closest kaarigars",
       resultsHeader: "CLOSEST TO YOU",
@@ -154,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
       verifiedText: "Verified",
       pendingText: "Pending verification",
       estLabel: "Est.",
-      priceTooltip: "Estimated range only — confirm the final price with the kaarigar directly.",
+      priceTooltip: "Estimated range only - confirm the final price with the kaarigar directly.",
       reviewsLabel: "reviews",
       yrsLabel: "yrs",
       toastDone: "Repair marked as complete. Thank you!",
@@ -167,11 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
       clickForStory: "Click to read their story →"
     },
     hi: {
-      disclaimer: "प्रोटोटाइप डेमो — यहाँ दिखाए गए नाम, फोन नंबर, रेटिंग और समीक्षाएं केवल उदाहरण के लिए हैं, असली लोग नहीं।",
+      disclaimer: "प्रोटोटाइप डेमो - यहाँ दिखाए गए नाम, फोन नंबर, रेटिंग और समीक्षाएं केवल उदाहरण के लिए हैं, असली लोग नहीं।",
       roleTitle: "RepairLink में आपका स्वागत है",
       roleSub: "हमें बताएं कि आप कौन हैं, ताकि हम आपको सही स्क्रीन दिखा सकें।",
       roleCustomerTitle: "मुझे कुछ ठीक करवाना है",
-      roleCustomerDesc: "अपने पास भरोसेमंद कारीगर खोजें — मोची, घड़ी मरम्मत करने वाला, उपकरण तकनीशियन या ताला बनाने वाला।",
+      roleCustomerDesc: "अपने पास भरोसेमंद कारीगर खोजें - मोची, घड़ी मरम्मत करने वाला, उपकरण तकनीशियन या ताला बनाने वाला।",
       roleArtisanTitle: "मैं मरम्मत का काम करता/करती हूँ",
       roleArtisanDesc: "RepairLink पर खुद को सूचीबद्ध करें ताकि आस-पास के ग्राहक आपको ढूंढ कर सीधे संपर्क कर सकें।",
       backToStart: "वापस",
@@ -189,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fieldPhone: "फोन / व्हाट्सएप नंबर",
       fieldHours: "काम के घंटे",
       fieldIntro: "अपने काम के बारे में एक पंक्ति",
-      fieldId: "सत्यापन के लिए पहचान पत्र (नकली — इस प्रोटोटाइप में कुछ भी अपलोड नहीं होता)",
+      fieldId: "सत्यापन के लिए पहचान पत्र (नकली - इस प्रोटोटाइप में कुछ भी अपलोड नहीं होता)",
       uploadText: "आधार / दुकान आईडी फ़ोटो जोड़ने के लिए टैप करें",
       submitListing: "सत्यापन के लिए जमा करें",
       pendingTag: "⏳ सत्यापन लंबित",
@@ -210,21 +212,21 @@ document.addEventListener('DOMContentLoaded', () => {
       reportIssue: "समस्या दर्ज करें",
       heroEyebrow: "RepairLink क्या है?",
       heroTitle: "हम आपकी टूटी चीज़ों को दूसरा मौका देते हैं।",
-      heroP1: "हम आपको मरम्मत के संपर्क उपलब्ध कराते हैं, ताकि आपकी रोज़मर्रा की ज़रूरतें बिना कचरा बढ़ाए पूरी हो सकें। हम आपको सबसे नज़दीकी कारीगर — मोची, घड़ी मरम्मत करने वाला, उपकरण तकनीशियन या ताला बनाने वाला — से जोड़ते हैं जो आपकी पहले से मौजूद चीज़ को ठीक कर सके।",
+      heroP1: "हम आपको मरम्मत के संपर्क उपलब्ध कराते हैं, ताकि आपकी रोज़मर्रा की ज़रूरतें बिना कचरा बढ़ाए पूरी हो सकें। हम आपको सबसे नज़दीकी कारीगर - मोची, घड़ी मरम्मत करने वाला, उपकरण तकनीशियन या ताला बनाने वाला - से जोड़ते हैं जो आपकी पहले से मौजूद चीज़ को ठीक कर सके।",
       heroP2: "जो चीज़ सच में मरम्मत के लायक नहीं होती, उसे हम खुद इकट्ठा करके रीसाइक्लिंग के लिए भेजते हैं, ताकि दिल्ली में कचरा कम जमा हो।",
       heroRegion: "फिलहाल केवल उत्तरी दिल्ली में उपलब्ध",
       heroBtnText: "मैप देखें",
-      brandTagline: "उत्तरी दिल्ली के कारीगरों की मैपिंग — पहले मरम्मत, फिर जो बचे उसे रीसाइकल",
+      brandTagline: "उत्तरी दिल्ली के कारीगरों की मैपिंग - पहले मरम्मत, फिर जो बचे उसे रीसाइकल",
       legendTitle: "हमारी सेवाएं",
       legendSub: "कारीगर से मिलने के लिए मैप पर एक चिह्न टैप करें",
       legendCobblerName: "मोची",
-      legendCobblerDesc: "— जूते और चमड़े की मरम्मत",
+      legendCobblerDesc: "- जूते और चमड़े की मरम्मत",
       legendWatchName: "घड़ी मरम्मत करने वाले",
-      legendWatchDesc: "— घड़ीसाज़",
+      legendWatchDesc: "- घड़ीसाज़",
       legendApplianceName: "उपकरण मरम्मत",
-      legendApplianceDesc: "— मिक्सर और ग्राइंडर",
+      legendApplianceDesc: "- मिक्सर और ग्राइंडर",
       legendLocksmithName: "ताला बनाने वाले",
-      legendLocksmithDesc: "— चाबी और ताले",
+      legendLocksmithDesc: "- चाबी और ताले",
       chatCtaText: "RepairLink सहायक से चैट करें",
       locateEyebrow: "अपना नज़दीकी कारीगर खोजें",
       locateHeading: "अपना स्थान चुनें और हम आपको हर व्यवसाय के सबसे नज़दीकी कारीगर तुरंत दिखाएंगे।",
@@ -238,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
       verifiedText: "सत्यापित",
       pendingText: "सत्यापन लंबित",
       estLabel: "अनुमानित",
-      priceTooltip: "केवल अनुमानित सीमा — अंतिम मूल्य की पुष्टि सीधे कारीगर से करें।",
+      priceTooltip: "केवल अनुमानित सीमा - अंतिम मूल्य की पुष्टि सीधे कारीगर से करें।",
       reviewsLabel: "समीक्षाएं",
       yrsLabel: "वर्ष",
       toastDone: "मरम्मत पूर्ण के रूप में चिह्नित। धन्यवाद!",
@@ -273,77 +275,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let ARTISANS = [
     { name:"Ramesh Kumar", trade:"cobbler", phone:"919876507001", years:11, hours:"10 AM – 7 PM · Closed Sun", lat:28.6667, lng:77.2286, area:"Kashmere Gate",
-      s1:"Hey! I'm Ramesh — I've been sitting right here near Kashmere Gate for the past 11 years.",
-      s2:"I've repaired more than 5,000 shoes in that time and I keep my rates minimal, because everyone deserves a well-fitting pair. I sit from 10 AM to 7 PM, but not on Sundays — that's family day." },
+      s1:"Hey! I'm Ramesh - I've been sitting right here near Kashmere Gate for the past 11 years.",
+      s2:"I've repaired more than 5,000 shoes in that time and I keep my rates minimal, because everyone deserves a well-fitting pair. I sit from 10 AM to 7 PM, but not on Sundays - that's family day." },
     { name:"Suresh Lal", trade:"cobbler", phone:"919876507002", years:6, hours:"9 AM – 6:30 PM · Closed Sun", lat:28.6580, lng:77.2100, area:"Sadar Bazaar",
       s1:"Namaste, I'm Suresh, working out of a small corner in Sadar Bazaar for 6 years now.",
       s2:"My father taught me this trade, and before him, my grandfather. Nothing goes to waste if it can still be mended. Come by 9 to 6:30, except Sundays." },
     { name:"Iqbal Ahmed", trade:"watch", phone:"919876507003", years:19, hours:"11 AM – 8 PM · Closed Sun", lat:28.6800, lng:77.2220, area:"Civil Lines",
-      s1:"I'm Iqbal — I've kept time for this part of Civil Lines for 19 years now.",
-      s2:"Battery changes, strap repairs, old mechanical pieces no showroom wants to touch anymore — I take them all. I'm here 11 to 8, every day but Sunday." },
+      s1:"I'm Iqbal - I've kept time for this part of Civil Lines for 19 years now.",
+      s2:"Battery changes, strap repairs, old mechanical pieces no showroom wants to touch anymore - I take them all. I'm here 11 to 8, every day but Sunday." },
     { name:"Harbhajan Singh", trade:"watch", phone:"919876507004", years:8, hours:"10:30 AM – 7:30 PM · Closed Sun", lat:28.6800, lng:77.2050, area:"Kamla Nagar",
       s1:"Hello, I'm Harbhajan, and I've had my little watch counter in Kamla Nagar for 8 years.",
       s2:"Students from the college nearby are half my customers. I charge what's fair, especially for students. Find me 10:30 to 7:30, closed Sundays." },
     { name:"Farooq Sheikh", trade:"appliance", phone:"919876507005", years:14, hours:"10 AM – 7 PM · Closed Sun", lat:28.6600, lng:77.2050, area:"Azad Market",
-      s1:"I'm Farooq — for 14 years I've been fixing mixers, grinders and small kitchen motors near Azad Market.",
+      s1:"I'm Farooq - for 14 years I've been fixing mixers, grinders and small kitchen motors near Azad Market.",
       s2:"Most people think a mixer with a dead motor is trash. Nine times out of ten, it isn't. I take minimal charges. Open 10 to 7, not Sundays." },
     { name:"Deepak Chauhan", trade:"appliance", phone:"919876507006", years:9, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.7100, lng:77.1900, area:"Model Town",
       s1:"Hi, I'm Deepak, running a small repair stall in Model Town for the past 9 years.",
-      s2:"Mixies, grinders, table fans, irons — if it plugs in and it's stopped working, bring it over. Open 9:30 to 6:30, closed Sundays." },
+      s2:"Mixies, grinders, table fans, irons - if it plugs in and it's stopped working, bring it over. Open 9:30 to 6:30, closed Sundays." },
     { name:"Rafiq Malik", trade:"locksmith", phone:"919876507007", years:16, hours:"9 AM – 9 PM · Open all week", lat:28.6660, lng:77.2170, area:"Tis Hazari",
-      s1:"I'm Rafiq — I've been cutting keys and fixing locks near Tis Hazari courts for 16 years.",
-      s2:"Court days keep this area busy, so I stay open all week, 9 AM to 9 PM. Old almirah locks, padlocks, house locks — always for the right reasons." },
+      s1:"I'm Rafiq - I've been cutting keys and fixing locks near Tis Hazari courts for 16 years.",
+      s2:"Court days keep this area busy, so I stay open all week, 9 AM to 9 PM. Old almirah locks, padlocks, house locks - always for the right reasons." },
     { name:"Meena Devi", trade:"locksmith", phone:"919876507008", years:7, hours:"10 AM – 6 PM · Closed Sun", lat:28.6870, lng:77.2010, area:"Roshanara Road",
-      s1:"Hello, I'm Meena — one of the few women locksmiths you'll find in this trade, working near Roshanara Road for 7 years.",
-      s2:"Duplicate keys, jammed locks, gate repairs — I handle it all, and I keep my rates the same for everyone. Here 10 to 6, closed Sundays." },
+      s1:"Hello, I'm Meena - one of the few women locksmiths you'll find in this trade, working near Roshanara Road for 7 years.",
+      s2:"Duplicate keys, jammed locks, gate repairs - I handle it all, and I keep my rates the same for everyone. Here 10 to 6, closed Sundays." },
     { name:"Vinod Kashyap", trade:"cobbler", phone:"919876507009", years:5, hours:"10 AM – 8 PM · Closed Sun", lat:28.7040, lng:77.2110, area:"Mukherjee Nagar",
       s1:"I'm Vinod, and I've had my stool outside the coaching lane in Mukherjee Nagar for 5 years now.",
       s2:"Half my customers are students who've worn one pair of shoes into the ground. I keep prices student-friendly and turn most repairs around same-day." },
     { name:"Nasir Khan", trade:"watch", phone:"919876507010", years:12, hours:"10 AM – 7:30 PM · Closed Sun", lat:28.6995, lng:77.2080, area:"GTB Nagar",
-      s1:"Hello, I'm Nasir — I've run a small watch counter outside GTB Nagar metro for 12 years.",
+      s1:"Hello, I'm Nasir - I've run a small watch counter outside GTB Nagar metro for 12 years.",
       s2:"Mostly strap changes and battery swaps for people rushing to catch a train, but I enjoy the occasional old mechanical watch too." },
     { name:"Ashok Verma", trade:"appliance", phone:"919876507011", years:10, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.6960, lng:77.2260, area:"Timarpur",
       s1:"I'm Ashok, fixing mixers and grinders out of a small shop in Timarpur for the past 10 years.",
       s2:"If the jar is cracked or the blade's gone blunt, I can usually source a replacement part rather than telling you to buy new." },
     { name:"Salim Qureshi", trade:"locksmith", phone:"919876507012", years:13, hours:"9 AM – 8 PM · Open all week", lat:28.7130, lng:77.2280, area:"Wazirabad",
       s1:"I'm Salim, working near Wazirabad for 13 years now, mostly gate and shutter locks.",
-      s2:"This area has a lot of old iron gates that jam in the monsoon — that's most of my calls in July and August." },
+      s2:"This area has a lot of old iron gates that jam in the monsoon - that's most of my calls in July and August." },
     { name:"Balwant Singh", trade:"cobbler", phone:"919876507013", years:8, hours:"10 AM – 7 PM · Closed Sun", lat:28.7160, lng:77.1720, area:"Adarsh Nagar",
-      s1:"Sat Sri Akal, I'm Balwant — I've been repairing shoes in Adarsh Nagar market for 8 years.",
-      s2:"Sports shoes are my specialty — kids wear through soles fast here and I can resole them for a fraction of a new pair." },
+      s1:"Sat Sri Akal, I'm Balwant - I've been repairing shoes in Adarsh Nagar market for 8 years.",
+      s2:"Sports shoes are my specialty - kids wear through soles fast here and I can resole them for a fraction of a new pair." },
     { name:"Prakash Yadav", trade:"watch", phone:"919876507014", years:6, hours:"10:30 AM – 7 PM · Closed Sun", lat:28.6920, lng:77.1570, area:"Keshav Puram",
       s1:"Hi, I'm Prakash, at a small counter in Keshav Puram for 6 years now.",
-      s2:"Straps, glass, batteries, and small repairs on quartz watches — quick and fair, every time." },
+      s2:"Straps, glass, batteries, and small repairs on quartz watches - quick and fair, every time." },
     { name:"Zaheer Ahmed", trade:"appliance", phone:"919876507015", years:7, hours:"10 AM – 7 PM · Closed Sun", lat:28.7050, lng:77.2270, area:"Majnu ka Tilla",
-      s1:"I'm Zaheer — I've fixed household appliances near Majnu ka Tilla for 7 years.",
-      s2:"Mixers, grinders, and the occasional rice cooker — if the motor still turns, I can usually bring it back." },
+      s1:"I'm Zaheer - I've fixed household appliances near Majnu ka Tilla for 7 years.",
+      s2:"Mixers, grinders, and the occasional rice cooker - if the motor still turns, I can usually bring it back." },
     { name:"Om Prakash", trade:"locksmith", phone:"919876507016", years:10, hours:"9 AM – 8 PM · Open all week", lat:28.7550, lng:77.2000, area:"Burari",
       s1:"I'm Om Prakash, cutting keys and repairing locks in Burari for 10 years.",
       s2:"New duplicate keys usually take me ten minutes. If you're locked out, call ahead and I'll try to reach you within the hour." },
     { name:"Chhotu Ram", trade:"cobbler", phone:"919876507017", years:9, hours:"9:30 AM – 6:30 PM · Closed Sun", lat:28.8530, lng:77.0920, area:"Narela",
       s1:"I'm Chhotu Ram, working from a small stall near Narela market for 9 years.",
-      s2:"This is a working-class area, so I keep my rates as low as I can — a resole rarely costs more than a cup of chai." },
+      s2:"This is a working-class area, so I keep my rates as low as I can - a resole rarely costs more than a cup of chai." },
     { name:"Aslam Sheikh", trade:"watch", phone:"919876507018", years:15, hours:"10 AM – 7 PM · Closed Sun", lat:28.7960, lng:77.1360, area:"Alipur",
-      s1:"I'm Aslam — I've run a small watch repair table in Alipur for 15 years.",
+      s1:"I'm Aslam - I've run a small watch repair table in Alipur for 15 years.",
       s2:"I still keep spare parts for a few older mechanical brands that most repairers won't touch anymore." },
     { name:"Kishan Lal", trade:"appliance", phone:"919876507019", years:11, hours:"9 AM – 7 PM · Closed Sun", lat:28.6720, lng:77.1980, area:"Sabzi Mandi",
       s1:"I'm Kishan, fixing mixers and grinders near Sabzi Mandi for 11 years.",
-      s2:"Vendors here bring me their crushers and juicers when they break down mid-morning — I try to get them running before the lunch rush." },
+      s2:"Vendors here bring me their crushers and juicers when they break down mid-morning - I try to get them running before the lunch rush." },
     { name:"Radha Devi", trade:"locksmith", phone:"919876507020", years:5, hours:"10:30 AM – 6:30 PM · Closed Sun", lat:28.6960, lng:77.1980, area:"Shakti Nagar",
-      s1:"Hello, I'm Radha — one of the newer locksmiths around, working in Shakti Nagar for 5 years.",
+      s1:"Hello, I'm Radha - one of the newer locksmiths around, working in Shakti Nagar for 5 years.",
       s2:"I learned the trade at a training centre and set up on my own after. Duplicate keys and small lock repairs are my main work." },
     { name:"Mahesh Prasad", trade:"cobbler", phone:"919876507021", years:7, hours:"10 AM – 7 PM · Closed Sun", lat:28.6920, lng:77.2100, area:"Malka Ganj",
       s1:"I'm Mahesh, mending shoes near Malka Ganj for the past 7 years.",
-      s2:"College students and office-goers both stop by here — I keep a price list on display so nobody has to ask twice." },
+      s2:"College students and office-goers both stop by here - I keep a price list on display so nobody has to ask twice." },
     { name:"Yusuf Malik", trade:"watch", phone:"919876507022", years:9, hours:"10 AM – 7:30 PM · Closed Sun", lat:28.6980, lng:77.1930, area:"Rana Pratap Bagh",
       s1:"I'm Yusuf, running a small watch stall in Rana Pratap Bagh for 9 years.",
-      s2:"Battery changes take five minutes, most strap repairs under fifteen — I keep common straps in stock so you rarely come back twice." },
+      s2:"Battery changes take five minutes, most strap repairs under fifteen - I keep common straps in stock so you rarely come back twice." },
     { name:"Devendra Kumar", trade:"appliance", phone:"919876507023", years:6, hours:"10 AM – 7 PM · Closed Sun", lat:28.7020, lng:77.2070, area:"Kingsway Camp",
       s1:"I'm Devendra, repairing mixers and small appliances in Kingsway Camp for 6 years.",
       s2:"I studied basic electricals before I started this, so I can usually diagnose a fault on the spot." },
     { name:"Naseem Akhtar", trade:"locksmith", phone:"919876507024", years:8, hours:"9:30 AM – 7:30 PM · Closed Sun", lat:28.7370, lng:77.1620, area:"Bhalswa",
       s1:"I'm Naseem, working with locks and keys near Bhalswa for 8 years.",
-      s2:"A lot of my work here is repairing old padlocks rather than replacing them — most can be saved with the right part." }
+      s2:"A lot of my work here is repairing old padlocks rather than replacing them - most can be saved with the right part." }
   ];
 
   let LOCALITIES = [];
@@ -428,12 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
       { n:"Priya S.", t:"Fixed my sandal strap in ten minutes and charged next to nothing." },
       { n:"Ankit R.", t:"Resoled a pair of office shoes I thought were done for. Good as new." },
       { n:"Sunita M.", t:"Quick, honest pricing, and he remembered me from the last visit." },
-      { n:"Rahul B.", t:"Saved my favourite boots — wouldn't have found this place otherwise." },
+      { n:"Rahul B.", t:"Saved my favourite boots - wouldn't have found this place otherwise." },
       { n:"Kavita J.", t:"Went in expecting to buy new shoes, walked out with the old ones fixed." },
       { n:"Manoj T.", t:"Told me honestly the shoe wasn't worth repairing, saved me the money." }
     ],
     watch: [
-      { n:"Rohan K.", t:"Brought in my father's old watch — he got it ticking again in a day." },
+      { n:"Rohan K.", t:"Brought in my father's old watch - he got it ticking again in a day." },
       { n:"Neha G.", t:"Fair price for a battery change, didn't try to upsell me." },
       { n:"Vikram S.", t:"Fixed a strap no showroom would even look at." },
       { n:"Anjali P.", t:"Same-day service and the watch runs better than before it broke." },
@@ -446,7 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { n:"Pooja L.", t:"Fixed our iron in fifteen minutes flat, very fair rate." },
       { n:"Gaurav M.", t:"Diagnosed the fault over a call before I even brought it in." },
       { n:"Shalini R.", t:"Table fan works better now than when we first bought it." },
-      { n:"Naveen C.", t:"Reliable — this is the third appliance he's fixed for our family." }
+      { n:"Naveen C.", t:"Reliable - this is the third appliance he's fixed for our family." }
     ],
     locksmith: [
       { n:"Arjun B.", t:"Locked out at 10pm, he reached in twenty minutes." },
@@ -454,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { n:"Tarun S.", t:"Repaired an old almirah lock instead of pushing me to replace it." },
       { n:"Fatima H.", t:"Reasonable price for a gate lock repair after the monsoon jammed it." },
       { n:"Yash P.", t:"Professional and quick, didn't ask any awkward questions either." },
-      { n:"Bhavna D.", t:"Trustworthy — let him into the house without a second thought." }
+      { n:"Bhavna D.", t:"Trustworthy - let him into the house without a second thought." }
     ]
   };
   function trustData(a, idx){
@@ -540,7 +542,33 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="review-top"><span class="review-name">${r.n}</span><span class="stars">${starsSvg(td.rating)}</span></div>
         <div class="review-text">${r.t}</div>
       </div>`).join('');
-    document.getElementById('whatsappPanel').href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
+    const isAdmin = (window.windowUserRole === 'admin');
+    const whatsappPanel = document.getElementById('whatsappPanel');
+    const storyText1 = document.getElementById('storyText1');
+    const storyText2 = document.getElementById('storyText2');
+
+    if (!isAdmin) {
+      whatsappPanel.classList.add('blur-locked-btn');
+      whatsappPanel.removeAttribute('target');
+      whatsappPanel.removeAttribute('rel');
+      whatsappPanel.href = "javascript:void(0)";
+      whatsappPanel.onclick = (e) => {
+        e.preventDefault();
+        alert("Please upgrade to Premium (₹9) to view contact details.");
+      };
+      
+      storyText1.classList.add('blur-content');
+      storyText2.classList.add('blur-content');
+    } else {
+      whatsappPanel.classList.remove('blur-locked-btn');
+      whatsappPanel.target = "_blank";
+      whatsappPanel.rel = "noopener";
+      whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
+      whatsappPanel.onclick = null;
+      
+      storyText1.classList.remove('blur-content');
+      storyText2.classList.remove('blur-content');
+    }
 
     // Action button updates using the safe t18n helper
     const doneBtn = document.getElementById('markDoneBtn');

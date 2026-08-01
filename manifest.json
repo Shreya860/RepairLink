@@ -1,7 +1,7 @@
 {
   "name": "RepairLink - Local Repair Experts",
   "short_name": "RepairLink",
-  "description": "Mapping North Delhi's kaarigars — repair first, recycle what's left.",
+  "description": "Mapping North Delhi's kaarigars - repair first, recycle what's left.",
   "start_url": "/RepairLink.html",
   "display": "standalone",
   "background_color": "#f6ecd8",

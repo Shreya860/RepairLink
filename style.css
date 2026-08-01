@@ -257,6 +257,9 @@
   }
   .lang-btn.active{background:var(--marigold); color:#2A1E00;}
 
+.blur-content { filter: blur(5px); pointer-events: none; user-select: none; }
+.blur-locked-btn { filter: blur(3.5px); pointer-events: auto; }
+
   /* ---------- Demo data disclaimer ---------- */
   .disclaimer-bar{
     position:fixed; left:50%; bottom:0; transform:translateX(-50%); z-index:22;

@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
-<meta property="og:title" content="RepairLink — Local Repair Experts">
-<meta property="og:description" content="Mapping North Delhi's kaarigars — repair first, recycle what's left. Find your nearest cobbler, mechanic, and repair shops instantly.">
+<meta property="og:title" content="RepairLink - Local Repair Experts">
+<meta property="og:description" content="Mapping North Delhi's kaarigars - repair first, recycle what's left. Find your nearest cobbler, mechanic, and repair shops instantly.">
 <meta property="og:image" content="https://repairlink-de1ta.web.app/logo.png">
 <meta property="og:url" content="https://repairlink-de1ta.web.app/">
 <meta name="twitter:card" content="summary_large_image">
-<title>RepairLink — Find Your Neighbourhood Kaarigar</title>
+<title>RepairLink - Find Your Neighbourhood Kaarigar</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -31,7 +31,7 @@
       <div class="role-opt customer" id="roleCustomer">
         <div class="role-opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg></div>
         <h3 data-i18n="roleCustomerTitle">I need something repaired</h3>
-        <p data-i18n="roleCustomerDesc">Find a trusted kaarigar near you — cobbler, watch repairer, appliance technician or locksmith.</p>
+        <p data-i18n="roleCustomerDesc">Find a trusted kaarigar near you - cobbler, watch repairer, appliance technician or locksmith.</p>
       </div>
       <div class="role-opt artisan" id="roleArtisan">
         <div class="role-opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.1-3.1a5 5 0 01-6.6 6.6L4.7 22.3a1.5 1.5 0 01-2.1-2.1L12.8 9.7a5 5 0 016.6-6.6l-3.1 3.1z"/></svg></div>
@@ -50,7 +50,7 @@
     </div>
     <div class="hero-eyebrow" data-i18n="heroEyebrow">What is RepairLink?</div>
     <h2 data-i18n="heroTitle">We give your broken things a second chance.</h2>
-    <p data-i18n="heroP1">We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar — cobbler, watch repairer, appliance technician or locksmith — who can fix what you already own.</p>
+    <p data-i18n="heroP1">We provide repair links to you, so that your daily needs can be fulfilled without turning them into waste. We connect you to the nearest kaarigar - cobbler, watch repairer, appliance technician or locksmith - who can fix what you already own.</p>
     <p data-i18n="heroP2">Anything that truly cannot be repaired, we collect ourselves and send for recycling, so it reduces waste piling up in Delhi.</p>
     <div class="hero-region">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
@@ -70,7 +70,7 @@
       <img src="logo.png" style="width: 28px; height: 28px; object-fit: contain; margin-right: 2px;">
       <h1>RepairLink</h1>
     </div>
-    <p data-i18n="brandTagline">Mapping North Delhi's kaarigars — repair first, recycle what's left</p>
+    <p data-i18n="brandTagline">Mapping North Delhi's kaarigars - repair first, recycle what's left</p>
     <nav style="margin-top: 12px; display: flex; gap: 15px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;">
       <a href="RepairLink.html" style="color: var(--leaf); text-decoration: none;">Home</a>
       <a href="Pricing.html" style="color: var(--ink); text-decoration: none;">Pricing Guide</a>
@@ -85,10 +85,10 @@
   <div class="legend">
     <div class="legend-title" data-i18n="legendTitle">Services We Provide</div>
     <div class="legend-sub" data-i18n="legendSub">Tap a symbol on the map to meet the kaarigar</div>
-    <div class="legend-row"><div class="legend-dot" id="legendCobbler"></div><span><span data-i18n="legendCobblerName">Cobblers</span> <span style="color:var(--ink-dim)" data-i18n="legendCobblerDesc">— shoe & leather repair</span><span class="legend-price" id="legendPriceCobbler"></span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span><span data-i18n="legendWatchName">Watch repairers</span> <span style="color:var(--ink-dim)" data-i18n="legendWatchDesc">— horologists</span><span class="legend-price" id="legendPriceWatch"></span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span><span data-i18n="legendApplianceName">Appliance repair</span> <span style="color:var(--ink-dim)" data-i18n="legendApplianceDesc">— mixers & grinders</span><span class="legend-price" id="legendPriceAppliance"></span></span></div>
-    <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span><span data-i18n="legendLocksmithName">Locksmiths</span> <span style="color:var(--ink-dim)" data-i18n="legendLocksmithDesc">— keys & locks</span><span class="legend-price" id="legendPriceLocksmith"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendCobbler"></div><span><span data-i18n="legendCobblerName">Cobblers</span> <span style="color:var(--ink-dim)" data-i18n="legendCobblerDesc">- shoe & leather repair</span><span class="legend-price" id="legendPriceCobbler"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendWatch"></div><span><span data-i18n="legendWatchName">Watch repairers</span> <span style="color:var(--ink-dim)" data-i18n="legendWatchDesc">- horologists</span><span class="legend-price" id="legendPriceWatch"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendAppliance"></div><span><span data-i18n="legendApplianceName">Appliance repair</span> <span style="color:var(--ink-dim)" data-i18n="legendApplianceDesc">- mixers & grinders</span><span class="legend-price" id="legendPriceAppliance"></span></span></div>
+    <div class="legend-row"><div class="legend-dot" id="legendLocksmith"></div><span><span data-i18n="legendLocksmithName">Locksmiths</span> <span style="color:var(--ink-dim)" data-i18n="legendLocksmithDesc">- keys & locks</span><span class="legend-price" id="legendPriceLocksmith"></span></span></div>
     <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
       <button class="music-btn" id="musicBtn" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--line); padding: 12px 20px; border-radius: 99px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: 'Manrope', sans-serif; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: var(--ink); transition: background 0.3s ease, color 0.3s ease; user-select: none;">
         <span id="musicIcon">🎵</span>
@@ -134,7 +134,7 @@
 
 <div class="locate-box">
   <div class="locate-eyebrow" data-i18n="locateEyebrow">Find your nearest kaarigar</div>
-  <h3 data-i18n="locateHeading">Select your location and we'll show you the closest artisan of each trade — in no time.</h3>
+  <h3 data-i18n="locateHeading">Select your location and we'll show you the closest artisan of each trade - in no time.</h3>
   <select id="localitySelect"><option value="" data-i18n="localityPlaceholder">Choose your area in North Delhi…</option></select>
   <button class="locate-btn" id="locateBtn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
@@ -152,24 +152,24 @@
   <div id="storyView">
     <div class="ticket-header">
       <div class="ticket-no" id="ticketNo">REPAIR TICKET NO. 001</div>
-      <h2 id="artisanName">— <span class="verify-badge" id="verifyBadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span id="verifyBadgeText">Verified</span></span></h2>
+      <h2 id="artisanName">- <span class="verify-badge" id="verifyBadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg><span id="verifyBadgeText">Verified</span></span></h2>
       <div class="trade-tag" id="tradeTag"></div>
       <div class="rating-row">
         <span class="stars" id="starsRow"></span>
-        <span><span class="rating-num" id="ratingNum">—</span> <span id="reviewCountText">(0 reviews)</span></span>
-        <span class="price-pill" id="pricePill">₹—</span>
+        <span><span class="rating-num" id="ratingNum">-</span> <span id="reviewCountText">(0 reviews)</span></span>
+        <span class="price-pill" id="pricePill">₹-</span>
       </div>
     </div>
     <div class="panel-body">
       <div class="proximity-bar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
-        <span id="proximityText">—</span>
+        <span id="proximityText">-</span>
       </div>
       <div class="chat-window">
         <div class="chat-header">
           <div class="chat-avatar" id="chatAvatar">R</div>
           <div>
-            <div class="chat-name" id="chatName">—</div>
+            <div class="chat-name" id="chatName">-</div>
             <div class="chat-status" data-i18n="repliesHour">Usually replies within the hour</div>
           </div>
         </div>
@@ -178,9 +178,9 @@
         <div class="chat-time" data-i18n="delivered">Delivered</div>
       </div>
       <div class="stat-row">
-        <div class="stat"><div class="stat-label" data-i18n="statHoursLabel">Hours</div><div class="stat-value" id="statHours">—</div></div>
-        <div class="stat"><div class="stat-label" data-i18n="statYearsLabel">Years here</div><div class="stat-value" id="statYears">—</div></div>
-        <div class="stat"><div class="stat-label" data-i18n="statJobsLabel">Jobs completed</div><div class="stat-value" id="statJobs">—</div></div>
+        <div class="stat"><div class="stat-label" data-i18n="statHoursLabel">Hours</div><div class="stat-value" id="statHours">-</div></div>
+        <div class="stat"><div class="stat-label" data-i18n="statYearsLabel">Years here</div><div class="stat-value" id="statYears">-</div></div>
+        <div class="stat"><div class="stat-label" data-i18n="statJobsLabel">Jobs completed</div><div class="stat-value" id="statJobs">-</div></div>
       </div>
       <div class="review-block">
         <div class="review-block-title" data-i18n="whatCustomersSay">What customers say</div>
@@ -212,7 +212,7 @@
   <div id="resultsView" style="display:none;">
     <div class="results-header">
       <div class="ticket-no" data-i18n="resultsHeader">CLOSEST TO YOU</div>
-      <h2 id="resultsLocality">—</h2>
+      <h2 id="resultsLocality">-</h2>
     </div>
     <div class="results-list" id="resultsList"></div>
   </div>
