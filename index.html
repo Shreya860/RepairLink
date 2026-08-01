@@ -570,6 +570,25 @@
   #social-reels::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(230, 104, 60, 0.08) 0%, transparent 60%); z-index: -1; pointer-events: none; }
   .reel-wrapper a > div { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease; position: relative; }
   .reel-wrapper a:hover > div { transform: translateY(-12px) scale(1.02); box-shadow: 0 25px 50px rgba(188, 24, 136, 0.25), 0 0 40px rgba(230, 104, 60, 0.25); }
+
+  /* ================= FAQ SECTION ================= */
+  .faq-section { padding: 80px 28px; background: var(--paper); border-top: 1px solid rgba(0,0,0,0.05); }
+  .faq-container { max-width: 800px; margin: 40px auto 0; }
+  .faq-item {
+    background: #fff; border-radius: 12px; margin-bottom: 16px; border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02); overflow: hidden; transition: all 0.3s ease;
+  }
+  .faq-item:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.05); transform: translateY(-2px); border-color: rgba(0,0,0,0.08); }
+  .faq-question {
+    width: 100%; text-align: left; padding: 24px; font-family: var(--font-sans); font-size: 18px; font-weight: 700;
+    color: var(--ink); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; transition: color 0.3s;
+  }
+  .faq-question:hover { color: var(--brand); }
+  .faq-icon { width: 24px; height: 24px; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: var(--brand); }
+  .faq-item.active .faq-icon { transform: rotate(45deg); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  .faq-answer-content { padding: 0 24px 24px; font-size: 16px; color: var(--ink-soft); line-height: 1.6; }
 </style>
 <link rel="icon" type="image/png" href="logo.png?v=2">
 <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
@@ -1016,6 +1035,90 @@
   </div>
 </section>
 
+<!-- ============ FAQ SECTION ============ -->
+<section id="faq" class="faq-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Got Questions?</p>
+      <h3 class="fr">Frequently Asked Questions</h3>
+      <p>Everything you need to know about how RepairLink works.</p>
+    </div>
+    <div class="faq-container reveal">
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Why do I have to pay anything at all?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            This fee covers the cost of connecting you accurately — verifying the kaarigar, confirming their location, and matching you to the nearest one for your specific repair. It's usually ₹9 to ₹49 depending on the service and distance, which is far less than the fuel or time you'd spend going door to door looking for someone trustworthy yourself. Our aim isn't to profit from this step — it's to make sure the location you get is accurate and verified, so a trip out isn't wasted.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Do kaarigars take a cut too?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            No. Whatever you pay for the repair itself goes entirely to the kaarigar. RepairLink doesn't take any commission — the small connection fee upfront is all we charge.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Isn't this the same as paying a middleman?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            No — think of it as a one-time access fee, not a markup. You pay the kaarigar directly, in full, for the actual repair. RepairLink's fee only covers finding and verifying them for you.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Is the fee refundable if the kaarigar isn't available?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            No — the amount is minimal, ₹9 in most cases, so it isn't something we refund. But that's exactly why it's a one-time cost: once you have a kaarigar's verified location, it's yours to keep. If they're busy right now, you can simply message them again later — you won't be asked to pay a second time for the same kaarigar and the same service.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>What areas do we cover?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            We're currently live in North Delhi, connecting households to verified kaarigars in their own neighbourhood. We're expanding one locality at a time, with more areas on the way.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>What's the aim behind RepairLink?</span>
+          <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-content">
+            Most things that break don't need to be replaced — they need someone nearby who knows how to fix them. RepairLink exists to make that person easy to find: a verified kaarigar in your own lane, instead of a landfill-bound purchase — without taking anything away from the kaarigar's earnings.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ INSTAGRAM REELS ============ -->
 <section id="social-reels" style="background: var(--paper-2); padding-top: 20px; padding-bottom: 60px;">
   <div class="wrap">
@@ -1428,6 +1531,29 @@
       floatBtn.style.pointerEvents = 'all';
     }
   }, {passive: true});
+
+  // FAQ ACCORDION LOGIC
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const faqItem = button.parentElement;
+      const isActive = faqItem.classList.contains('active');
+      
+      // Close all other FAQs
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+        const answer = item.querySelector('.faq-answer');
+        if (answer) answer.style.maxHeight = null;
+      });
+
+      if (!isActive) {
+        faqItem.classList.add('active');
+        const answer = faqItem.querySelector('.faq-answer');
+        if (answer) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      }
+    });
+  });
 
 </script>
 <script async src="https://www.instagram.com/embed.js"></script>
