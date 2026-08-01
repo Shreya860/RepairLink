@@ -60,6 +60,21 @@
   <h1>Admin Dashboard</h1>
   
   <div class="data-section">
+    <h2>Analytics: Page Visits</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Page Name</th>
+          <th>Total Visits</th>
+        </tr>
+      </thead>
+      <tbody id="analyticsTableBody">
+        <tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="data-section">
     <h2>All Users</h2>
     <table>
       <thead>
@@ -223,6 +238,29 @@
     const usersBody = document.getElementById('usersTableBody');
     const kaarigarsBody = document.getElementById('kaarigarsTableBody');
     
+    // Load Analytics
+    const analyticsBody = document.getElementById('analyticsTableBody');
+    try {
+      const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
+      if (statsDoc.exists()) {
+        const statsData = statsDoc.data();
+        // Sort by visits descending
+        const sortedStats = Object.entries(statsData).sort((a,b) => b[1] - a[1]);
+        let html = '';
+        for (const [page, count] of sortedStats) {
+          html += `<tr>
+            <td style="font-weight:600; font-family:'JetBrains Mono', monospace;">${page}</td>
+            <td><span class="badge kaarigar" style="font-size:13px;">${count}</span></td>
+          </tr>`;
+        }
+        analyticsBody.innerHTML = html || '<tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">No data yet.</td></tr>';
+      } else {
+        analyticsBody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--ink-dim)">No data yet.</td></tr>';
+      }
+    } catch(err) {
+      analyticsBody.innerHTML = `<tr><td colspan="2">Error loading analytics: ${err.message}</td></tr>`;
+    }
+
     // Load Users
     try {
       const usersSnap = await getDocs(collection(db, 'users'));
@@ -587,6 +625,29 @@
     document.addEventListener('touchmove', drag, {passive: false});
     document.addEventListener('touchend', dragEnd);
   })();
+</script>
+<!-- PAGE TRACKER SCRIPT -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    projectId: "repairlink-de1ta",
+    appId: "1:4711329582:web:6e12287963fd4bd58254bf",
+    storageBucket: "repairlink-de1ta.firebasestorage.app",
+    apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
+    authDomain: "repairlink-de1ta.firebaseapp.com",
+    messagingSenderId: "4711329582",
+    measurementId: "G-BQ7PBRSGH3"
+  };
+
+  const app = initializeApp(firebaseConfig, "TrackerApp-" + Math.random().toString(36).substring(7));
+  const db = getFirestore(app);
+
+  let pageName = window.location.pathname.split('/').pop();
+  if (!pageName || pageName === '') pageName = 'index.html';
+  const docRef = doc(db, 'stats', 'page_visits');
+  setDoc(docRef, { [pageName]: increment(1) }, { merge: true }).catch(e => console.error("Error tracking visit:", e));
 </script>
 </body>
 
