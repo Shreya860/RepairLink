@@ -502,6 +502,13 @@
   .calc-result h4 { color: var(--leaf); font-size: 28px; margin: 0; font-weight: 800; }
   .calc-result p { margin: 0; color: var(--ink); font-size: 15px; font-weight: 600; }
 
+  /* ================= FAQ ================= */
+  .faq-wrap { max-width: 800px; margin: 40px auto 0; display: flex; flex-direction: column; gap: 16px; }
+  .faq-item { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 24px; transition: transform 0.2s; }
+  .faq-item:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+  .faq-q { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--ink); margin: 0 0 12px 0; }
+  .faq-a { font-family: 'Manrope', sans-serif; font-size: 15px; color: var(--ink-dim); line-height: 1.6; margin: 0; }
+
   /* ================= WOW FEATURES CSS ================= */
   /* --- Text Rotator --- */
   .text-rotator {
@@ -980,6 +987,31 @@
           <div class="testi-avatar" style="background:var(--vermilion-dim); color:var(--vermilion-deep);">A</div>
           <div><b>Arjun Sethi</b><span>Customer, Shakti Nagar</span></div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ SECTION ============ -->
+<section id="faq" style="background:var(--paper-2); border-top:1px solid var(--line);">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Got questions?</p>
+      <h3 class="fr">Frequently Asked Questions</h3>
+    </div>
+    
+    <div class="faq-wrap reveal">
+      <div class="faq-item">
+        <h4 class="faq-q">Why do I have to pay anything at all?</h4>
+        <p class="faq-a">This fee covers the cost of connecting you accurately - verifying the kaarigar, confirming their location, and matching you to the nearest one for your specific repair. It's usually ₹9 to ₹49 depending on the service and distance, which is far less than the fuel or time you'd spend going door to door looking for someone trustworthy yourself. Our aim isn't to profit from this step - it's to make sure the location you get is accurate and verified, so a trip out isn't wasted.</p>
+      </div>
+      <div class="faq-item">
+        <h4 class="faq-q">Do kaarigars take a cut too?</h4>
+        <p class="faq-a">No. Whatever you pay for the repair itself goes entirely to the kaarigar. RepairLink doesn't take any commission - the small connection fee upfront is all we charge.</p>
+      </div>
+      <div class="faq-item">
+        <h4 class="faq-q">Isn't this the same as paying a middleman?</h4>
+        <p class="faq-a">No - think of it as a one-time access fee, not a markup. You pay the kaarigar directly, in full, for the actual repair. RepairLink's fee only covers verification and connection.</p>
       </div>
     </div>
   </div>
