@@ -383,8 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const map = L.map('map', { zoomControl:false, attributionControl:true }).setView([28.74, 77.18], 11.4);
   L.control.zoom({ position:'bottomright' }).addTo(map);
 
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)',
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom:17, minZoom:10, updateWhenZooming:false, keepBuffer:2
   }).addTo(map);
 
@@ -395,12 +395,22 @@ document.addEventListener('DOMContentLoaded', () => {
     [28.700,77.170],[28.712,77.165],[28.740,77.152],[28.780,77.132],
     [28.822,77.108],[28.865,77.078]
   ];
-  L.polygon(NORTH_DELHI_ZONE, {
-    color:'#8A5C00', weight:2.4, opacity:0.85, dashArray:'9 5',
-    fillColor:'#FFB800', fillOpacity:0.07
-  }).addTo(map).bindTooltip('North Delhi service zone (illustrative outline)', {sticky:true, direction:'top'});
 
-  L.marker([28.822, 77.10], { icon: L.divIcon({ html:'<div class="zone-label">North Delhi Service Zone</div>', className:'', iconSize:null }) }).addTo(map);
+  // Create an inverted polygon to dim everything OUTSIDE North Delhi
+  const worldBounds = [
+    [-90, -180], [90, -180], [90, 180], [-90, 180]
+  ];
+  L.polygon([worldBounds, NORTH_DELHI_ZONE], {
+    color: '#D89100', // Outline for North Delhi
+    weight: 2,
+    opacity: 0.9,
+    dashArray: '8 6',
+    fillColor: '#221D14', // Dim color for outside
+    fillOpacity: 0.35,
+    interactive: false
+  }).addTo(map);
+
+  L.marker([28.822, 77.10], { icon: L.divIcon({ html:'<div class="zone-label" style="background:#fff; padding:4px 8px; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.1); font-weight:bold; font-size:12px; color:#D89100; border:1px solid #D89100;">North Delhi Zone</div>', className:'', iconSize:null }) }).addTo(map);
 
   // ---------- Marker Icons ----------
   function iconSvg(trade, highlighted, verified){
