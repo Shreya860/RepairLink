@@ -544,9 +544,29 @@
     background: #fff;
   }
   /* ================= WOW FEATURES CSS ================= */
-  .typewriter-cursor { animation: blink 0.7s infinite; font-weight: normal; margin-left: 2px; color: var(--rust-deep); }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-  .typewriter-text { display: inline-block; min-width: 200px; }
+  /* --- Text Rotator --- */
+  .text-rotator {
+    display: inline-grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    color: var(--rust-deep);
+  }
+  .text-rotator > span {
+    grid-area: 1 / 1;
+    opacity: 0;
+    animation: rotateText 15s linear infinite;
+    transform: translateY(20px);
+  }
+  .text-rotator > span:nth-child(1) { animation-delay: 0s; }
+  .text-rotator > span:nth-child(2) { animation-delay: 3s; }
+  .text-rotator > span:nth-child(3) { animation-delay: 6s; }
+  .text-rotator > span:nth-child(4) { animation-delay: 9s; }
+  .text-rotator > span:nth-child(5) { animation-delay: 12s; }
+
+  @keyframes rotateText {
+    0%, 25%, 100% { opacity: 0; transform: translateY(10px); }
+    3%, 22% { opacity: 1; transform: translateY(0); }
+  }
 
   #scrollProgressBar {
     position: fixed; top: 0; left: 0; height: 5px; background: linear-gradient(90deg, #e6683c, #bc1888); z-index: 9999; width: 0%;
@@ -648,7 +668,15 @@
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="eyebrow hero-eyebrow">A repair-first marketplace</p>
-      <h2 class="fr">Before you throw it out, <br><em class="typewriter-text">let someone mend it.</em><span class="typewriter-cursor">|</span></h2>
+      <h2 class="fr">Before you throw it out, <br>
+        <span class="text-rotator">
+          <span>let someone mend it.</span>
+          <span>fix your favorite shoes.</span>
+          <span>restore your leather bag.</span>
+          <span>repair that old fan.</span>
+          <span>stitch that torn shirt.</span>
+        </span>
+      </h2>
       <p class="lede">RepairLink puts a verified kaarigar - cobbler, watch repairer, appliance technician, locksmith or tailor - from your own neighbourhood one message away. No showroom, no markup, no guessing who to trust.</p>
       <div class="hero-actions">
         <a href="#cta" class="btn-primary">
@@ -1508,36 +1536,6 @@
 </a>
 
 <script>
-  // TYPEWRITER EFFECT
-  const words = ["let someone mend it.", "fix your favorite shoes.", "restore your leather bag.", "repair that old fan.", "stitch that torn shirt."];
-  let wordIndex = 0, charIndex = 0;
-  let isDeleting = false;
-  const typeText = document.querySelector(".typewriter-text");
-  
-  function typeWord() {
-    if (!typeText) return;
-    const currentWord = words[wordIndex];
-    if (isDeleting) {
-      typeText.textContent = currentWord.substring(0, charIndex - 1);
-      charIndex--;
-    } else {
-      typeText.textContent = currentWord.substring(0, charIndex + 1);
-      charIndex++;
-    }
-    let typeSpeed = 150;
-    if (isDeleting) typeSpeed /= 2;
-    if (!isDeleting && charIndex === currentWord.length) {
-      typeSpeed = 4000;
-      isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      wordIndex = (wordIndex + 1) % words.length;
-      typeSpeed = 1000;
-    }
-    setTimeout(typeWord, typeSpeed);
-  }
-  setTimeout(typeWord, 1000);
-
   // SCROLL PROGRESS BAR
   window.addEventListener('scroll', () => {
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
