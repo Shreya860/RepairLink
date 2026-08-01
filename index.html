@@ -589,6 +589,16 @@
   .faq-item.active .faq-icon { transform: rotate(45deg); }
   .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
   .faq-answer-content { padding: 0 24px 24px; font-size: 16px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ---------- Language toggle ---------- */
+  .lang-btn{
+    border:none; background:transparent; font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:600;
+    padding:7px 13px; border-radius:999px; cursor:pointer; color:var(--ink-dim); letter-spacing:0.03em;
+  }
+  .lang-btn.active{background:var(--marigold); color:#2A1E00;}
+  .goog-te-banner-frame { display: none !important; }
+  body { top: 0px !important; position: static !important; }
+
 </style>
 <link rel="icon" type="image/png" href="logo.png?v=2">
 <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
@@ -615,6 +625,10 @@
       <a href="Auth.html" id="navLogin">Sign In</a>
       <a href="#" id="navLogout" style="display:none;">Logout</a>
     </nav>
+    <div class="lang-toggle-nav" id="langToggle" style="display:flex; border:1px solid var(--line); border-radius:99px; padding:4px; margin-right: 16px;">
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="hi" onclick="setLang('hi')">हिं</button>
+    </div>
     <a href="RepairLink.html?role=customer" class="nav-cta">
       Find a Kaarigar
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1588,6 +1602,28 @@
   if (!pageName || pageName === '') pageName = 'index.html';
   const docRef = doc(db, 'stats', 'page_visits');
   setDoc(docRef, { [pageName]: increment(1) }, { merge: true }).catch(e => console.error("Error tracking visit:", e));
+</script>
+<!-- ============ GOOGLE TRANSLATE ============ -->
+<div id="google_translate_element" style="display:none;"></div>
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'hi,en', autoDisplay: false}, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('#langToggle .lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`#langToggle .lang-btn[data-lang="${lang}"]`).classList.add('active');
+    
+    var select = document.querySelector('select.goog-te-combo');
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event('change'));
+    } else {
+      setTimeout(() => setLang(lang), 500);
+    }
+  }
 </script>
 </body>
 </html>
