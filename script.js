@@ -515,6 +515,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentArtisanIdx = null;
 
   function showStory(a, idx){
+    const isAdmin = (window.windowUserRole === 'admin');
+    
+    if (!isAdmin) {
+      alert("After your request to the service, if it gets verified after payment then you can see the details, not before that.");
+      return;
+    }
+
     storyView.style.display = 'block';
     resultsView.style.display = 'none';
     currentArtisan = a;
@@ -552,33 +559,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="review-top"><span class="review-name">${r.n}</span><span class="stars">${starsSvg(td.rating)}</span></div>
         <div class="review-text">${r.t}</div>
       </div>`).join('');
-    const isAdmin = (window.windowUserRole === 'admin');
     const whatsappPanel = document.getElementById('whatsappPanel');
-    const storyText1 = document.getElementById('storyText1');
-    const storyText2 = document.getElementById('storyText2');
-
-    if (!isAdmin) {
-      whatsappPanel.classList.add('blur-locked-btn');
-      whatsappPanel.removeAttribute('target');
-      whatsappPanel.removeAttribute('rel');
-      whatsappPanel.href = "javascript:void(0)";
-      whatsappPanel.onclick = (e) => {
-        e.preventDefault();
-        alert("Please upgrade to Premium (₹9) to view contact details.");
-      };
-      
-      storyText1.classList.add('blur-content');
-      storyText2.classList.add('blur-content');
-    } else {
-      whatsappPanel.classList.remove('blur-locked-btn');
-      whatsappPanel.target = "_blank";
-      whatsappPanel.rel = "noopener";
-      whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
-      whatsappPanel.onclick = null;
-      
-      storyText1.classList.remove('blur-content');
-      storyText2.classList.remove('blur-content');
-    }
+    whatsappPanel.target = "_blank";
+    whatsappPanel.rel = "noopener";
+    whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
+    whatsappPanel.onclick = null;
 
     // Action button updates using the safe t18n helper
     const doneBtn = document.getElementById('markDoneBtn');
