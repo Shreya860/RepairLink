@@ -2,7 +2,7 @@
   <img src="logo.png" alt="RepairLink Logo" width="120" />
   
   # 🛠️ RepairLink
-  **Mapping North Delhi's kaarigars — repair first, recycle what's left.**
+  **Mat Feko, Fix Karo. Mapping North Delhi's kaarigars — repair first, recycle what's left.**
 
   [![Website Live](https://img.shields.io/badge/Live-repairlink--de1ta.web.app-success?style=for-the-badge&logo=firebase)](https://repairlink-de1ta.web.app)
   [![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)](https://firebase.google.com/)
@@ -13,34 +13,46 @@
 
 <br/>
 
-RepairLink connects local *Kaarigars* (repair workers) with customers who need their services, empowering local tradesmen and making everyday repairs highly accessible. 
+RepairLink is a community-driven platform built for a circular economy. Instead of throwing away a broken mixer or a torn shoe, RepairLink instantly connects you with verified local artisans (*kaarigars*) capable of fixing it. 
 
 ---
 
-## ✨ Why RepairLink?
+## ✨ Core Features & Innovations
 
-We believe in a circular economy. Instead of throwing away that broken mixer or torn shoe, RepairLink instantly connects you with verified local artisans capable of fixing it. 
+### 🗺️ Geo-Fenced Discovery (CARTO Maps)
+We utilize **CARTO Voyager** tiles paired with a custom **Inverted Polygon Mask** to visually isolate and highlight our active service area (North Delhi), dimming out regions where services are currently unavailable. Users can filter kaarigars by category (Cobbler, Tailor, Electrician, etc.) instantly on the map.
 
-### 🚀 Key Features
+### 🔒 Privacy-First Architecture
+Kaarigar phone numbers and direct contact details are protected by strict **Role-Based Access Control (RBAC)**. When users click on a map marker, they see the kaarigar's story and skills, but sensitive details are masked and strictly restricted to Admin users only, preventing unauthorized data scraping.
 
-*   🗺️ **Interactive Artisan Map:** Browse an interactive Mapbox-powered map to find nearby Kaarigars (cobblers, watch repairers, mechanics, etc.).
-*   🛡️ **Role-Based Dashboards:** 
-    *   **Customers:** Book repairs, leave ratings, and track job status.
-    *   **Kaarigars:** Manage public profiles, accept incoming jobs, and mark them as completed.
-    *   **Admins:** Oversee the platform, verify Kaarigar profiles before they go live, and assign concierge jobs.
-*   💳 **Concierge Booking & Payments:** Request a service directly from the map. A small ₹9 booking fee is collected via QR code, which admins manually verify before assigning the job.
-*   ⭐ **Trust & Rating System:** Verified users can leave 1-5 star reviews. Kaarigar profiles automatically display dynamic, real-time gold star ratings.
-*   🤖 **AI Support Chatbot:** A fully integrated, floating AI chatbot (powered by Streamlit & Groq) is available on the main page to assist users instantly.
-*   💎 **Premium Glassmorphism UI:** Built with a stunning, high-end design system featuring mesh-gradient backgrounds, frosted-glass panels, custom scrollbars, and scale-up entrance animations.
+### 🌐 Bilingual Accessibility (English & Hindi)
+To ensure maximum accessibility across diverse demographics, the platform features a seamless **Hindi/English localization toggle**, powered by dynamic CSS text rotators that prevent layout shifting during translation.
 
-### 📈 Marketing & Viral Growth
-*   **Social Sharing:** Integrated "Share on WhatsApp" system to drive viral user acquisition.
-*   **SEO & Open Graph:** Fully configured OG and Twitter Card tags. Sharing links on social media automatically generates beautiful branded preview cards.
-*   **Analytics:** Native Firebase Analytics integration to track user behavior and conversions.
-*   **PWA Ready:** Fully installable Progressive Web App with a custom `manifest.json`.
+### 📊 Real-Time Native Analytics
+Instead of relying on heavy third-party trackers, RepairLink features a custom, lightweight real-time analytics engine. Page visits and interactions are tracked natively and pushed directly to **Cloud Firestore (`/stats/page_visits`)**, which Admins can monitor in real-time.
 
-### 🎵 Immersive Vibe
-*   **Custom Theme Song:** The platform features an exclusive, custom-produced theme song. Users can toggle the music via a floating, draggable glass button on the main map, or via the interactive equalizer on the *About Us* page.
+### 👥 Dedicated Role Portals
+The ecosystem is divided into specific portals tailored for different users:
+- **`UserDashboard.html`**: For customers to track their repair requests.
+- **`KaarigarDashboard.html`**: For artisans to manage their profile and workload.
+- **`Admin.html`**: A powerful control center for verifying kaarigars, monitoring site analytics, and managing user feedback.
+- **`Addkaarigar.html`**: A streamlined onboarding flow with an interactive map picker for pinning the exact geolocation of a new artisan's shop.
+
+### 💬 Integrated AI Support
+A floating, draggable AI Chatbot (powered by Streamlit & Groq) is embedded directly into the platform, providing instant contextual help to users without them having to leave the page.
+
+---
+
+## 🏗️ Project Architecture
+
+| Page | Description |
+| :--- | :--- |
+| **`index.html`** | The landing page featuring a repair vs. replace calculator, dynamic testimonials, an interactive accordion FAQ, and a premium glassmorphism aesthetic. |
+| **`RepairLink.html`** | The core map interface where users locate and discover kaarigars. |
+| **`Pricing.html`** | Transparent breakdown of our minimal ₹9 connection fee model (no commissions on repairs). |
+| **`Auth.html`** | Secure authentication handling via Firebase Auth. |
+| **`AboutUs.html`** | The mission statement page, featuring an interactive audio equalizer for the platform's custom theme song. |
+| **`script.js`** | The brain of the frontend—handling Mapbox initialization, Firestore listeners, auth state, and UI logic. |
 
 ---
 
@@ -50,11 +62,11 @@ We believe in a circular economy. Instead of throwing away that broken mixer or 
   <img src="https://skillicons.dev/icons?i=html,css,js,firebase,python" />
 </div>
 
-*   **Frontend:** HTML5, CSS3, Vanilla JavaScript (No heavy frameworks!)
-*   **Backend & DB:** Firebase (Cloud Firestore & Auth)
+*   **Frontend:** HTML5, CSS3, Vanilla JavaScript (Zero heavy frameworks for maximum performance)
+*   **Backend & Database:** Firebase (Cloud Firestore, Authentication)
 *   **Hosting:** Firebase Hosting
-*   **Mapping:** Mapbox GL JS
-*   **AI Chatbot:** Python, Streamlit, LangChain, Groq
+*   **Mapping:** Mapbox GL JS with CARTO basemaps
+*   **AI Chatbot (External):** Python, Streamlit, LangChain, Groq
 
 ---
 
@@ -75,10 +87,9 @@ We believe in a circular economy. Instead of throwing away that broken mixer or 
    ```bash
    npx serve . -p 3000
    ```
+   Or simply use the VS Code Live Server extension.
 
-4. **(Optional) Run the AI Chatbot:**
-   Navigate to the chatbot folder (if applicable) and run:
+4. **Deploying Updates:**
    ```bash
-   pip install -r requirements.txt
-   streamlit run app.py
+   npx firebase-tools deploy --only hosting
    ```
