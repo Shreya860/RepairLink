@@ -30,7 +30,7 @@ window.sendChatMessage = async function() {
     chatInput.disabled = true;
     chatSendBtn.disabled = true;
     
-    const botBubble = addMessageToUI("...", "bot");
+    const botBubble = addMessageToUI("<div class='typing-indicator'><span></span><span></span><span></span></div>", "bot");
 
     try {
         const result = await chat.sendMessageStream(text);
@@ -69,7 +69,7 @@ function addMessageToUI(text, sender) {
 
     const msgDiv = document.createElement("div");
     msgDiv.className = `chat-msg ${sender}`;
-    msgDiv.innerHTML = text === "..." ? "..." : marked.parse(text);
+    msgDiv.innerHTML = text.includes("typing-indicator") ? text : marked.parse(text);
 
     if (sender === "bot") {
         rowDiv.appendChild(avatar);
