@@ -6,7 +6,7 @@ const apiKey = "AIzaSyBhGWGZUoljRyvcrYVt2zGi_XuROCIEWyc";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({ 
-    model: "gemini-3.5-flash",
+    model: "gemini-3.6-flash",
     systemInstruction: "You are the RepairLink assistant. You help customers find local kaarigars (repair shops), guide them on DIY fixes, and explain pricing. Be concise and friendly. DO NOT tell users to pay any fees in the dashboard. The booking is free but the actual repair cost is discussed with the kaarigar.",
 });
 
