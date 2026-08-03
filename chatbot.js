@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
 // Standard Gemini Developer API (Free Tier)
-const apiKey = "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk";
+const apiKey = "AIzaSyBhGWGZUoljRyvcrYVt2zGi_XuROCIEWyc";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({ 
