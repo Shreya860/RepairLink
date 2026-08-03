@@ -1,21 +1,11 @@
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getVertexAI, getGenerativeModel } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-vertexai.js";
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-const firebaseConfig = {
-  projectId: "repairlink-de1ta",
-  appId: "1:4711329582:web:6e12287963fd4bd58254bf",
-  storageBucket: "repairlink-de1ta.firebasestorage.app",
-  apiKey: "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk",
-  authDomain: "repairlink-de1ta.firebaseapp.com",
-  messagingSenderId: "4711329582",
-  measurementId: "G-BQ7PBRSGH3"
-};
+// Standard Gemini Developer API (Free Tier)
+const apiKey = "AIzaSyDMuvy1qfYvqLP348TZB-lfxGixaJGZFrk";
+const genAI = new GoogleGenerativeAI(apiKey);
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-
-const vertexAI = getVertexAI(app);
-const model = getGenerativeModel(vertexAI, { 
-    model: "gemini-flash-latest",
+const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash",
     systemInstruction: "You are the RepairLink assistant. You help customers find local kaarigars (repair shops), guide them on DIY fixes, and explain pricing. Be concise and friendly. DO NOT tell users to pay any fees in the dashboard. The booking is free but the actual repair cost is discussed with the kaarigar.",
 });
 
