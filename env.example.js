@@ -1,0 +1,1 @@
+export const GEMINI_API_KEY = "PASTE_YOUR_AI_STUDIO_KEY_HERE";
