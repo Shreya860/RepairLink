@@ -15,7 +15,7 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
 
 const vertexAI = getVertexAI(app);
 const model = getGenerativeModel(vertexAI, { 
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-flash-latest",
     systemInstruction: "You are the RepairLink assistant. You help customers find local kaarigars (repair shops), guide them on DIY fixes, and explain pricing. Be concise and friendly. DO NOT tell users to pay any fees in the dashboard. The booking is free but the actual repair cost is discussed with the kaarigar.",
 });
 
@@ -46,7 +46,7 @@ window.sendChatMessage = async function() {
         }
     } catch (error) {
         console.error(error);
-        botBubble.textContent = "Oops, something went wrong. Please try again.";
+        botBubble.textContent = "Error: " + (error.message || error.toString());
     } finally {
         chatInput.disabled = false;
         chatSendBtn.disabled = false;
