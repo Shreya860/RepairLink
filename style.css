@@ -292,7 +292,8 @@
 /* ---------- Premium Float ---------- */
 .premium-float {
   position: absolute;
-  top: 140px;
+  bottom: calc(50% + 25px);
+  top: auto;
   left: 20px;
   z-index: 900;
   background: linear-gradient(135deg, #111, #333);
@@ -320,10 +321,11 @@
 
 @media (max-width: 768px) {
   .premium-float {
-    top: 110px;
+    bottom: calc(50% + 25px);
+    top: auto;
     left: 14px;
     width: calc(100% - 28px);
-    max-width: 250px;
+    max-width: 220px;
     padding: 10px;
   }
 }.blur-locked-btn { filter: blur(3.5px); pointer-events: auto; }
