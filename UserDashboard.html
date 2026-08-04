@@ -385,27 +385,45 @@
       `;
     } else {
       sec.innerHTML = `
-        <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Upgrade to RepairLink Premium ✦</h2>
-        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 20px; line-height: 1.5;">Get 3 free services with zero upfront fees, priority Kaarigar matching, and premium support for 3 months.</p>
-        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-          <div style="flex:1; background:var(--paper-2); padding:16px; border-radius:12px; border:1px solid var(--line-strong); display:flex; justify-content:space-between; align-items:center; color:var(--ink);">
-            <div>
-              <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8; font-weight:700;">3 Months Plan</div>
-              <div style="font-family:'JetBrains Mono', monospace; font-size:24px; font-weight:700; color:var(--ink);" id="subPrice">₹59</div>
-              <div style="font-size:11px; color:#1F7A44; font-weight:700; margin-top:4px;">Apply Code Delta for ₹20 off instantly!</div>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <div style="display:flex; gap:8px;">
-                <input type="text" id="couponInput" placeholder="Coupon Code" style="padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif; font-size:13px; max-width:120px; background:white; color:black;">
-                <button onclick="applyCoupon()" style="padding:8px 16px; background:var(--ink-dim); color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">Apply</button>
+        <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-top: 0; margin-bottom: 8px; color: #ffc935; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Upgrade to RepairLink Premium ✦</h2>
+        <p style="font-size: 15px; opacity: 0.95; margin-bottom: 24px; line-height: 1.6;">Join our premium members and enjoy a seamless repair experience.</p>
+        
+        <div style="display: flex; gap: 20px; align-items: stretch; flex-wrap: wrap;">
+          <!-- Features Box -->
+          <div style="flex:1; min-width: 250px; background: rgba(255,255,255,0.05); padding:20px; border-radius:16px; border:1px solid rgba(255,255,255,0.1);">
+            <h3 style="font-size: 16px; margin-top: 0; margin-bottom: 16px; color: #fff; letter-spacing: 0.5px;">Premium Benefits</h3>
+            <ul style="list-style:none; padding:0; margin:0; font-size:14px; line-height:1.8; color: #e0e0e0;">
+              <li style="margin-bottom: 10px;"><span style="color:#ffc935; margin-right:8px;">✔</span> <strong>3 Free Services</strong> (Upfront fees covered)</li>
+              <li style="margin-bottom: 10px;"><span style="color:#ffc935; margin-right:8px;">✔</span> <strong>Zero Upfront Fees</strong> for 3 months</li>
+              <li style="margin-bottom: 10px;"><span style="color:#ffc935; margin-right:8px;">✔</span> <strong>Priority Kaarigar Matching</strong></li>
+              <li style="margin-bottom: 0;"><span style="color:#ffc935; margin-right:8px;">✔</span> <strong>Premium Support</strong> on WhatsApp</li>
+            </ul>
+          </div>
+
+          <!-- Pricing & Payment Box -->
+          <div style="flex:1.2; min-width: 300px; background: linear-gradient(145deg, #ffffff, #fdfbf7); padding:24px; border-radius:16px; border:1px solid var(--marigold); box-shadow: 0 8px 24px rgba(0,0,0,0.15); display:flex; flex-direction:column; color:var(--ink); position: relative; overflow: hidden;">
+            <div style="position: absolute; top:-10px; right:-10px; background: var(--marigold); color: #2a1e00; font-weight: 800; font-size: 11px; padding: 12px 24px; transform: rotate(45deg); letter-spacing: 1px;">POPULAR</div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 16px;">
+              <div>
+                <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.1em; opacity:0.6; font-weight:800; margin-bottom:4px;">3 Months Plan</div>
+                <div style="font-family:'JetBrains Mono', monospace; font-size:32px; font-weight:800; color:var(--ink); line-height: 1;" id="subPrice">₹59</div>
               </div>
-              
-              <div style="text-align:center; margin-bottom: 20px; background:rgba(0,0,0,0.03); padding:16px; border-radius:12px; border:1px dashed var(--line);">
-                <p style="font-size:14px; margin-bottom:8px; color:var(--ink);"><strong>Scan via PhonePe / UPI to pay ₹59</strong></p>
-                <img src="./PhonePay_QR.jpeg" alt="PhonePe QR" style="width:150px; height:150px; border-radius:8px; background:white; padding:8px; object-fit:contain; display:block; margin: 0 auto;">
+              <div style="background: #e6f4ea; border: 1px dashed #1f7a44; border-radius: 8px; padding: 10px 12px; text-align:center;">
+                <div style="font-size:11px; color:#1f7a44; font-weight:800; margin-bottom: 6px;">APPLY CODE DELTA</div>
+                <div style="display:flex; gap:6px;">
+                  <input type="text" id="couponInput" placeholder="Code" style="padding:6px; border:1px solid #1f7a44; border-radius:4px; font-family:'Manrope', sans-serif; font-size:12px; max-width:70px; background:white; color:black; text-align:center;">
+                  <button onclick="applyCoupon()" style="padding:6px 12px; background:#1f7a44; color:white; border:none; border-radius:4px; font-weight:700; cursor:pointer; font-size:12px;">Apply</button>
+                </div>
               </div>
-<button id="paySubBtn" onclick="subscribePremium()" style="padding:10px 16px; background:#ffc935; color:#2A1E00; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; width:100%;">Paid ₹59 & Subscribe</button>
             </div>
+            
+            <div style="text-align:center; margin-bottom: 20px; background: rgba(255,201,53,0.1); padding:16px; border-radius:12px; border: 1px dashed var(--marigold);">
+              <p style="font-size:14px; margin-top:0; margin-bottom:12px; color:var(--ink);"><strong>Scan to pay with any UPI App</strong></p>
+              <img src="./PhonePay_QR.jpeg" alt="PhonePe QR" style="width:140px; height:140px; border-radius:12px; background:white; padding:8px; object-fit:contain; display:block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            </div>
+            
+            <button id="paySubBtn" onclick="subscribePremium()" style="padding:14px 16px; background: linear-gradient(90deg, #ffc935, #ffaa00); color:#2A1E00; border:none; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px; width:100%; box-shadow: 0 4px 12px rgba(255,201,53,0.4); transition: transform 0.2s ease;">Paid ₹59 & Subscribe</button>
           </div>
         </div>
       `;
