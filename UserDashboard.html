@@ -556,6 +556,37 @@
     }
   }
 
+
+  // Dynamic Pricing Logic
+  window.updateServicePriceUI = function() {
+    const prices = { cobbler: 9, locksmith: 19, watch: 29, appliance: 39 };
+    const tradeSelect = document.getElementById('requestTrade');
+    if (!tradeSelect) return;
+    const trade = tradeSelect.value;
+    const price = prices[trade] || 9;
+    
+    const isPremiumWithFreeServices = (window.currentUserData && window.currentUserData.isPremium && window.currentUserData.freeServicesLeft > 0);
+    
+    if (isPremiumWithFreeServices) {
+      document.getElementById('modalFeeText').innerHTML = '<strong>Premium Member:</strong> Your upfront fee is ₹0 for this request. (1 free service will be deducted)';
+      const paySec = document.getElementById('servicePaymentSection');
+      if(paySec) paySec.style.display = 'none';
+      document.getElementById('submitRequestBtn').innerHTML = '<span style="font-weight:600; text-align:center; width:100%;">Submit Request for Free</span>';
+    } else {
+      document.getElementById('modalFeeText').innerHTML = `Pay a ₹${price} upfront fee to have our team assign the best verified Kaarigar for your job.`;
+      const paySec = document.getElementById('servicePaymentSection');
+      if(paySec) {
+        paySec.style.display = 'block';
+        const qrText = paySec.querySelector('p strong');
+        if (qrText) qrText.innerText = `Scan via PhonePe / UPI to pay ₹${price}`;
+      }
+      document.getElementById('submitRequestBtn').innerHTML = `<span style="font-weight:600; text-align:center; width:100%;">Paid ₹${price} & Submit Request</span>`;
+    }
+  };
+  
+  // Attach listener to select
+  document.getElementById('requestTrade').addEventListener('change', window.updateServicePriceUI);
+
   document.getElementById('submitRequestBtn').addEventListener('click', async () => {
     const item = document.getElementById('requestItem').value;
     const address = document.getElementById('requestAddress').value;
@@ -583,7 +614,8 @@
         trade: trade,
         address: address,
         status: isFree ? 'pending' : 'pending_payment',
-        paymentAmount: isFree ? 0 : 9,
+        const prices = { cobbler: 9, locksmith: 19, watch: 29, appliance: 39 };
+        paymentAmount: isFree ? 0 : (prices[trade] || 9),
         date: new Date().toLocaleDateString('en-GB')
       };
 
