@@ -31,6 +31,15 @@
     --surface-strong: rgba(255,255,255,0.97);
     --surface-soft: rgba(255,255,255,0.92);
     --surface-solid:#FFFFFF;
+
+    --mesh-bg-color: #f6ecd8;
+    --mesh-grad-1: hsla(43, 100%, 85%, 1);
+    --mesh-grad-2: hsla(145, 56%, 85%, 1);
+    --mesh-grad-3: hsla(207, 72%, 85%, 1);
+    --mesh-grad-4: hsla(7, 100%, 88%, 1);
+    
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.5);
   }
 
   html[data-theme="dark"]{
@@ -59,6 +68,15 @@
     --surface-strong: rgba(30,30,30,0.92);
     --surface-soft: rgba(30,30,30,0.85);
     --surface-solid:#1E1E1E;
+
+    --mesh-bg-color: #121212;
+    --mesh-grad-1: hsla(43, 100%, 15%, 1);
+    --mesh-grad-2: hsla(145, 56%, 15%, 1);
+    --mesh-grad-3: hsla(207, 72%, 15%, 1);
+    --mesh-grad-4: hsla(7, 100%, 15%, 1);
+    
+    --glass-bg: rgba(30, 30, 30, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.1);
   }
 
   /* Respect the OS setting ONLY until the user picks a theme explicitly
@@ -90,6 +108,15 @@
       --surface-strong: rgba(30,30,30,0.92);
       --surface-soft: rgba(30,30,30,0.85);
       --surface-solid:#1E1E1E;
+
+      --mesh-bg-color: #121212;
+      --mesh-grad-1: hsla(43, 100%, 15%, 1);
+      --mesh-grad-2: hsla(145, 56%, 15%, 1);
+      --mesh-grad-3: hsla(207, 72%, 15%, 1);
+      --mesh-grad-4: hsla(7, 100%, 15%, 1);
+      
+      --glass-bg: rgba(30, 30, 30, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -528,22 +555,22 @@
 
   /* Mesh Gradient Background */
   .mesh-bg {
-    background-color: #f6ecd8;
+    background-color: var(--mesh-bg-color);
     background-image: 
-      radial-gradient(at 0% 0%, hsla(43, 100%, 85%, 1) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(145, 56%, 85%, 1) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(207, 72%, 85%, 1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(7, 100%, 88%, 1) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, var(--mesh-grad-1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, var(--mesh-grad-2) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, var(--mesh-grad-3) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, var(--mesh-grad-4) 0px, transparent 50%);
     background-attachment: fixed;
   }
 
   /* Glassmorphism Card */
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 24px 60px rgba(34, 29, 20, 0.08);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
   }
 
   /* Entrance Animations */
