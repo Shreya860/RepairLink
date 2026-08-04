@@ -572,6 +572,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('heroClose').addEventListener('click', () => {
     document.getElementById('heroScrim').classList.add('closed');
+    const returnBtn = document.getElementById('returnHomeBtn');
+    const premiumBox = document.querySelector('.premium-float');
+    if(returnBtn) returnBtn.style.display = 'flex';
+    if(premiumBox) premiumBox.style.display = 'flex';
   });
 
   // ---------- Role Selector & Onboarding Logic ----------
