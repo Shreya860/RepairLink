@@ -135,6 +135,11 @@
         Messages
         <span class="nav-badge" id="unreadMsgBadge" style="display:none;">0</span>
       </button>
+      <button data-tab="premium">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+        Premium Approvals
+        <span class="nav-badge" id="pendingPremiumBadge" style="display:none;">0</span>
+      </button>
     </nav>
     <div class="sidebar-footer">
       <a href="index.html">
@@ -176,6 +181,17 @@
         <table>
           <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="usersTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== PREMIUM APPROVALS ===== -->
+    <div class="tab-content" id="tab-premium">
+      <div class="page-head"><div><h1>Premium Approvals</h1><p>Users who have paid and are waiting for Premium activation.</p></div></div>
+      <div class="panel-block" style="padding:0; overflow-x:auto;">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Payment Status</th><th>Actions</th></tr></thead>
+          <tbody id="premiumTableBody"><tr><td colspan="4" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -341,8 +357,10 @@
       window.adminUsersData = {};
       usersSnap.forEach(d => { window.adminUsersData[d.id] = d.data(); });
       renderUsersTable();
+      renderPremiumApprovalsTable();
     } catch (err) {
       document.getElementById('usersTableBody').innerHTML = `<tr><td colspan="5">Error loading users: ${err.message}</td></tr>`;
+      document.getElementById('premiumTableBody').innerHTML = `<tr><td colspan="4">Error loading users: ${err.message}</td></tr>`;
     }
 
     // ---- Kaarigars ----
@@ -494,9 +512,7 @@
     entries.forEach(([id, u]) => {
       const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
       let premiumAction = '';
-      if (u.premiumStatus === 'pending') {
-        premiumAction = `<button class="btn-small marigold" onclick="approvePremiumUser('${id}')">Approve Premium</button>`;
-      } else if (u.isPremium) {
+      if (u.isPremium) {
         premiumAction = `<span style="font-size:11px; color:#ffc935; font-weight:700;">✦ Premium</span>`;
       }
       
@@ -514,6 +530,34 @@
     });
   }
   document.getElementById('userSearchInput').addEventListener('input', renderUsersTable);
+
+  // ---------- Premium Approvals tab: render ----------
+  function renderPremiumApprovalsTable() {
+    const body = document.getElementById('premiumTableBody');
+    body.innerHTML = '';
+    const pendingEntries = Object.entries(window.adminUsersData).filter(([id, u]) => u.premiumStatus === 'pending');
+    
+    const pBadge = document.getElementById('pendingPremiumBadge');
+    if (pendingEntries.length > 0) {
+      pBadge.style.display = 'inline-block';
+      pBadge.textContent = pendingEntries.length;
+    } else {
+      pBadge.style.display = 'none';
+      body.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--ink-dim);">No pending premium approvals.</td></tr>`;
+      return;
+    }
+    
+    pendingEntries.forEach(([id, u]) => {
+      body.innerHTML += `<tr>
+        <td style="font-weight:600">${u.displayName || 'No Name'}</td>
+        <td>${u.email || ''}</td>
+        <td><span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Approval</span></td>
+        <td class="actions-cell">
+          <button class="btn-small marigold" onclick="approvePremiumUser('${id}')">Approve Premium</button>
+        </td>
+      </tr>`;
+    });
+  }
 
   window.approvePremiumUser = async function(id) {
     if (!confirm("Approve Premium Subscription for this user? They will receive 3 free services.")) return;
