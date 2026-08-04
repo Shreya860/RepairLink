@@ -89,6 +89,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         Overview
       </button>
+      <button data-tab="new-request">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New Request
+      </button>
       <button data-tab="premium">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
         Premium
@@ -131,9 +135,7 @@
           <div class="profile-name" id="profileName">Loading...</div>
           <div class="profile-email" id="profileEmail"></div>
         </div>
-        <button onclick="document.getElementById('serviceModal').style.display='flex'" style="background:var(--marigold); color:var(--ink); border:none; padding:12px 24px; border-radius:12px; font-weight:700; font-family:'Manrope', sans-serif; cursor:pointer; font-size:16px;">
-          + Request a Service
-        </button>
+        
       </div>
 
       <div style="background:linear-gradient(135deg, var(--leaf), #083318); border-radius:16px; padding:24px; color:white; margin-bottom:32px; display:flex; justify-content:space-between; align-items:center;">
@@ -166,6 +168,41 @@
           <button onclick="navigator.clipboard.writeText(document.getElementById('referralLink').value); alert('Referral link copied!');" style="padding: 12px 20px; background: var(--marigold); color: #2A1E00; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Copy Link</button>
           <a href="https://wa.me/?text=I%20just%20found%20local%20repair%20experts%20in%20North%20Delhi%20on%20RepairLink!%20Check%20it%20out:%20https://repairlink-de1ta.web.app" target="_blank" style="padding: 12px 20px; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center;">Share on WhatsApp</a>
         </div>
+      </div>
+    </div>
+
+    
+    <!-- ===== NEW REQUEST ===== -->
+    <div class="tab-content" id="tab-new-request">
+      <div class="page-head"><div><h1>Request a Service</h1><p>Tell us what needs fixing, and we'll match you with a Kaarigar.</p></div></div>
+      <div class="panel-block" style="max-width: 600px; padding: 32px; background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        
+    <p id="modalFeeText" style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.</p>
+    
+    <div class="field-group">
+      <label>Service Type</label>
+      <select id="requestTrade">
+        <option value="cobbler">Cobbler / Shoe Repair</option>
+        <option value="watch">Watch Repair</option>
+        <option value="appliance">Appliance Repair</option>
+        <option value="locksmith">Locksmith</option>
+      </select>
+    </div>
+    
+    <div class="field-group">
+      <label>What needs fixing?</label>
+      <input type="text" id="requestItem" placeholder="e.g. Broken mixer grinder jar">
+    </div>
+
+    <div class="field-group">
+      <label>Your Address</label>
+      <textarea id="requestAddress" placeholder="e.g. 12B, Saket Block M"></textarea>
+    </div>
+    
+    <button class="form-submit" id="submitRequestBtn">
+      <span style="font-weight:600; text-align:center; width:100%;">Submit Request</span>
+    </button>
+  
       </div>
     </div>
 
@@ -214,37 +251,7 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="serviceModal" style="display:none;">
-  <div class="modal-container">
-    <button class="modal-close" onclick="document.getElementById('serviceModal').style.display='none'">&times;</button>
-    <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Request a Service</h2>
-    <p id="modalFeeText" style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.</p>
-    
-    <div class="field-group">
-      <label>Service Type</label>
-      <select id="requestTrade">
-        <option value="cobbler">Cobbler / Shoe Repair</option>
-        <option value="watch">Watch Repair</option>
-        <option value="appliance">Appliance Repair</option>
-        <option value="locksmith">Locksmith</option>
-      </select>
-    </div>
-    
-    <div class="field-group">
-      <label>What needs fixing?</label>
-      <input type="text" id="requestItem" placeholder="e.g. Broken mixer grinder jar">
-    </div>
 
-    <div class="field-group">
-      <label>Your Address</label>
-      <textarea id="requestAddress" placeholder="e.g. 12B, Saket Block M"></textarea>
-    </div>
-    
-    <button class="form-submit" id="submitRequestBtn">
-      <span style="font-weight:600; text-align:center; width:100%;">Submit Request</span>
-    </button>
-  </div>
-</div>
 
 <div class="modal-overlay" id="ratingModal" style="display:none;">
   <div class="modal-container">
@@ -584,7 +591,7 @@
         showToast("Request submitted successfully! We are verifying your payment.");
       }
 
-      document.getElementById('serviceModal').style.display = 'none';
+      document.querySelector('button[data-tab="requests"]').click();
       loadLiveRequests(auth.currentUser.uid);
     } catch(err) {
       showToast("Error submitting request: " + err.message, 'error');
