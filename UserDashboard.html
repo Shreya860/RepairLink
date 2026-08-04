@@ -315,7 +315,7 @@
     if (userDoc.exists()) {
       const role = userDoc.data().role;
       if (role === 'user' || role === 'admin') {
-        document.getElementById('userContainer').style.display = 'block';
+        document.getElementById('userContainer').style.display = 'flex';
         
         // Populate profile
         const data = userDoc.data();
