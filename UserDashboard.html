@@ -235,9 +235,17 @@
 
     <!-- ===== SAVED KAARIGARS ===== -->
     <div class="tab-content" id="tab-saved">
-      <div class="page-head"><div><h1>Suggested Kaarigars</h1><p>Find and save trusted local repair experts.</p></div></div>
-      <div class="list-container" id="kaarigarsList">
-        <div style="text-align:center; padding:20px; color:var(--ink-dim);">Loading kaarigars...</div>
+      <div class="page-head"><div><h1>Saved Kaarigars</h1><p>Your favorite repair experts.</p></div></div>
+      <div class="list-container" id="savedKaarigarsList">
+        <div style="text-align:center; padding:20px; color:var(--ink-dim);">Loading saved kaarigars...</div>
+      </div>
+    </div>
+    
+    <!-- ===== SUGGESTED KAARIGARS ===== -->
+    <div class="tab-content" id="tab-suggested">
+      <div class="page-head"><div><h1>Suggested Kaarigars</h1><p>Find trusted local repair experts.</p></div></div>
+      <div class="list-container" id="suggestedKaarigarsList">
+        <div style="text-align:center; padding:20px; color:var(--ink-dim);">Loading suggested kaarigars...</div>
       </div>
     </div>
   </div>
@@ -446,39 +454,54 @@
   window.loadKaarigars = async function() {
     try {
       const snap = await getDocs(collection(db, "kaarigars"));
-      const listEl = document.getElementById('kaarigarsList');
-      listEl.innerHTML = '';
+      const savedEl = document.getElementById('savedKaarigarsList');
+      const suggestedEl = document.getElementById('suggestedKaarigarsList');
+      if (savedEl) savedEl.innerHTML = '';
+      if (suggestedEl) suggestedEl.innerHTML = '';
       
       const savedList = window.currentUserData.savedKaarigars || [];
       
-      let count = 0;
+      let savedCount = 0;
+      let suggestedCount = 0;
+      
       snap.forEach(docSnap => {
-        count++;
         const k = docSnap.data();
         const kId = docSnap.id;
         const isSaved = savedList.includes(kId);
         
-        const btnText = isSaved ? 'Saved ♥' : 'Save ♡';
-        const btnBg = isSaved ? 'var(--leaf-dim)' : '#f0f0f0';
-        const btnColor = isSaved ? 'var(--leaf)' : 'var(--ink-dim)';
+        const btnText = isSaved ? 'Unsave ✕' : 'Save ♡';
+        const btnBg = isSaved ? '#f8f9fa' : '#f0f0f0';
+        const btnColor = isSaved ? 'var(--ink)' : 'var(--ink-dim)';
         
-        listEl.innerHTML += `
+        const cardHtml = `
           <div class="list-item">
             <div class="list-info">
               <div class="list-title">${k.name || k.displayName || 'Kaarigar'}</div>
               <div class="list-meta">${k.address || k.area || 'Local'} • ${k.trade || 'Repair Expert'}</div>
             </div>
-            <button onclick="toggleSaveKaarigar('${kId}')" style="background:${btnBg}; color:${btnColor}; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">${btnText}</button>
+            <button onclick="toggleSaveKaarigar('${kId}')" style="background:${btnBg}; color:${btnColor}; border:1px solid var(--line); padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">${btnText}</button>
           </div>
         `;
+        
+        if (isSaved) {
+            savedEl.innerHTML += cardHtml;
+            savedCount++;
+        } else {
+            suggestedEl.innerHTML += cardHtml;
+            suggestedCount++;
+        }
       });
       
-      if (count === 0) {
+      if (savedCount === 0 && savedEl) {
+        savedEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">You have no saved kaarigars.</div>';
+      }
+      if (suggestedCount === 0 && suggestedEl) {
+
         listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No kaarigars found in your area yet.</div>';
       }
     } catch (e) {
       console.error(e);
-      document.getElementById('kaarigarsList').innerHTML = '<div style="text-align:center; padding:20px; color:red;">Failed to load kaarigars.</div>';
+      if(document.getElementById('savedKaarigarsList')) document.getElementById('savedKaarigarsList').innerHTML = '<div style="text-align:center; padding:20px; color:red;">Failed to load kaarigars.</div>'; if(document.getElementById('suggestedKaarigarsList')) document.getElementById('suggestedKaarigarsList').innerHTML = '<div style="text-align:center; padding:20px; color:red;">Failed to load kaarigars.</div>';
     }
   };
 
