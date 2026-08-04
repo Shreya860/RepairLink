@@ -292,41 +292,41 @@
 /* ---------- Premium Float ---------- */
 .premium-float {
   position: absolute;
-  bottom: calc(50% + 25px);
+  bottom: calc(35% + 25px);
   top: auto;
   left: 20px;
   z-index: 900;
   background: linear-gradient(135deg, #111, #333);
   color: #fff;
   border: 1px solid var(--line-strong);
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 10px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  width: 210px;
+  width: 180px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
-.premium-float .pf-header { font-family:'Fraunces', serif; font-size: 12px; font-weight: 700; color: #ffc935; }
-.premium-float .pf-desc { font-size: 10px; opacity: 0.8; margin: 0; line-height: 1.2; }
-.premium-float .pf-plan { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; font-weight: 700; margin-top: 2px; }
+.premium-float .pf-header { font-family:'Fraunces', serif; font-size: 11px; font-weight: 700; color: #ffc935; }
+.premium-float .pf-desc { font-size: 9px; opacity: 0.8; margin: 0; line-height: 1.15; }
+.premium-float .pf-plan { font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; font-weight: 700; margin-top: 2px; }
 .premium-float .pf-price-wrap { display: flex; flex-direction: column; }
-.premium-float .pf-price { font-family:'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; }
-.premium-float .pf-promo { font-size: 8px; color: #25D366; font-weight: 700; margin-top: 2px; }
-.premium-float .pf-action { display: flex; gap: 4px; }
-.premium-float .pf-action input { flex: 1; padding: 4px 6px; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(0,0,0,0.5); color: #fff; font-size: 10px; font-family:'Manrope', sans-serif; }
-.premium-float .pf-action button { padding: 4px 8px; background: #444; color: #fff; border: none; border-radius: 4px; font-weight: 700; font-size: 10px; cursor: pointer; }
-.premium-float .pf-pay { width: 100%; padding: 6px; background: #ffc935; color: #2A1E00; border: none; border-radius: 4px; font-weight: 700; font-size: 11px; cursor: pointer; transition: background 0.2s; }
+.premium-float .pf-price { font-family:'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
+.premium-float .pf-promo { font-size: 8px; color: #25D366; font-weight: 700; margin-top: 1px; }
+.premium-float .pf-action { display: flex; gap: 3px; }
+.premium-float .pf-action input { flex: 1; padding: 3px 5px; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background: rgba(0,0,0,0.5); color: #fff; font-size: 9px; font-family:'Manrope', sans-serif; }
+.premium-float .pf-action button { padding: 3px 6px; background: #444; color: #fff; border: none; border-radius: 4px; font-weight: 700; font-size: 9px; cursor: pointer; }
+.premium-float .pf-pay { width: 100%; padding: 5px; background: #ffc935; color: #2A1E00; border: none; border-radius: 4px; font-weight: 700; font-size: 10px; cursor: pointer; transition: background 0.2s; }
 .premium-float .pf-pay:hover { background: #e5b42d; }
 
 @media (max-width: 768px) {
   .premium-float {
-    bottom: calc(50% + 25px);
+    bottom: calc(35% + 25px);
     top: auto;
     left: 14px;
     width: calc(100% - 28px);
-    max-width: 220px;
-    padding: 10px;
+    max-width: 180px;
+    padding: 8px;
   }
 }.blur-locked-btn { filter: blur(3.5px); pointer-events: auto; }
 
