@@ -170,6 +170,7 @@
       <div class="page-head"><div><h1>Users</h1><p>Everyone registered on RepairLink, across all roles.</p></div></div>
       <div class="toolbar">
         <input type="text" class="search-input" id="userSearchInput" placeholder="Search by name or email…">
+        <button class="btn-small danger" onclick="resetAllPremiumUsers()">Reset All Premium Subscriptions</button>
       </div>
       <div class="panel-block" style="padding:0; overflow-x:auto;">
         <table>
@@ -530,6 +531,31 @@
       loadData();
     } catch (err) {
       showToast("Error approving premium: " + err.message, 'error');
+    }
+  };
+
+  window.resetAllPremiumUsers = async function() {
+    if (!confirm("WARNING: This will revoke Premium from ALL users and reset their status. Proceed?")) return;
+    try {
+      const usersRef = collection(db, 'users');
+      const snap = await getDocs(usersRef);
+      let count = 0;
+      for (const d of snap.docs) {
+        const u = d.data();
+        if (u.isPremium || u.premiumStatus) {
+          await updateDoc(doc(db, 'users', d.id), {
+            isPremium: false,
+            premiumStatus: null,
+            freeServicesLeft: 0,
+            premiumExpiry: null
+          });
+          count++;
+        }
+      }
+      showToast(`Reset premium for ${count} users successfully!`);
+      loadData();
+    } catch(err) {
+      showToast("Error resetting users: " + err.message, 'error');
     }
   };
 
