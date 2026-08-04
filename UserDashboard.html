@@ -104,6 +104,10 @@
     </div>
   </div>
 
+  <div id="premiumSection" style="background: linear-gradient(135deg, #111, #333); border: 1px solid var(--line-strong); border-radius: 16px; padding: 24px; margin-bottom: 40px; color: white;">
+    <!-- Rendered by JS -->
+  </div>
+
   <h2 class="section-title">My Live Requests</h2>
   <div class="list-container" id="liveRequestsList">
     <div style="text-align:center; padding:20px; color:var(--ink-dim);">No active requests.</div>
@@ -137,7 +141,7 @@
   <div class="modal-container">
     <button class="modal-close" onclick="document.getElementById('serviceModal').style.display='none'">&times;</button>
     <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Request a Service</h2>
-    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.</p>
+    <p id="modalFeeText" style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.</p>
     
     <div class="field-group">
       <label>Service Type</label>
@@ -249,6 +253,8 @@
           document.getElementById('profileInitials').textContent = (data.displayName || '?').charAt(0).toUpperCase();
         }
         
+        window.currentUserData = data;
+        renderPremiumSection();
         loadLiveRequests(user.uid);
         
       } else {
@@ -259,6 +265,93 @@
       window.location.href = 'Auth.html';
     }
   });
+
+  window.renderPremiumSection = function() {
+    const data = window.currentUserData;
+    const sec = document.getElementById('premiumSection');
+    if (!data) return;
+
+    if (data.isPremium && data.freeServicesLeft > 0) {
+      document.getElementById('modalFeeText').innerHTML = '<strong>Premium Member:</strong> Your upfront fee is ₹0 for this request. (1 free service will be deducted)';
+    } else {
+      document.getElementById('modalFeeText').textContent = 'Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.';
+    }
+
+    if (data.isPremium) {
+      const expiry = data.premiumExpiry ? new Date(data.premiumExpiry.toDate ? data.premiumExpiry.toDate() : data.premiumExpiry).toLocaleDateString() : 'Unknown';
+      sec.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div>
+            <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px; color: #ffc935;">RepairLink Premium Active ✦</h2>
+            <p style="font-size: 14px; opacity: 0.9; margin-bottom: 0;">You have <strong>${data.freeServicesLeft} free services</strong> left.</p>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: 4px;">Valid until: ${expiry}</p>
+          </div>
+        </div>
+      `;
+    } else {
+      sec.innerHTML = `
+        <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Upgrade to RepairLink Premium ✦</h2>
+        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 20px; line-height: 1.5;">Get 3 free services with zero upfront fees, priority Kaarigar matching, and premium support for 3 months.</p>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <div style="flex:1; background:var(--paper-2); padding:16px; border-radius:12px; border:1px solid var(--line-strong); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8; font-weight:700;">3 Months Plan</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:24px; font-weight:700; color:var(--ink);" id="subPrice">₹59</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="couponInput" placeholder="Coupon Code" style="padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif; font-size:13px; max-width:120px; background:white; color:black;">
+                <button onclick="applyCoupon()" style="padding:8px 16px; background:var(--ink-dim); color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">Apply</button>
+              </div>
+              <button id="paySubBtn" onclick="subscribePremium()" style="padding:10px 16px; background:#ffc935; color:#2A1E00; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; width:100%;">Pay & Subscribe</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  };
+
+  window.applyCoupon = function() {
+    const code = document.getElementById('couponInput').value.trim();
+    if (code.toLowerCase() === 'delta') {
+      document.getElementById('subPrice').innerHTML = '<span style="text-decoration:line-through; font-size:14px; color:gray;">₹59</span> ₹39';
+      document.getElementById('paySubBtn').setAttribute('data-price', '39');
+      showToast("Coupon applied! ₹20 off.");
+    } else {
+      showToast("Invalid coupon code.", "error");
+      document.getElementById('subPrice').innerHTML = '₹59';
+      document.getElementById('paySubBtn').setAttribute('data-price', '59');
+    }
+  };
+
+  window.subscribePremium = async function() {
+    const btn = document.getElementById('paySubBtn');
+    btn.innerHTML = 'Processing...';
+    btn.disabled = true;
+
+    try {
+      const expiry = new Date();
+      expiry.setMonth(expiry.getMonth() + 3); // 3 months validity
+
+      const userRef = doc(db, 'users', auth.currentUser.uid);
+      await updateDoc(userRef, {
+        isPremium: true,
+        freeServicesLeft: 3,
+        premiumExpiry: expiry
+      });
+
+      window.currentUserData.isPremium = true;
+      window.currentUserData.freeServicesLeft = 3;
+      window.currentUserData.premiumExpiry = expiry;
+      
+      showToast("Payment Successful! Welcome to Premium ✦");
+      renderPremiumSection();
+    } catch(err) {
+      showToast("Payment failed: " + err.message, "error");
+      btn.innerHTML = 'Pay & Subscribe';
+      btn.disabled = false;
+    }
+  };
 
   document.getElementById('navLogout').addEventListener('click', (e) => {
     e.preventDefault();
@@ -380,24 +473,42 @@
     btn.disabled = true;
     
     try {
-      await addDoc(collection(db, "orders"), {
+      let isFree = false;
+      if (window.currentUserData && window.currentUserData.isPremium && window.currentUserData.freeServicesLeft > 0) {
+        isFree = true;
+      }
+
+      const orderData = {
         customerId: auth.currentUser.uid,
         customerName: auth.currentUser.displayName || 'Customer',
         item: item,
         trade: trade,
         address: address,
-        status: 'pending_payment',
-        paymentAmount: 9,
+        status: isFree ? 'pending' : 'pending_payment',
+        paymentAmount: isFree ? 0 : 9,
         date: new Date().toLocaleDateString('en-GB')
-      });
-      
-      showToast("Request submitted successfully! We are verifying your payment.");
+      };
+
+      await addDoc(collection(db, "orders"), orderData);
+
+      if (isFree) {
+        const newLeft = window.currentUserData.freeServicesLeft - 1;
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+          freeServicesLeft: newLeft
+        });
+        window.currentUserData.freeServicesLeft = newLeft;
+        renderPremiumSection();
+        showToast("Request submitted successfully! Premium covered the fee.");
+      } else {
+        showToast("Request submitted successfully! We are verifying your payment.");
+      }
+
       document.getElementById('serviceModal').style.display = 'none';
       loadLiveRequests(auth.currentUser.uid);
     } catch(err) {
       showToast("Error submitting request: " + err.message, 'error');
     } finally {
-      btn.innerHTML = '<span style="font-weight:600; text-align:center; width:100%;">I have paid, submit request</span>';
+      btn.innerHTML = '<span style="font-weight:600; text-align:center; width:100%;">Submit Request</span>';
       btn.disabled = false;
     }
   });
