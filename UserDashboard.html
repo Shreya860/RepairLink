@@ -360,11 +360,7 @@
     const sec = document.getElementById('premiumSection');
     if (!data) return;
 
-    if (data.isPremium && data.freeServicesLeft > 0) {
-      document.getElementById('modalFeeText').innerHTML = '<strong>Premium Member:</strong> Your upfront fee is ₹0 for this request. (1 free service will be deducted)';
-    } else {
-      document.getElementById('modalFeeText').textContent = 'Pay a ₹9 upfront fee to have our team assign the best verified Kaarigar for your job.';
-    }
+    window.updateServicePriceUI();
 
     if (data.isPremium) {
       const expiry = data.premiumExpiry ? new Date(data.premiumExpiry.toDate ? data.premiumExpiry.toDate() : data.premiumExpiry).toLocaleDateString() : 'Unknown';
@@ -607,6 +603,7 @@
         isFree = true;
       }
 
+      const prices = { cobbler: 9, locksmith: 19, watch: 29, appliance: 39 };
       const orderData = {
         customerId: auth.currentUser.uid,
         customerName: auth.currentUser.displayName || 'Customer',
@@ -614,7 +611,6 @@
         trade: trade,
         address: address,
         status: isFree ? 'pending' : 'pending_payment',
-        const prices = { cobbler: 9, locksmith: 19, watch: 29, appliance: 39 };
         paymentAmount: isFree ? 0 : (prices[trade] || 9),
         date: new Date().toLocaleDateString('en-GB')
       };
