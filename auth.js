@@ -19,6 +19,14 @@ const authStep1 = document.getElementById('authStep1');
 const authStep2 = document.getElementById('authStep2');
 const completeSignupBtn = document.getElementById('completeSignupBtn');
 
+// Automatically route users who are already logged in
+onAuthStateChanged(auth, async (user) => {
+  if (user && !currentUser) {
+    currentUser = user;
+    await checkUserRole(currentUser);
+  }
+});
+
 // Handle redirect result on page load
 getRedirectResult(auth).then(async (result) => {
   if (result && result.user) {
