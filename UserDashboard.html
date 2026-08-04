@@ -694,6 +694,20 @@
   const docRef = doc(db, 'stats', 'page_visits');
   setDoc(docRef, { [pageName]: increment(1) }, { merge: true }).catch(e => console.error("Error tracking visit:", e));
 </script>
+
+<script>
+  // Tab Switching Logic
+  document.querySelectorAll('#sidebarNav button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('#sidebarNav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      const tabId = e.currentTarget.getAttribute('data-tab');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    });
+  });
+</script>
+
 </body>
 
 </html>
