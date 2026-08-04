@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
   body { overflow: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
   .container { max-width: 800px; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(34,29,20,0.12); margin-top: 20px; }
@@ -121,6 +123,18 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.1-3.1a5 5 0 01-6.6 6.6L4.7 22.3a1.5 1.5 0 01-2.1-2.1L12.8 9.7a5 5 0 016.6-6.6l-3.1 3.1z"/></svg>
         Service Requests
       </button>
+      <button data-tab="earnings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        Earnings
+      </button>
+      <button data-tab="reviews">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        Reviews
+      </button>
+      <button data-tab="support">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        Help & Support
+      </button>
     </nav>
     <div class="sidebar-footer">
       <a href="index.html">
@@ -214,7 +228,8 @@
     </div>
 
     <div class="field-group">
-      <label>Location - enter coordinates directly or tap the button to auto-detect</label>
+      <label>Location - click the map to drop a pin, or enter coordinates directly</label>
+      <div id="map" style="height: 250px; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--line); z-index: 1;"></div>
       <div class="field-row">
         <div class="field-group" style="margin-bottom:0;">
           <label for="kLat">Latitude</label>
@@ -230,7 +245,7 @@
     <div class="field-group" style="margin-top:-10px;">
       <button type="button" class="btn btn-secondary" onclick="getLocation()" style="font-size:12px; padding:8px 16px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px; vertical-align:-2px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
-        Get My Current Location
+        Auto-Detect GPS Location
       </button>
     </div>
     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
@@ -244,6 +259,42 @@
       <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-bottom: 24px; color: var(--ink);">Service Requests</h2>
       <div class="job-list" id="activeJobsSection">
         <!-- Jobs will be populated here by loadActiveJobs() -->
+      </div>
+    </div>
+    
+    <!-- Earnings Tab -->
+    <div id="tab-earnings" class="tab-content">
+      <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-bottom: 24px; color: var(--ink);">Earnings & Payments</h2>
+      <div style="background:var(--paper-2); padding:40px; border-radius:16px; text-align:center; border:1px dashed var(--line-strong);">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--ink-dim)" stroke-width="1" style="margin-bottom:16px;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <h3 style="font-size:18px; margin-bottom:8px; color:var(--ink);">No Earnings Yet</h3>
+        <p style="color:var(--ink-dim); max-width:300px; margin:0 auto; font-size:14px; line-height:1.5;">Complete your first repair to see your earnings history and request payouts.</p>
+      </div>
+    </div>
+
+    <!-- Reviews Tab -->
+    <div id="tab-reviews" class="tab-content">
+      <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-bottom: 24px; color: var(--ink);">Ratings & Reviews</h2>
+      <div style="display:flex; gap:24px; align-items:center; background:#fff; padding:32px; border-radius:16px; border:1px solid var(--line); margin-bottom:24px;">
+        <div style="text-align:center;">
+          <div style="font-family:'Fraunces', serif; font-size:48px; font-weight:700; color:var(--ink); line-height:1;">0.0</div>
+          <div style="color:var(--marigold); margin:8px 0;">★★★★★</div>
+          <div style="font-size:13px; color:var(--ink-dim);">0 Reviews</div>
+        </div>
+        <div style="flex:1; padding-left:24px; border-left:1px solid var(--line);">
+          <h3 style="font-size:16px; margin-bottom:4px; color:var(--ink);">Build your reputation</h3>
+          <p style="font-size:14px; color:var(--ink-dim); margin:0; line-height:1.5;">Customers will leave feedback here after their service is completed. High ratings will help you get more jobs!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support Tab -->
+    <div id="tab-support" class="tab-content">
+      <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-bottom: 24px; color: var(--ink);">Help & Support</h2>
+      <div style="background:#fff; padding:32px; border-radius:16px; border:1px solid var(--line);">
+        <h3 style="font-size:16px; margin-bottom:12px; color:var(--ink);">Need help with your account?</h3>
+        <p style="font-size:14px; color:var(--ink-dim); margin-bottom:24px; line-height:1.5;">If you are facing issues with customer requests, payments, or your profile, our admin team is here to assist you.</p>
+        <a href="Contact.html" class="btn btn-primary" style="text-decoration:none;">Contact Support Team</a>
       </div>
     </div>
   </div>
@@ -284,6 +335,22 @@
 
   let currentKaarigarData = null;
   let currentUser = null;
+  
+  // Map Variables
+  let map, marker;
+  document.addEventListener("DOMContentLoaded", () => {
+    map = L.map('map').setView([28.6667, 77.2286], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(map);
+
+    map.on('click', function(e) {
+      document.getElementById('kLat').value = e.latlng.lat.toFixed(6);
+      document.getElementById('kLng').value = e.latlng.lng.toFixed(6);
+      if (marker) map.removeLayer(marker);
+      marker = L.marker(e.latlng).addTo(map);
+    });
+  });
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -333,11 +400,22 @@
         document.getElementById('kPhone').value = currentKaarigarData.phone || '';
         document.getElementById('kYears').value = currentKaarigarData.years || '';
         document.getElementById('kHours').value = currentKaarigarData.hours || '';
-        document.getElementById('kS1').value = currentKaarigarData.s1 || '';
-        document.getElementById('kS2').value = currentKaarigarData.s2 || '';
-        document.getElementById('kLat').value = currentKaarigarData.lat || '';
-        document.getElementById('kLng').value = currentKaarigarData.lng || '';
+        document.getElementById('kS1').value = currentKaarigarData.s1 || "";
+        document.getElementById('kS2').value = currentKaarigarData.s2 || "";
+        if (currentKaarigarData.lat) {
+          document.getElementById('kLat').value = currentKaarigarData.lat;
+          document.getElementById('kLng').value = currentKaarigarData.lng;
+          setTimeout(() => {
+            if (map) {
+              const latlng = [currentKaarigarData.lat, currentKaarigarData.lng];
+              map.setView(latlng, 15);
+              if(marker) map.removeLayer(marker);
+              marker = L.marker(latlng).addTo(map);
+            }
+          }, 500);
+        }
         
+        document.getElementById('profileFormView').style.display = 'block';
         const statusBanner = document.getElementById('profileStatusBanner');
         if (currentKaarigarData.verified) {
           statusBanner.textContent = "Profile Status: Approved & Live";
@@ -378,6 +456,11 @@
     document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
     const content = document.getElementById('tab-' + tabId);
     if (content) content.classList.add('active');
+    
+    // Fix leaflet map size if switching to profile tab
+    if (tabId === 'profile' && typeof map !== 'undefined' && map) {
+      setTimeout(() => map.invalidateSize(), 100);
+    }
   }
 
   document.querySelectorAll('.sidebar-nav button').forEach(btn => {
@@ -387,9 +470,30 @@
   });
 
   // Navigation Logic
-  
-
-  
+  window.getLocation = function() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude.toFixed(6);
+          const lng = position.coords.longitude.toFixed(6);
+          document.getElementById('kLat').value = lat;
+          document.getElementById('kLng').value = lng;
+          if (map) {
+            const latlng = [lat, lng];
+            map.setView(latlng, 15);
+            if (marker) map.removeLayer(marker);
+            marker = L.marker(latlng).addTo(map);
+          }
+          showToast("Location detected successfully!", "success");
+        },
+        (error) => {
+          showToast("Could not fetch location. Please enter manually.", "error");
+        }
+      );
+    } else {
+      showToast("Geolocation is not supported by this browser.", "error");
+    }
+  };
 
   document.getElementById('btnSubmit').addEventListener('click', async () => {
     const btn = document.getElementById('btnSubmit');
