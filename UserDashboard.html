@@ -235,22 +235,9 @@
 
     <!-- ===== SAVED KAARIGARS ===== -->
     <div class="tab-content" id="tab-saved">
-      <div class="page-head"><div><h1>Saved Kaarigars</h1><p>Your favorite and recently contacted repair experts.</p></div></div>
-      <div class="list-container">
-        <div class="list-item">
-          <div class="list-info">
-            <div class="list-title">Raju Cobbler</div>
-            <div class="list-meta">Kamla Nagar • Cobbler</div>
-          </div>
-          <div class="status-badge contacted">Contacted</div>
-        </div>
-        <div class="list-item">
-          <div class="list-info">
-            <div class="list-title">Timepiece Experts</div>
-            <div class="list-meta">Model Town • Watch Repairer</div>
-          </div>
-          <div class="status-badge contacted">Saved</div>
-        </div>
+      <div class="page-head"><div><h1>Suggested Kaarigars</h1><p>Find and save trusted local repair experts.</p></div></div>
+      <div class="list-container" id="kaarigarsList">
+        <div style="text-align:center; padding:20px; color:var(--ink-dim);">Loading kaarigars...</div>
       </div>
     </div>
   </div>
@@ -306,7 +293,7 @@
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, query, where, getDocs, increment } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, query, where, getDocs, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   import { firebaseConfig } from './env.js';
 
@@ -453,6 +440,69 @@
       window.location.href = 'RepairLink.html';
     });
   });
+
+  
+  window.loadKaarigars = async function() {
+    try {
+      const snap = await getDocs(collection(db, "kaarigars"));
+      const listEl = document.getElementById('kaarigarsList');
+      listEl.innerHTML = '';
+      
+      const savedList = window.currentUserData.savedKaarigars || [];
+      
+      let count = 0;
+      snap.forEach(docSnap => {
+        count++;
+        const k = docSnap.data();
+        const kId = docSnap.id;
+        const isSaved = savedList.includes(kId);
+        
+        const btnText = isSaved ? 'Saved ♥' : 'Save ♡';
+        const btnBg = isSaved ? 'var(--leaf-dim)' : '#f0f0f0';
+        const btnColor = isSaved ? 'var(--leaf)' : 'var(--ink-dim)';
+        
+        listEl.innerHTML += `
+          <div class="list-item">
+            <div class="list-info">
+              <div class="list-title">${k.displayName || 'Kaarigar'}</div>
+              <div class="list-meta">${k.shopAddress || 'Local'} • ${k.trade || 'Repair Expert'}</div>
+            </div>
+            <button onclick="toggleSaveKaarigar('${kId}')" style="background:${btnBg}; color:${btnColor}; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">${btnText}</button>
+          </div>
+        `;
+      });
+      
+      if (count === 0) {
+        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">No kaarigars found in your area yet.</div>';
+      }
+    } catch (e) {
+      console.error(e);
+      document.getElementById('kaarigarsList').innerHTML = '<div style="text-align:center; padding:20px; color:red;">Failed to load kaarigars.</div>';
+    }
+  };
+
+  window.toggleSaveKaarigar = async function(kId) {
+    if (!auth.currentUser) return;
+    try {
+      let savedList = window.currentUserData.savedKaarigars || [];
+      const userRef = doc(db, 'users', auth.currentUser.uid);
+      
+      if (savedList.includes(kId)) {
+        await updateDoc(userRef, { savedKaarigars: arrayRemove(kId) });
+        savedList = savedList.filter(id => id !== kId);
+        showToast("Kaarigar removed from saved list.");
+      } else {
+        await updateDoc(userRef, { savedKaarigars: arrayUnion(kId) });
+        savedList.push(kId);
+        showToast("Kaarigar saved successfully!");
+      }
+      
+      window.currentUserData.savedKaarigars = savedList;
+      loadKaarigars(); // Re-render the list
+    } catch(err) {
+      showToast("Error updating saved status: " + err.message, "error");
+    }
+  };
 
   async function loadLiveRequests(uid) {
     try {
@@ -727,7 +777,7 @@
 <!-- PAGE TRACKER SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   import { firebaseConfig } from './env.js';
 
