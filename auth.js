@@ -3,15 +3,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.0/firebase
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  projectId: "repairlink-de1ta",
-  appId: "1:4711329582:web:6e12287963fd4bd58254bf",
-  storageBucket: "repairlink-de1ta.firebasestorage.app",
-  apiKey: "AIzaSyAcLvXeMUA01CB1vha8I6_R0iFK5iN0RWU",
-  authDomain: "repairlink-de1ta.firebaseapp.com",
-  messagingSenderId: "4711329582",
-  measurementId: "G-BQ7PBRSGH3"
-};
+import { firebaseConfig } from './env.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
