@@ -70,6 +70,13 @@
         <input type="text" id="newKName" placeholder="e.g. Ramesh Kumar" required>
       </div>
       <div class="field-group">
+        <label for="newKGmail">Google Email (Optional)</label>
+        <input type="email" id="newKGmail" placeholder="For Google Login mapping">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
         <label for="newKTrade">Trade</label>
         <select id="newKTrade" required>
           <option value="">Select a trade…</option>
@@ -229,6 +236,7 @@
     const btn = document.getElementById('addKaarigarBtn');
 
     const name = document.getElementById('newKName').value.trim();
+    const gmail = document.getElementById('newKGmail').value.trim();
     const trade = document.getElementById('newKTrade').value;
     const phone = document.getElementById('newKPhone').value.trim();
     const years = parseInt(document.getElementById('newKYears').value) || 0;
@@ -250,7 +258,7 @@
 
     try {
       await addDoc(collection(db, 'kaarigars'), {
-        name, trade, phone, years, area, hours, s1, s2, lat, lng, verified,
+        name, trade, phone, years, area, hours, s1, s2, lat, lng, verified, gmail,
         createdAt: new Date()
       });
       showToast(`${name} added successfully!`);

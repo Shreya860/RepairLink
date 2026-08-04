@@ -204,7 +204,18 @@
 
   async function loadKaarigarProfile() {
     try {
-      const kDoc = await getDoc(doc(db, 'kaarigars', currentUser.uid));
+      let kDoc = await getDoc(doc(db, 'kaarigars', currentUser.uid));
+      let mappedId = currentUser.uid;
+      
+      if (!kDoc.exists()) {
+        const qSnap = await getDocs(query(collection(db, 'kaarigars'), where('gmail', '==', currentUser.email)));
+        if (!qSnap.empty) {
+          kDoc = qSnap.docs[0];
+          mappedId = kDoc.id;
+        }
+      }
+      
+      window.currentKaarigarId = mappedId;
       if (kDoc.exists()) {
         currentKaarigarData = kDoc.data();
         
@@ -287,13 +298,13 @@
       years: parseInt(document.getElementById('kYears').value) || 0,
       intro: document.getElementById('kIntro').value,
       verified: false,
-      uid: currentUser.uid,
+      uid: window.currentKaarigarId,
       lat: 28.68, // Default approx lat for North Delhi for now
       lng: 77.20  // Default approx lng
     };
     
     try {
-      await setDoc(doc(db, 'kaarigars', currentUser.uid), kData, { merge: true });
+      await setDoc(doc(db, 'kaarigars', window.currentKaarigarId), kData, { merge: true });
       showToast("Profile submitted! An admin will review it shortly.");
       loadKaarigarProfile(); // Reloads and resets UI to Pending state
       
@@ -312,7 +323,7 @@
     jobList.innerHTML = '<div style="text-align:center; padding:20px; color:var(--ink-dim);">Loading active jobs...</div>';
     
     try {
-      const q = query(collection(db, "orders"), where("kaarigarId", "==", currentUser.uid));
+      const q = query(collection(db, "orders"), where("kaarigarId", "==", window.currentKaarigarId));
       const querySnapshot = await getDocs(q);
       
       if (querySnapshot.empty) {

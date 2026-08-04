@@ -807,6 +807,7 @@
     document.getElementById('modalTitle').textContent = "Edit Kaarigar Details";
     document.getElementById('modalContent').innerHTML = `
       <div class="field-group"><label>Name</label><input type="text" id="editKName" value="${k.name || ''}"></div>
+      <div class="field-group"><label>Google Email (Optional)</label><input type="email" id="editKGmail" value="${k.gmail || ''}"></div>
       <div class="field-group"><label>Trade</label><input type="text" id="editKTrade" value="${k.trade || ''}"></div>
       <div class="field-group"><label>Area</label><input type="text" id="editKArea" value="${k.area || ''}"></div>
       <div class="field-group"><label>Phone / WhatsApp number</label><input type="tel" id="editKPhone" value="${k.phone || ''}"></div>
@@ -829,6 +830,7 @@
     try {
       await updateDoc(doc(db, 'kaarigars', id), {
         name: document.getElementById('editKName').value,
+        gmail: document.getElementById('editKGmail').value,
         trade: document.getElementById('editKTrade').value,
         area: document.getElementById('editKArea').value,
         phone: document.getElementById('editKPhone').value,
