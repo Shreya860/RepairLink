@@ -199,7 +199,12 @@
       <textarea id="requestAddress" placeholder="e.g. 12B, Saket Block M"></textarea>
     </div>
     
-    <button class="form-submit" id="submitRequestBtn">
+    
+    <div id="servicePaymentSection" style="margin-bottom:24px; padding:16px; border:1px dashed var(--marigold); border-radius:12px; text-align:center; background: #fffcf5;">
+      <p style="font-size:14px; margin-bottom:8px; color:var(--ink);"><strong>Scan via PhonePe / UPI to pay ₹9</strong></p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=ashutosh@ybl&pn=RepairLink&am=9" alt="PhonePe QR" style="width:150px; height:150px; border-radius:8px; margin-bottom:0px; display:inline-block;">
+    </div>
+<button class="form-submit" id="submitRequestBtn">
       <span style="font-weight:600; text-align:center; width:100%;">Submit Request</span>
     </button>
   
@@ -398,7 +403,12 @@
                 <input type="text" id="couponInput" placeholder="Coupon Code" style="padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-family:'Manrope', sans-serif; font-size:13px; max-width:120px; background:white; color:black;">
                 <button onclick="applyCoupon()" style="padding:8px 16px; background:var(--ink-dim); color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">Apply</button>
               </div>
-              <button id="paySubBtn" onclick="subscribePremium()" style="padding:10px 16px; background:#ffc935; color:#2A1E00; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; width:100%;">Pay & Subscribe</button>
+              
+              <div style="text-align:center; margin-bottom: 20px; background:rgba(255,255,255,0.05); padding:16px; border-radius:12px;">
+                <p style="font-size:14px; margin-bottom:8px; color:white;"><strong>Scan via PhonePe / UPI to pay ₹59</strong></p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=ashutosh@ybl&pn=RepairLink&am=59" alt="PhonePe QR" style="width:150px; height:150px; border-radius:8px; background:white; padding:8px; display:inline-block;">
+              </div>
+<button id="paySubBtn" onclick="subscribePremium()" style="padding:10px 16px; background:#ffc935; color:#2A1E00; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; width:100%;">Paid ₹59 & Subscribe</button>
             </div>
           </div>
         </div>
