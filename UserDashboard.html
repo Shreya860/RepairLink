@@ -597,7 +597,8 @@
         
         if (o.status === 'pending_payment') {
           statusBadge = `<span class="status-badge" style="background:#FFF9C4; color:#F57F17;">Awaiting Payment Approval</span>`;
-          adminNotes = `<div style="font-size:12px; color:var(--ink-dim); margin-top:8px;">Your payment of ₹9 is being verified by our admin.</div>`;
+          const paidAmount = o.paymentAmount !== undefined ? o.paymentAmount : 9;
+          adminNotes = `<div style="font-size:12px; color:var(--ink-dim); margin-top:8px;">Your payment of ₹${paidAmount} is being verified by our admin.</div>`;
         } else if (o.status === 'pending' || o.status === 'progress' || o.status === 'ready') {
           let badgeText = 'Kaarigar Assigned';
           if(o.status === 'progress') badgeText = 'Repair in Progress';
