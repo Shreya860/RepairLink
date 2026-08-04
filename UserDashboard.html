@@ -147,11 +147,11 @@
           <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
         <div style="position: relative; z-index: 2;">
-          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color: var(--marigold); margin-bottom: 4px;">Level: Eco-Warrior</div>
+          <div id="overviewLevelName" style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color: var(--marigold); margin-bottom: 4px;">Level: Eco-Beginner</div>
           <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px; margin-top:0;">Your Eco-Impact</h2>
-          <p style="opacity:0.9; font-size:13px; margin-bottom:12px; max-width: 250px;">You are helping Delhi transition to a circular economy. 50 points to next level.</p>
+          <p id="overviewLevelDesc" style="opacity:0.9; font-size:13px; margin-bottom:12px; max-width: 250px;">You are helping Delhi transition to a circular economy. 200 points to next level.</p>
           <div style="width: 100%; max-width: 200px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden;">
-            <div style="width: 90%; height: 100%; background: var(--marigold);"></div>
+            <div id="overviewLevelProgress" style="width: 60%; height: 100%; background: var(--marigold);"></div>
           </div>
         </div>
         <div style="text-align:right; position: relative; z-index: 2;">
@@ -200,15 +200,15 @@
             <div style="font-size: 24px; margin-bottom: 4px;">🌱</div>
             <div style="font-size: 11px; font-weight: 700; color: var(--leaf);">Early Adopter</div>
           </div>
-          <!-- Badge 2: Locked -->
-          <div style="background: #f5f5f5; border: 1px solid var(--line); padding: 12px; border-radius: 12px; text-align: center; min-width: 100px; opacity: 0.6; filter: grayscale(1);">
+          <!-- Badge 2: Dynamic -->
+          <div id="badgeFirstRepair" style="background: #f5f5f5; border: 1px solid var(--line); padding: 12px; border-radius: 12px; text-align: center; min-width: 100px; opacity: 0.6; filter: grayscale(1); transition: 0.3s;">
             <div style="font-size: 24px; margin-bottom: 4px;">🛠️</div>
-            <div style="font-size: 11px; font-weight: 700; color: var(--ink-dim);">First Repair</div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--ink-dim);" id="badgeFirstRepairText">First Repair</div>
           </div>
-          <!-- Badge 3: Locked -->
-          <div style="background: #f5f5f5; border: 1px solid var(--line); padding: 12px; border-radius: 12px; text-align: center; min-width: 100px; opacity: 0.6; filter: grayscale(1);">
+          <!-- Badge 3: Dynamic -->
+          <div id="badgeEcoSaver" style="background: #f5f5f5; border: 1px solid var(--line); padding: 12px; border-radius: 12px; text-align: center; min-width: 100px; opacity: 0.6; filter: grayscale(1); transition: 0.3s;">
             <div style="font-size: 24px; margin-bottom: 4px;">🏆</div>
-            <div style="font-size: 11px; font-weight: 700; color: var(--ink-dim);">Eco-Saver</div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--ink-dim);" id="badgeEcoSaverText">Eco-Saver</div>
           </div>
         </div>
       </div>
@@ -735,11 +735,73 @@
       const wpEl = document.getElementById('overviewWastePoints');
       const wdEl = document.getElementById('overviewWasteDiverted');
       const coEl = document.getElementById('overviewCO2Reduced');
+      let totalPoints = 300 + (doneCount * 150);
+      
       if (wpEl && wdEl && coEl) {
-        wpEl.innerText = 300 + (doneCount * 150);
+        wpEl.innerText = totalPoints;
         wdEl.innerText = (doneCount * 1.2).toFixed(1);
         coEl.innerText = (doneCount * 3.5).toFixed(1);
       }
+
+      // Dynamic Levels
+      const levelNameEl = document.getElementById('overviewLevelName');
+      const levelDescEl = document.getElementById('overviewLevelDesc');
+      const levelProgEl = document.getElementById('overviewLevelProgress');
+      
+      if (levelNameEl && levelDescEl && levelProgEl) {
+        let levelName = 'Eco-Beginner';
+        let pointsRequired = 500;
+        let prevPoints = 0;
+        
+        if (totalPoints >= 2000) {
+          levelName = 'Eco-Master';
+          pointsRequired = totalPoints; // Max level
+          prevPoints = 2000;
+        } else if (totalPoints >= 1000) {
+          levelName = 'Eco-Champion';
+          pointsRequired = 2000;
+          prevPoints = 1000;
+        } else if (totalPoints >= 500) {
+          levelName = 'Eco-Warrior';
+          pointsRequired = 1000;
+          prevPoints = 500;
+        }
+        
+        levelNameEl.innerText = 'Level: ' + levelName;
+        if (totalPoints >= 2000) {
+           levelDescEl.innerText = 'You have reached the maximum level! Amazing work!';
+           levelProgEl.style.width = '100%';
+        } else {
+           let remaining = pointsRequired - totalPoints;
+           levelDescEl.innerText = `You are helping Delhi transition to a circular economy. ${remaining} points to next level.`;
+           let progressPercent = ((totalPoints - prevPoints) / (pointsRequired - prevPoints)) * 100;
+           levelProgEl.style.width = progressPercent + '%';
+        }
+      }
+
+      // Dynamic Badges
+      const badge1 = document.getElementById('badgeFirstRepair');
+      const badge1Text = document.getElementById('badgeFirstRepairText');
+      if (badge1 && badge1Text && doneCount >= 1) {
+        badge1.style.background = 'white';
+        badge1.style.borderColor = 'var(--leaf)';
+        badge1.style.opacity = '1';
+        badge1.style.filter = 'none';
+        badge1.style.boxShadow = '0 4px 12px rgba(31,122,68,0.1)';
+        badge1Text.style.color = 'var(--leaf)';
+      }
+
+      const badge2 = document.getElementById('badgeEcoSaver');
+      const badge2Text = document.getElementById('badgeEcoSaverText');
+      if (badge2 && badge2Text && doneCount >= 5) {
+        badge2.style.background = 'white';
+        badge2.style.borderColor = 'var(--leaf)';
+        badge2.style.opacity = '1';
+        badge2.style.filter = 'none';
+        badge2.style.boxShadow = '0 4px 12px rgba(31,122,68,0.1)';
+        badge2Text.style.color = 'var(--leaf)';
+      }
+
     } catch(err) {
       console.error(err);
     }
