@@ -35,10 +35,15 @@
   .status-live { background: var(--leaf-dim); color: #1F7A44; border: 1px solid #81C784; }
   .status-incomplete { background: #f5f5f5; color: var(--ink-dim); border: 1px solid var(--line); }
   
-  .form-group { margin-bottom: 16px; width: 100%; text-align: left; }
-  .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-family: 'Manrope', sans-serif; font-size: 14px; background: var(--paper-2); color: var(--ink); box-sizing: border-box; }
-  .form-group textarea { resize: vertical; min-height: 80px; }
+  .field-row { display: flex; gap: 16px; width: 100%; margin-bottom: 16px; }
+  @media (max-width: 600px) { .field-row { flex-direction: column; gap: 16px; } .field-row .field-group { margin-bottom: 0 !important; } }
+  .field-row .field-group { margin-bottom: 0; flex: 1; }
+  .field-group { margin-bottom: 16px; width: 100%; text-align: left; }
+  .field-group label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .field-group input, .field-group select, .field-group textarea { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-family: 'Manrope', sans-serif; font-size: 14px; background: var(--paper-2); color: var(--ink); box-sizing: border-box; transition: all 0.2s ease; }
+  .field-group input:focus, .field-group select:focus, .field-group textarea:focus { outline: none; border-color: var(--marigold); background: #fff; box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1); }
+  .field-group textarea { resize: vertical; min-height: 80px; }
+  .field-hint { font-size: 11px; color: var(--ink-dim); margin-top: 4px; line-height: 1.4; }
   
   .btn { padding: 12px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; }
   .btn-primary { background: var(--marigold); color: #2A1E00; }
@@ -79,56 +84,75 @@
   
   <!-- Profile Form View -->
   <div id="profileFormView" style="display:none; width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-sizing: border-box;">
-    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 20px;">Profile Details</h2>
-    <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" id="kName" placeholder="e.g. Ramesh Kumar">
-    </div>
-    <div class="form-group">
-      <label>Trade</label>
-      <select id="kTrade">
-        <option value="cobbler">Cobbler</option>
-        <option value="watch">Watch Repairer</option>
-        <option value="appliance">Appliance Repairer</option>
-        <option value="locksmith">Locksmith</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Area / Locality</label>
-      <input type="text" id="kArea" placeholder="e.g. Kamla Nagar">
-    </div>
-    <div class="form-group">
-      <label>Phone / WhatsApp number</label>
-      <input type="tel" id="kPhone" placeholder="e.g. 919876500001">
-    </div>
-    <div class="form-group">
-      <label>Years of Experience</label>
-      <input type="number" id="kYears" placeholder="e.g. 10">
-    </div>
-    <div class="form-group">
-      <label>Working Hours</label>
-      <input type="text" id="kHours" placeholder="e.g. 9 AM - 8 PM">
-    </div>
-    <div class="form-group">
-      <label>Intro Line 1</label>
-      <textarea id="kS1" placeholder="Tell customers about your expertise..."></textarea>
-    </div>
-    <div class="form-group">
-      <label>Intro Line 2</label>
-      <textarea id="kS2" placeholder="Additional details or shop location..."></textarea>
-    </div>
-    <div style="display:flex; gap:12px;">
-      <div class="form-group" style="flex:1;">
-        <label>Latitude</label>
-        <input type="number" step="any" id="kLat" placeholder="e.g. 28.68">
+    <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-bottom: 24px;">Profile Details</h2>
+    
+    <div class="field-row">
+      <div class="field-group">
+        <label for="kName">Full name</label>
+        <input type="text" id="kName" placeholder="e.g. Ramesh Kumar">
       </div>
-      <div class="form-group" style="flex:1;">
-        <label>Longitude</label>
-        <input type="number" step="any" id="kLng" placeholder="e.g. 77.20">
+      <div class="field-group">
+        <label for="kTrade">Trade</label>
+        <select id="kTrade">
+          <option value="cobbler">Cobbler</option>
+          <option value="watch">Watch repairer</option>
+          <option value="appliance">Appliance repairer</option>
+          <option value="locksmith">Locksmith</option>
+        </select>
       </div>
     </div>
-    <div class="form-group">
-      <button type="button" class="btn btn-secondary" onclick="getLocation()" style="font-size:12px; padding:6px 12px;">Get My Current Location</button>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label for="kPhone">Phone / WhatsApp number</label>
+        <input type="tel" id="kPhone" placeholder="e.g. 919876500001">
+        <div class="field-hint">Country code + 10 digits, no spaces or +, e.g. 91XXXXXXXXXX.</div>
+      </div>
+      <div class="field-group">
+        <label for="kYears">Years of experience</label>
+        <input type="number" id="kYears" min="0" placeholder="e.g. 11">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label for="kArea">Area / locality</label>
+        <input type="text" id="kArea" placeholder="e.g. Kamla Nagar">
+      </div>
+      <div class="field-group">
+        <label for="kHours">Working hours</label>
+        <input type="text" id="kHours" placeholder="e.g. 10 AM – 7 PM · Closed Sun">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="kS1">Intro line 1 (shown in your profile chat)</label>
+      <textarea id="kS1" placeholder="e.g. Hey! I'm Ramesh - I've been sitting right here near Kashmere Gate for the past 11 years."></textarea>
+    </div>
+    <div class="field-group">
+      <label for="kS2">Intro line 2</label>
+      <textarea id="kS2" placeholder="e.g. I've repaired more than 5,000 shoes in that time..."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label>Location - enter coordinates directly or tap the button to auto-detect</label>
+      <div class="field-row">
+        <div class="field-group" style="margin-bottom:0;">
+          <label for="kLat">Latitude</label>
+          <input type="number" step="any" id="kLat" placeholder="e.g. 28.6667">
+        </div>
+        <div class="field-group" style="margin-bottom:0;">
+          <label for="kLng">Longitude</label>
+          <input type="number" step="any" id="kLng" placeholder="e.g. 77.2286">
+        </div>
+      </div>
+    </div>
+    
+    <div class="field-group" style="margin-top:-10px;">
+      <button type="button" class="btn btn-secondary" onclick="getLocation()" style="font-size:12px; padding:8px 16px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px; vertical-align:-2px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+        Get My Current Location
+      </button>
     </div>
     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
       <button class="btn btn-primary" id="btnPreview">Preview Profile</button>
