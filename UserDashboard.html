@@ -155,7 +155,7 @@
           </div>
         </div>
         <div style="text-align:right; position: relative; z-index: 2;">
-          <div style="font-size:42px; font-weight:800; font-family:'JetBrains Mono', monospace; line-height:1; color: var(--marigold); text-shadow: 0 2px 10px rgba(0,0,0,0.3);">450</div>
+          <div id="overviewWastePoints" style="font-size:42px; font-weight:800; font-family:'JetBrains Mono', monospace; line-height:1; color: var(--marigold); text-shadow: 0 2px 10px rgba(0,0,0,0.3);">300</div>
           <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9; margin-top: 4px;">Waste Points</div>
         </div>
       </div>
@@ -163,12 +163,12 @@
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
         <div style="background:var(--paper-2); padding:16px; border-radius:12px; text-align:center; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
           <div style="color: var(--leaf); margin-bottom: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>
-          <div style="font-size:24px; font-weight:800; margin-bottom:4px; font-family:'JetBrains Mono', monospace; color: var(--ink);">1.2 <span style="font-size:14px; font-weight:600; color:var(--ink-dim);">kg</span></div>
+          <div style="font-size:24px; font-weight:800; margin-bottom:4px; font-family:'JetBrains Mono', monospace; color: var(--ink);"><span id="overviewWasteDiverted">0.0</span> <span style="font-size:14px; font-weight:600; color:var(--ink-dim);">kg</span></div>
           <div style="font-size:12px; color:var(--ink-dim); font-weight:600; text-transform: uppercase; letter-spacing: 0.05em;">Waste Diverted</div>
         </div>
         <div style="background:var(--paper-2); padding:16px; border-radius:12px; text-align:center; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
           <div style="color: var(--marigold); margin-bottom: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
-          <div style="font-size:24px; font-weight:800; margin-bottom:4px; font-family:'JetBrains Mono', monospace; color: var(--ink);">3.5 <span style="font-size:14px; font-weight:600; color:var(--ink-dim);">kg</span></div>
+          <div style="font-size:24px; font-weight:800; margin-bottom:4px; font-family:'JetBrains Mono', monospace; color: var(--ink);"><span id="overviewCO2Reduced">0.0</span> <span style="font-size:14px; font-weight:600; color:var(--ink-dim);">kg</span></div>
           <div style="font-size:12px; color:var(--ink-dim); font-weight:600; text-transform: uppercase; letter-spacing: 0.05em;">CO₂ Reduced</div>
         </div>
       </div>
@@ -597,6 +597,7 @@
       let hasLive = false;
       let hasRecent = false;
       let activeCount = 0;
+      let doneCount = 0;
       
       snap.forEach(d => {
         const o = d.data();
@@ -608,6 +609,7 @@
 
         if (o.status === 'done') {
           hasRecent = true;
+          doneCount++;
           let actionHtml = '';
           if (!o.rating) {
              actionHtml = `<button onclick="openRatingModal('${oid}', '${o.kaarigarId}', '${o.kaarigarName || 'Kaarigar'}')" style="margin-top:8px; background:var(--marigold); color:var(--ink); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">★ Rate Kaarigar</button>`;
@@ -694,6 +696,15 @@
           activeRepairsCountEl.innerText = 'No active repairs right now';
           activeRepairsCountEl.style.color = '#555';
         }
+      }
+
+      const wpEl = document.getElementById('overviewWastePoints');
+      const wdEl = document.getElementById('overviewWasteDiverted');
+      const coEl = document.getElementById('overviewCO2Reduced');
+      if (wpEl && wdEl && coEl) {
+        wpEl.innerText = 300 + (doneCount * 150);
+        wdEl.innerText = (doneCount * 1.2).toFixed(1);
+        coEl.innerText = (doneCount * 3.5).toFixed(1);
       }
     } catch(err) {
       console.error(err);
