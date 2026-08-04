@@ -142,35 +142,70 @@
         
       </div>
 
-      <div style="background:linear-gradient(135deg, var(--leaf), #083318); border-radius:16px; padding:24px; color:white; margin-bottom:32px; display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px; margin-top:0;">Your Eco-Impact</h2>
-          <p style="opacity:0.9; font-size:14px; margin-bottom:0;">You are helping Delhi transition to a circular economy.</p>
+      <div style="background:linear-gradient(135deg, var(--leaf), #083318); border-radius:16px; padding:24px; color:white; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(31, 122, 68, 0.2);">
+        <div style="position: absolute; right: -20px; top: -40px; opacity: 0.1;">
+          <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
-        <div style="text-align:right;">
-          <div style="font-size:36px; font-weight:800; font-family:'JetBrains Mono', monospace; line-height:1;">450</div>
-          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8;">Waste Points</div>
+        <div style="position: relative; z-index: 2;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color: var(--marigold); margin-bottom: 4px;">Level: Eco-Warrior</div>
+          <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px; margin-top:0;">Your Eco-Impact</h2>
+          <p style="opacity:0.9; font-size:13px; margin-bottom:12px; max-width: 250px;">You are helping Delhi transition to a circular economy. 50 points to next level.</p>
+          <div style="width: 100%; max-width: 200px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden;">
+            <div style="width: 90%; height: 100%; background: var(--marigold);"></div>
+          </div>
+        </div>
+        <div style="text-align:right; position: relative; z-index: 2;">
+          <div style="font-size:42px; font-weight:800; font-family:'JetBrains Mono', monospace; line-height:1; color: var(--marigold); text-shadow: 0 2px 10px rgba(0,0,0,0.3);">450</div>
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; opacity:0.9; margin-top: 4px;">Waste Points</div>
         </div>
       </div>
       
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:40px;">
-        <div style="background:var(--paper-2); padding:16px; border-radius:12px; text-align:center;">
-          <div style="font-size:24px; font-weight:700; margin-bottom:4px; font-family:'JetBrains Mono', monospace;">1.2 <span style="font-size:14px;">kg</span></div>
-          <div style="font-size:12px; color:var(--ink-dim); font-weight:600;">Waste Diverted</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+        <div style="background:var(--paper-2); padding:16px; border-radius:12px; text-align:center; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+          <div style="color: var(--leaf); margin-bottom: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>
+          <div style="font-size:24px; font-weight:800; margin-bottom:4px; font-family:'JetBrains Mono', monospace; color: var(--ink);">1.2 <span style="font-size:14px; font-weight:600; color:var(--ink-dim);">kg</span></div>
+          <div style="font-size:12px; color:var(--ink-dim); font-weight:600; text-transform: uppercase; letter-spacing: 0.05em;">Waste Diverted</div>
         </div>
-        <div style="background:var(--paper-2); padding:16px; border-radius:12px; text-align:center;">
-          <div style="font-size:24px; font-weight:700; margin-bottom:4px; font-family:'JetBrains Mono', monospace;">3.5 <span style="font-size:14px;">kg</span></div>
-          <div style="font-size:12px; color:var(--ink-dim); font-weight:600;">CO2 Reduced</div>
+        <div style="background:var(--paper-2); padding:16px; border-radius:12px; text-align:center; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+          <div style="color: var(--marigold); margin-bottom: 8px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+          <div style="font-size:24px; font-weight:800; margin-bottom:4px; font-family:'JetBrains Mono', monospace; color: var(--ink);">3.5 <span style="font-size:14px; font-weight:600; color:var(--ink-dim);">kg</span></div>
+          <div style="font-size:12px; color:var(--ink-dim); font-weight:600; text-transform: uppercase; letter-spacing: 0.05em;">CO₂ Reduced</div>
         </div>
       </div>
 
-      <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 40px;">
-        <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Refer & Earn Waste Points</h2>
-        <p style="font-size: 14px; color: var(--ink-dim); margin-bottom: 20px; line-height: 1.5;">Invite your friends to use RepairLink and both of you will get <strong>100 bonus Waste Points</strong> when they complete their first repair!</p>
-        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-          <input type="text" id="referralLink" value="https://repairlink-de1ta.web.app" readonly style="flex: 1; min-width: 200px; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #fff; color: var(--ink-dim);">
-          <button onclick="navigator.clipboard.writeText(document.getElementById('referralLink').value); alert('Referral link copied!');" style="padding: 12px 20px; background: var(--marigold); color: #2A1E00; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Copy Link</button>
-          <a href="https://wa.me/?text=I%20just%20found%20local%20repair%20experts%20in%20North%20Delhi%20on%20RepairLink!%20Check%20it%20out:%20https://repairlink-de1ta.web.app" target="_blank" style="padding: 12px 20px; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center;">Share on WhatsApp</a>
+      <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:40px;">
+        <!-- Active Repair Widget -->
+        <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; border: 1px solid #BBDEFB; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="switchTab('service-requests')">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="background: #1565C0; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div>
+              <div style="font-size: 13px; color: #1565C0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;" id="overviewActiveRepairsCount">View your active repairs</div>
+              <div style="font-size: 15px; color: var(--ink); font-weight: 600;">Track your repair status</div>
+            </div>
+          </div>
+          <div style="color: #1565C0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(to right, var(--paper-2), #fdfbf7); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 40px; position: relative; overflow: hidden;">
+        <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 120px; background: var(--marigold); opacity: 0.1; clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);"></div>
+        <div style="display: flex; align-items: flex-start; gap: 16px; position: relative; z-index: 2;">
+          <div style="background: white; padding: 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); color: var(--marigold);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+          </div>
+          <div style="flex: 1;">
+            <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 4px;">Refer & Earn Points</h2>
+            <p style="font-size: 13px; color: var(--ink-dim); margin-bottom: 16px; line-height: 1.5; max-width: 400px;">Invite friends to RepairLink and you both get <strong>100 bonus Waste Points</strong> when they finish their first repair!</p>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <input type="text" id="referralLink" value="https://repairlink-de1ta.web.app" readonly style="flex: 1; min-width: 180px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; background: white; color: var(--ink-dim);">
+              <button onclick="navigator.clipboard.writeText(document.getElementById('referralLink').value); alert('Copied!');" style="padding: 10px 16px; background: white; border: 1px solid var(--line); color: var(--ink); border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">Copy</button>
+              <a href="https://wa.me/?text=I%20just%20found%20local%20repair%20experts%20in%20North%20Delhi%20on%20RepairLink!%20Check%20it%20out:%20https://repairlink-de1ta.web.app" target="_blank" style="padding: 10px 16px; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; transition: 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Share on WA</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -561,11 +596,16 @@
       
       let hasLive = false;
       let hasRecent = false;
+      let activeCount = 0;
       
       snap.forEach(d => {
         const o = d.data();
         const oid = d.id;
         
+        if (o.status !== 'done') {
+          activeCount++;
+        }
+
         if (o.status === 'done') {
           hasRecent = true;
           let actionHtml = '';
@@ -637,12 +677,23 @@
       }
       if (!hasRecent) {
         recentEl.innerHTML = `
-          <div class="empty-state">
+          <div style="text-align:center; padding:40px 20px; background:var(--paper-2); border-radius:12px; border:1px solid var(--line);">
             <div class="empty-state-icon" style="background:var(--leaf-dim); color:var(--leaf);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
             <h3>No completed repairs</h3>
             <p>Your past repairs and ratings will appear here.</p>
           </div>
         `;
+      }
+
+      const activeRepairsCountEl = document.getElementById('overviewActiveRepairsCount');
+      if (activeRepairsCountEl) {
+        if (activeCount > 0) {
+          activeRepairsCountEl.innerText = `You have ${activeCount} active repair${activeCount > 1 ? 's' : ''}`;
+          activeRepairsCountEl.style.color = '#1565C0';
+        } else {
+          activeRepairsCountEl.innerText = 'No active repairs right now';
+          activeRepairsCountEl.style.color = '#555';
+        }
       }
     } catch(err) {
       console.error(err);
