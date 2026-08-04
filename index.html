@@ -786,6 +786,29 @@
   </div>
 </div>
 
+<!-- ============ PREMIUM ============ -->
+<section id="premium" style="padding: 40px 0; background: var(--paper-2);">
+  <div class="wrap">
+    <div style="background: linear-gradient(135deg, #2A1E00 0%, #1a1300 100%); color: #fff; border: 1px solid #ffc935; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; border-radius: 20px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+      <div>
+        <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-top: 0; margin-bottom: 8px; color: #ffc935;">RepairLink Premium ✦</h2>
+        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 16px; line-height: 1.5;">Get 3 free services with zero upfront platform fees, priority Kaarigar matching, and premium support.</p>
+        <ul style="font-size: 13px; opacity: 0.8; list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+          <li>✅ 3 Months Validity</li>
+          <li>✅ 3 Zero-Fee Service Requests</li>
+          <li>✅ Instant Verified Matches</li>
+        </ul>
+      </div>
+      <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; min-width: 160px;">
+        <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8; font-weight:700;">Standard Price</div>
+        <div style="font-family:'JetBrains Mono', monospace; font-size:32px; font-weight:700; margin: 4px 0 12px 0;">₹59</div>
+        <button onclick="handlePremiumSubscribe()" style="display: block; padding: 12px; background: #ffc935; color: #2A1E00; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 14px; width: 100%; border: none; cursor: pointer; transition: background 0.2s;">Subscribe Now</button>
+        <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">Have a coupon? Apply in Dashboard.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ HOW IT WORKS ============ -->
 <section id="how">
   <div class="wrap">
@@ -1567,6 +1590,17 @@
       setTimeout(() => setLang(lang), 500);
     }
   }
+
+  window.handlePremiumSubscribe = function() {
+    if (window.windowUserRole === 'user') {
+      window.location.href = 'UserDashboard.html';
+    } else if (window.windowUserRole === 'admin' || window.windowUserRole === 'kaarigar') {
+      alert("Premium subscription is only available for regular Users. You are logged in as " + window.windowUserRole + ".");
+    } else {
+      alert("Please log in as a User to subscribe to Premium.");
+      window.location.href = 'Auth.html';
+    }
+  };
 </script>
 <script src="theme.js"></script>
 </body>
