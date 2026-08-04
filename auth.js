@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-analytics.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 import { firebaseConfig } from './env.js';
@@ -19,18 +19,29 @@ const authStep1 = document.getElementById('authStep1');
 const authStep2 = document.getElementById('authStep2');
 const completeSignupBtn = document.getElementById('completeSignupBtn');
 
+// Handle redirect result on page load
+getRedirectResult(auth).then(async (result) => {
+  if (result && result.user) {
+    currentUser = result.user;
+    await checkUserRole(currentUser);
+  }
+}).catch((error) => {
+  console.error("Redirect Error:", error);
+  if(errorMessage) {
+    errorMessage.textContent = error.message;
+    errorMessage.style.display = 'block';
+  }
+});
+
 // Sign In
 if(googleSignInBtn) {
-  googleSignInBtn.addEventListener('click', async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      currentUser = result.user;
-      await checkUserRole(currentUser);
-    } catch (error) {
-      console.error(error);
-      errorMessage.textContent = error.message;
-      errorMessage.style.display = 'block';
+  googleSignInBtn.addEventListener('click', () => {
+    // Show a loading state if needed
+    if(googleSignInBtn.querySelector('span')) {
+       googleSignInBtn.querySelector('span').innerText = "Redirecting...";
     }
+    // Use redirect for better mobile and cross-browser compatibility
+    signInWithRedirect(auth, provider);
   });
 }
 
