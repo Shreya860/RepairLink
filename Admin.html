@@ -372,18 +372,27 @@
     let sortedStats = [];
     try {
       const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
-      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'AddKaarigar.html'];
+      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'Addkaarigar.html', 'Dashboard.html'];
       let mergedStats = {};
       allPages.forEach(p => mergedStats[p] = 0);
       if (statsDoc.exists()) {
         const statsData = statsDoc.data();
-        for (const [p, c] of Object.entries(statsData)) mergedStats[p] = c;
+        for (const [p, c] of Object.entries(statsData)) {
+          let key = p;
+          if (key === 'AddKaarigar.html') key = 'Addkaarigar.html';
+          mergedStats[key] = (mergedStats[key] || 0) + c;
+        }
       }
       sortedStats = Object.entries(mergedStats).sort((a, b) => b[1] - a[1]);
+      let maxVisits = sortedStats.length > 0 ? sortedStats[0][1] : 1;
       let html = '';
       for (const [page, count] of sortedStats) {
-        html += `<tr><td style="font-weight:600; font-family:'JetBrains Mono', monospace;">${page}</td>
-          <td><span class="badge kaarigar" style="font-size:13px; background:${count === 0 ? '#f0f0f0' : 'var(--leaf-dim)'}; color:${count === 0 ? '#999' : '#1F7A44'}">${count}</span></td></tr>`;
+        let pct = maxVisits > 0 ? (count / maxVisits) * 100 : 0;
+        html += `<tr>
+          <td style="font-weight:600; font-family:'JetBrains Mono', monospace; width: 30%;">${page}</td>
+          <td style="width: 50%;"><div style="background: var(--line); height: 8px; border-radius: 4px; width: 100%; overflow: hidden;"><div style="background: var(--leaf); height: 100%; width: ${pct}%"></div></div></td>
+          <td style="text-align: right;"><span class="badge kaarigar" style="font-size:13px; background:${count === 0 ? '#f0f0f0' : 'var(--leaf-dim)'}; color:${count === 0 ? '#999' : '#1F7A44'}">${count}</span></td>
+        </tr>`;
       }
       analyticsBody.innerHTML = html;
     } catch (err) {
@@ -511,9 +520,21 @@
     const verifiedCount = kaarigars.filter(k => k.verified).length;
     const pendingCount = kaarigars.length - verifiedCount;
     const pendingPayment = orders.filter(o => o.status === 'pending_payment').length;
+    const totalRevenue = orders.reduce((sum, o) => {
+      // count revenue if it's paid (pending, progress, ready, done)
+      if (o.status !== 'pending_payment') {
+        return sum + (Number(o.paymentAmount) || 0);
+      }
+      return sum;
+    }, 0);
     const topPage = sortedStats && sortedStats.length ? sortedStats[0] : null;
 
     document.getElementById('overviewCards').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-num">₹${totalRevenue}</div>
+        <div class="stat-sub">From all paid orders</div>
+      </div>
       <div class="stat-card">
         <div class="stat-label">Kaarigars</div>
         <div class="stat-num">${kaarigars.length}</div>
