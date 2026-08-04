@@ -21,6 +21,16 @@
 
 <div id="map"></div>
 
+<div class="premium-float fade-in-up">
+  <div>
+    <h3>RepairLink Premium ✦</h3>
+    <p>Get 3 free services, zero fees, & priority matches.</p>
+  </div>
+  <div class="price-row">
+    <div class="price-val">₹59</div>
+    <button onclick="handlePremiumSubscribe()">Subscribe</button>
+  </div>
+</div>
 
 
 <div class="role-scrim" id="roleScrim">
@@ -238,6 +248,18 @@
 </script>
 
 <script type="module" src="script.js"></script>
+<script>
+  window.handlePremiumSubscribe = function() {
+    if (window.windowUserRole === 'user') {
+      window.location.href = 'UserDashboard.html';
+    } else if (window.windowUserRole === 'admin' || window.windowUserRole === 'kaarigar') {
+      alert("Premium subscription is only available for regular Users. You are logged in as " + window.windowUserRole + ".");
+    } else {
+      alert("Please log in as a User to subscribe to Premium.");
+      window.location.href = 'Auth.html';
+    }
+  };
+</script>
 
 <!-- Return to Home Draggable Button -->
 <a href="index.html" class="return-home-btn" id="returnHomeBtn" style="position:fixed; top:50%; left:20px; z-index:9999; display:flex; align-items:center; gap:6px; background:var(--ink, #1F1B13); color:#fff; padding:8px 14px; border-radius:99px; text-decoration:none; font-weight:700; font-family:'Manrope', sans-serif; font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,0.15); cursor:grab; user-select:none; transition: transform 0.3s, box-shadow 0.3s;">
