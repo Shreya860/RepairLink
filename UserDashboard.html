@@ -332,6 +332,7 @@
         window.currentUserData = data;
         renderPremiumSection();
         loadLiveRequests(user.uid);
+        window.loadKaarigars();
         
       } else {
         alert("You are registered as a Kaarigar. Redirecting to your dashboard.");
@@ -464,8 +465,8 @@
         listEl.innerHTML += `
           <div class="list-item">
             <div class="list-info">
-              <div class="list-title">${k.displayName || 'Kaarigar'}</div>
-              <div class="list-meta">${k.shopAddress || 'Local'} • ${k.trade || 'Repair Expert'}</div>
+              <div class="list-title">${k.name || k.displayName || 'Kaarigar'}</div>
+              <div class="list-meta">${k.address || k.area || 'Local'} • ${k.trade || 'Repair Expert'}</div>
             </div>
             <button onclick="toggleSaveKaarigar('${kId}')" style="background:${btnBg}; color:${btnColor}; border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">${btnText}</button>
           </div>
