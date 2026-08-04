@@ -98,12 +98,37 @@
       <input type="text" id="kArea" placeholder="e.g. Kamla Nagar">
     </div>
     <div class="form-group">
+      <label>Phone / WhatsApp number</label>
+      <input type="tel" id="kPhone" placeholder="e.g. 919876500001">
+    </div>
+    <div class="form-group">
       <label>Years of Experience</label>
       <input type="number" id="kYears" placeholder="e.g. 10">
     </div>
     <div class="form-group">
-      <label>Short Introduction</label>
-      <textarea id="kIntro" placeholder="Tell customers about your expertise..."></textarea>
+      <label>Working Hours</label>
+      <input type="text" id="kHours" placeholder="e.g. 9 AM - 8 PM">
+    </div>
+    <div class="form-group">
+      <label>Intro Line 1</label>
+      <textarea id="kS1" placeholder="Tell customers about your expertise..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Intro Line 2</label>
+      <textarea id="kS2" placeholder="Additional details or shop location..."></textarea>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <div class="form-group" style="flex:1;">
+        <label>Latitude</label>
+        <input type="number" step="any" id="kLat" placeholder="e.g. 28.68">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label>Longitude</label>
+        <input type="number" step="any" id="kLng" placeholder="e.g. 77.20">
+      </div>
+    </div>
+    <div class="form-group">
+      <button type="button" class="btn btn-secondary" onclick="getLocation()" style="font-size:12px; padding:6px 12px;">Get My Current Location</button>
     </div>
     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
       <button class="btn btn-primary" id="btnPreview">Preview Profile</button>
@@ -223,8 +248,13 @@
         document.getElementById('kName').value = currentKaarigarData.name || '';
         document.getElementById('kTrade').value = currentKaarigarData.trade || 'cobbler';
         document.getElementById('kArea').value = currentKaarigarData.area || '';
+        document.getElementById('kPhone').value = currentKaarigarData.phone || '';
         document.getElementById('kYears').value = currentKaarigarData.years || '';
-        document.getElementById('kIntro').value = currentKaarigarData.intro || '';
+        document.getElementById('kHours').value = currentKaarigarData.hours || '';
+        document.getElementById('kS1').value = currentKaarigarData.s1 || '';
+        document.getElementById('kS2').value = currentKaarigarData.s2 || '';
+        document.getElementById('kLat').value = currentKaarigarData.lat || '';
+        document.getElementById('kLng').value = currentKaarigarData.lng || '';
         
         const statusBanner = document.getElementById('profileStatusBanner');
         if (currentKaarigarData.verified) {
@@ -266,7 +296,7 @@
     
     document.getElementById('prevArea').textContent = document.getElementById('kArea').value || 'Unknown Area';
     document.getElementById('prevYears').textContent = document.getElementById('kYears').value || '0';
-    document.getElementById('prevIntro').textContent = document.getElementById('kIntro').value || 'No intro provided.';
+    document.getElementById('prevIntro').textContent = (document.getElementById('kS1').value + ' ' + document.getElementById('kS2').value).trim() || 'No intro provided.';
     
     document.getElementById('profileFormView').style.display = 'none';
     document.getElementById('profilePreviewView').style.display = 'block';
@@ -296,11 +326,14 @@
       trade: document.getElementById('kTrade').value,
       area: document.getElementById('kArea').value,
       years: parseInt(document.getElementById('kYears').value) || 0,
-      intro: document.getElementById('kIntro').value,
+      phone: document.getElementById('kPhone').value,
+      hours: document.getElementById('kHours').value,
+      s1: document.getElementById('kS1').value,
+      s2: document.getElementById('kS2').value,
       verified: false,
       uid: window.currentKaarigarId,
-      lat: 28.68, // Default approx lat for North Delhi for now
-      lng: 77.20  // Default approx lng
+      lat: parseFloat(document.getElementById('kLat').value) || 28.68,
+      lng: parseFloat(document.getElementById('kLng').value) || 77.20
     };
     
     try {
