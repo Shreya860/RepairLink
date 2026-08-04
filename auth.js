@@ -3,7 +3,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.0/firebase
 import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-import { firebaseConfig } from './env.js?v=5';
+import { firebaseConfig } from './env.js?v=6';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
