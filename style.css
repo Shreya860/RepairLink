@@ -1,12 +1,18 @@
 :root{
     --ink:#221D14;
     --ink-dim:#7A7264;
+    --ink-soft:#4A4437;
     --paper:#FFFFFF;
     --paper-2:#F3EFE6;
+    --paper-card:#FFFFFF;
+    --paper-card-rgb:255,255,255;
     --line: rgba(34,29,20,0.14);
+    --line-strong: rgba(34,29,20,0.24);
     --marigold:#FFB800;
     --vermilion:#FF4C3B;
+    --vermilion-deep:#E0392A;
     --teal:#2E8FE0;
+    --teal-deep:#1E6BB8;
     --leaf:#2FA65C;
     --marigold-dim:#FFF3D2;
     --vermilion-dim:#FFE3E0;
@@ -16,12 +22,52 @@
     --shadow-sm: 0 4px 14px rgba(34,29,20,0.08);
     --shadow-md: 0 14px 34px rgba(34,29,20,0.12);
     --shadow-lg: 0 28px 64px rgba(34,29,20,0.16);
+
+    /* Page background + floating "card on top of map" surfaces.
+       These used to be hardcoded #fff / rgba(255,255,255,..) all over
+       the file, which is why dark mode text used to vanish. */
+    --page-bg:#EDE7D8;
+    --surface: rgba(255,255,255,0.96);
+    --surface-strong: rgba(255,255,255,0.97);
+    --surface-soft: rgba(255,255,255,0.92);
+    --surface-solid:#FFFFFF;
   }
 
+  html[data-theme="dark"]{
+    --paper: #121212;
+    --paper-card: #1E1E1E;
+    --paper-card-rgb: 30,30,30;
+    --paper-2: #2A2A2A;
+    --paper-3: #333333;
+    --ink: #F0F0F0;
+    --ink-dim: #A0A0A0;
+    --ink-soft: #B3B3B3;
+    --line: rgba(255, 255, 255, 0.15);
+    --line-strong: rgba(255, 255, 255, 0.25);
+    --marigold-dim: #332A00;
+    --vermilion-dim: #33100A;
+    --vermilion-deep:#FF6B5B;
+    --teal-dim: #002244;
+    --teal-deep:#6BB6FF;
+    --leaf-dim: #002B13;
+    --shadow-sm: 0 4px 14px rgba(0,0,0,0.4);
+    --shadow-md: 0 14px 34px rgba(0,0,0,0.5);
+    --shadow-lg: 0 28px 64px rgba(0,0,0,0.6);
+
+    --page-bg:#121212;
+    --surface: rgba(30,30,30,0.9);
+    --surface-strong: rgba(30,30,30,0.92);
+    --surface-soft: rgba(30,30,30,0.85);
+    --surface-solid:#1E1E1E;
+  }
+
+  /* Respect the OS setting ONLY until the user picks a theme explicitly
+     (see theme.js, which sets data-theme and short-circuits this). */
   @media (prefers-color-scheme: dark) {
-    :root {
+    html:not([data-theme]){
       --paper: #121212;
       --paper-card: #1E1E1E;
+      --paper-card-rgb: 30,30,30;
       --paper-2: #2A2A2A;
       --paper-3: #333333;
       --ink: #F0F0F0;
@@ -31,21 +77,29 @@
       --line-strong: rgba(255, 255, 255, 0.25);
       --marigold-dim: #332A00;
       --vermilion-dim: #33100A;
+      --vermilion-deep:#FF6B5B;
       --teal-dim: #002244;
+      --teal-deep:#6BB6FF;
       --leaf-dim: #002B13;
       --shadow-sm: 0 4px 14px rgba(0,0,0,0.4);
       --shadow-md: 0 14px 34px rgba(0,0,0,0.5);
       --shadow-lg: 0 28px 64px rgba(0,0,0,0.6);
+
+      --page-bg:#121212;
+      --surface: rgba(30,30,30,0.9);
+      --surface-strong: rgba(30,30,30,0.92);
+      --surface-soft: rgba(30,30,30,0.85);
+      --surface-solid:#1E1E1E;
     }
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%; width:100%; overflow:hidden;}
-  body{font-family:'Manrope', sans-serif; background:#EDE7D8; color:var(--ink); position:relative;}
+  body{font-family:'Manrope', sans-serif; background:var(--page-bg); color:var(--ink); position:relative;}
   #map{position:absolute; inset:0; z-index:1;}
   .leaflet-marker-pane, .leaflet-tile-pane{will-change: transform;}
   .leaflet-control-attribution{
-    background:rgba(255,255,255,0.85) !important; color:var(--ink-dim) !important;
+    background:var(--surface) !important; color:var(--ink-dim) !important;
     font-family:'JetBrains Mono', monospace; font-size:9px !important;
   }
   .leaflet-control-attribution a{color:var(--ink-dim) !important;}
@@ -66,7 +120,7 @@
     display:flex; align-items:flex-start; justify-content:space-between;
     padding:22px 26px; pointer-events:none;
   }
-  .brand{pointer-events:auto; background:rgba(255,255,255,0.96);
+  .brand{pointer-events:auto; background:var(--surface);
     border:1px solid var(--line); border-radius:14px; padding:12px 18px; box-shadow:0 6px 20px rgba(34,29,20,0.1);}
   .brand-mark{display:flex; align-items:center; gap:10px;}
   .brand h1{font-family:'Fraunces', serif; font-weight:700; font-size:21px; letter-spacing:0.2px; color:var(--ink);}
@@ -76,7 +130,7 @@
   }
 
   .legend{
-    pointer-events:auto; background:rgba(255,255,255,0.97);
+    pointer-events:auto; background:var(--surface-strong);
     border:1px solid var(--line); border-radius:14px; padding:14px 16px;
     display:flex; flex-direction:column; gap:9px; min-width:220px;
     box-shadow:0 6px 20px rgba(34,29,20,0.1); margin-top:44px;
@@ -100,7 +154,7 @@
 
   .locate-box{
     position:absolute; left:26px; bottom:26px; top:auto; z-index:20; pointer-events:auto;
-    width:300px; max-width:80vw; background:rgba(255,255,255,0.97);
+    width:300px; max-width:80vw; background:var(--surface-strong);
     border:1px solid var(--line); border-radius:14px; padding:18px;
     box-shadow:0 10px 28px rgba(34,29,20,0.14);
   }
@@ -149,14 +203,14 @@
 
   .kmarker{
     position:relative; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
-    background:#fff; border-radius:50%; box-shadow:0 2px 4px rgba(34,29,20,0.3);
+    background:var(--surface-solid); border-radius:50%; box-shadow:0 2px 4px rgba(34,29,20,0.3);
   }
   .kmarker svg{width:20px; height:20px; display:block;}
   .kmarker.highlighted{width:42px; height:42px;}
   .kmarker.highlighted svg{width:28px; height:28px;}
 
   .zone-label{
-    background:rgba(255,255,255,0.92); border:1px solid var(--line); color:var(--ink);
+    background:var(--surface-soft); border:1px solid var(--line); color:var(--ink);
     font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.05em;
     padding:4px 10px; border-radius:6px; text-transform:uppercase; white-space:nowrap;
     box-shadow:0 3px 10px rgba(34,29,20,0.15);
@@ -198,7 +252,7 @@
   .chat-window{background:var(--paper-2); border:1px solid var(--line); border-radius:16px; padding:18px;}
   .chat-header{display:flex; align-items:center; gap:11px; margin-bottom:14px;}
   .chat-avatar{
-    width:40px; height:40px; border-radius:50%; background:#fff; flex:none;
+    width:40px; height:40px; border-radius:50%; background:var(--surface-solid); flex:none;
     display:flex; align-items:center; justify-content:center;
     font-family:'Fraunces', serif; font-weight:700; font-size:16px; border:2px solid var(--marigold); color:var(--ink);
   }
@@ -206,7 +260,7 @@
   .chat-status{font-size:11px; color:#2FA65C; margin-top:2px;}
   .chat-status::before{content:"●"; margin-right:4px; font-size:8px;}
   .chat-bubble{
-    background:#fff; border:1px solid var(--line); color:var(--ink);
+    background:var(--surface-solid); border:1px solid var(--line); color:var(--ink);
     border-radius:16px 16px 16px 4px; padding:12px 15px; font-size:14px; line-height:1.65;
     max-width:94%;
   }
@@ -229,7 +283,7 @@
   .results-header h2{font-family:'Fraunces', serif; font-weight:700; font-size:21px; margin-top:8px; line-height:1.3; color:var(--ink);}
   .results-list{padding:18px 26px 36px 26px; display:flex; flex-direction:column; gap:12px;}
   .result-card{background:var(--paper-2); border:1px solid var(--line); border-radius:14px; padding:16px; cursor:pointer; transition:border-color .15s ease, background .15s ease;}
-  .result-card:hover{border-color:var(--marigold); background:#fff;}
+  .result-card:hover{border-color:var(--marigold); background:var(--surface-solid);}
   .result-top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
   .result-name{font-family:'Fraunces', serif; font-weight:600; font-size:16px; color:var(--ink);}
   .result-dist{font-family:'JetBrains Mono', monospace; font-size:11px; color:#C98A00; white-space:nowrap;}
@@ -347,7 +401,7 @@
 
   /* ---------- Artisan onboarding flow ---------- */
   .artisan-shell{
-    position:fixed; inset:0; z-index:15; background:#EDE7D8; overflow-y:auto; display:none;
+    position:fixed; inset:0; z-index:15; background:var(--page-bg); overflow-y:auto; display:none;
     padding:60px 24px; align-items:flex-start; justify-content:center;
   }
   .artisan-shell.open{display:flex;}
@@ -566,3 +620,23 @@
 .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
 .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
 @keyframes typing { 0%, 80%, 100% { transform: scale(0.4); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
+/* ============ THEME TOGGLE (injected by theme.js) ============ */
+.theme-toggle-btn{
+  position:fixed; top:22px; right:26px; z-index:9500;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--surface); border:1px solid var(--line);
+  box-shadow:var(--shadow-sm), 0 6px 20px rgba(34,29,20,0.1);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  color:var(--ink); transition:transform .15s ease, background .2s ease, box-shadow .2s ease;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.theme-toggle-btn:hover{transform:translateY(-2px); background:var(--paper-2);}
+.theme-toggle-btn svg{width:19px; height:19px; display:block;}
+.theme-toggle-btn .icon-sun{display:none;}
+html[data-theme="dark"] .theme-toggle-btn .icon-moon{display:none;}
+html[data-theme="dark"] .theme-toggle-btn .icon-sun{display:block;}
+
+@media (max-width:640px){
+  .theme-toggle-btn{top:12px; right:12px; width:38px; height:38px;}
+  .theme-toggle-btn svg{width:16px; height:16px;}
+}
