@@ -178,7 +178,7 @@
 
       <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:24px;">
         <!-- Active Repair Widget -->
-        <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; border: 1px solid #BBDEFB; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="switchTab('service-requests')">
+        <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; border: 1px solid #BBDEFB; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="switchTab('requests')">
           <div style="display: flex; align-items: center; gap: 16px;">
             <div style="background: #1565C0; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -999,6 +999,12 @@
 </script>
 
 <script>
+  // Global Tab Switcher for UI elements
+  function switchTab(tabId) {
+    const btn = document.querySelector(`button[data-tab="${tabId}"]`);
+    if (btn) btn.click();
+  }
+
   // Tab Switching Logic
   document.querySelectorAll('#sidebarNav button').forEach(btn => {
     btn.addEventListener('click', (e) => {
