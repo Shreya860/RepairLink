@@ -128,7 +128,7 @@
       </button>
       <button data-tab="orders">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
-        Orders
+        Service Requests
       </button>
       <button data-tab="messages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -217,7 +217,7 @@
 
     <!-- ===== ORDERS ===== -->
     <div class="tab-content" id="tab-orders">
-      <div class="page-head"><div><h1>Orders</h1><p>Live repair bookings coming through the platform.</p></div></div>
+      <div class="page-head"><div><h1>Service Requests</h1><p>Live repair bookings coming through the platform.</p></div></div>
       <div class="panel-block" style="padding:0; overflow-x:auto;">
         <table>
           <thead><tr><th>Item</th><th>Customer UID</th><th>Kaarigar Name</th><th>Status</th><th>Actions / Photos</th></tr></thead>
@@ -387,12 +387,26 @@
         window.adminOrdersData[oid] = o;
         let statusBadge = `<span class="badge" style="background:#e0e0e0; color:#333;">${o.status || 'unknown'}</span>`;
         if (o.status === 'pending_payment') statusBadge = `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Payment</span>`;
-        if (o.status === 'pending') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Assigned</span>`;
+        if (o.status === 'pending') {
+          statusBadge = o.kaarigarId 
+            ? `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Assigned</span>` 
+            : `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Assignment</span>`;
+        }
         if (o.status === 'done') statusBadge = `<span class="badge" style="background:var(--leaf-dim); color:#1F7A44;">Done</span>`;
 
         let actionHtml = '';
-        if (o.status === 'pending_payment') {
-          actionHtml = `<button class="btn-small marigold" onclick="openAssignModal('${oid}', '${o.trade}')">Approve & Assign</button>`;
+        if (!o.kaarigarId && (o.status === 'pending_payment' || o.status === 'pending')) {
+          actionHtml = `<button class="btn-small marigold" onclick="openAssignModal('${oid}', '${o.trade}')">Assign Kaarigar</button>`;
+        } else if (o.kaarigarId && o.status === 'pending') {
+          const isFree = o.paymentAmount === 0;
+          let revokePhotos = '';
+          if (o.beforePhotoUrl) revokePhotos += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
+          if (o.afterPhotoUrl) revokePhotos += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
+          
+          actionHtml = `
+            ${revokePhotos}
+            <button class="btn-small danger" onclick="revokeAssignment('${oid}', ${isFree})" style="margin-top:4px;">Revoke Kaarigar</button>
+          `;
         } else {
           if (o.beforePhotoUrl) actionHtml += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
           if (o.afterPhotoUrl) actionHtml += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
@@ -682,6 +696,23 @@
       showToast("Error assigning kaarigar: " + err.message, 'error');
     } finally {
       btn.textContent = 'Approve & Assign'; btn.disabled = false;
+    }
+  };
+
+  window.revokeAssignment = async function(orderId, isFree) {
+    if (!confirm("Are you sure you want to revoke this Kaarigar assignment? The request will go back to the pool.")) return;
+    try {
+      const newStatus = isFree ? 'pending' : 'pending_payment';
+      await updateDoc(doc(db, 'orders', orderId), { 
+        status: newStatus,
+        kaarigarId: null,
+        kaarigarName: null,
+        adminComments: null
+      });
+      showToast("Assignment revoked.");
+      loadData();
+    } catch (err) {
+      showToast("Error revoking assignment: " + err.message, 'error');
     }
   };
 
