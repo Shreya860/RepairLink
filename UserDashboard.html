@@ -148,7 +148,10 @@
         </div>
         <div style="position: relative; z-index: 2;">
           <div id="overviewLevelName" style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color: var(--marigold); margin-bottom: 4px;">Level: Eco-Beginner</div>
-          <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px; margin-top:0;">Your Eco-Impact</h2>
+          <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px; margin-top:0; display:flex; align-items:center; gap:8px;">
+            Your Eco-Impact
+            <svg onclick="document.getElementById('ecoImpactInfoModal').style.display='flex'" style="cursor:pointer; opacity:0.8; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          </h2>
           <p id="overviewLevelDesc" style="opacity:0.9; font-size:13px; margin-bottom:12px; max-width: 250px;">You are helping Delhi transition to a circular economy. 200 points to next level.</p>
           <div style="width: 100%; max-width: 200px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden;">
             <div id="overviewLevelProgress" style="width: 60%; height: 100%; background: var(--marigold);"></div>
@@ -1007,6 +1010,40 @@
     });
   });
 </script>
+
+  <!-- Eco-Impact Info Modal -->
+  <div id="ecoImpactInfoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:1000; justify-content:center; align-items:center; padding: 20px; box-sizing:border-box;">
+    <div style="background:var(--paper); width:100%; max-width:500px; border-radius:24px; padding:32px; position:relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <button onclick="document.getElementById('ecoImpactInfoModal').style.display='none'" style="position:absolute; top:24px; right:24px; background:none; border:none; cursor:pointer; color:var(--ink-dim); padding:8px; border-radius:50%; transition:0.2s;" onmouseover="this.style.background='var(--paper-2)'" onmouseout="this.style.background='none'">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      
+      <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-top:0; margin-bottom:24px; color:var(--ink);">How Gamification Works</h2>
+      
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size:16px; font-weight:700; color:var(--leaf); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Eco-Levels
+        </h3>
+        <p style="font-size:14px; color:var(--ink-dim); line-height:1.5; margin-bottom:12px;">Earn Waste Points by completing repairs and unlocking new tiers of environmental impact:</p>
+        <ul style="font-size:14px; color:var(--ink); line-height:1.6; padding-left:20px; margin:0;">
+          <li><strong style="color:var(--marigold);">Eco-Beginner:</strong> 0 - 499 Points</li>
+          <li><strong style="color:var(--marigold);">Eco-Warrior:</strong> 500 - 999 Points</li>
+          <li><strong style="color:var(--marigold);">Eco-Champion:</strong> 1000 - 1999 Points</li>
+          <li><strong style="color:var(--marigold);">Eco-Master:</strong> 2000+ Points</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 style="font-size:16px; font-weight:700; color:var(--leaf); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
+          Badges & Rewards
+        </h3>
+        <p style="font-size:14px; color:var(--ink-dim); line-height:1.5; margin-bottom:0;">You start with the <strong>Early Adopter</strong> badge. Your <strong>First Repair</strong> unlocks instantly after your first completed service, and the prestigious <strong>Eco-Saver</strong> badge unlocks after 5 successful repairs!</p>
+      </div>
+      
+    </div>
+  </div>
 
 </body>
 
