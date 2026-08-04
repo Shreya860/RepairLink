@@ -288,6 +288,16 @@
           </div>
         </div>
       `;
+    } else if (data.premiumStatus === 'pending') {
+      sec.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; opacity: 0.9;">
+          <div>
+            <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px; color: #ffc935;">Premium Approval Pending ⏳</h2>
+            <p style="font-size: 14px; opacity: 0.9; margin-bottom: 0;">We have received your payment request. Waiting for admin approval.</p>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: 4px;">Your 3 free services will unlock soon.</p>
+          </div>
+        </div>
+      `;
     } else {
       sec.innerHTML = `
         <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Upgrade to RepairLink Premium ✦</h2>
@@ -330,21 +340,14 @@
     btn.disabled = true;
 
     try {
-      const expiry = new Date();
-      expiry.setMonth(expiry.getMonth() + 3); // 3 months validity
-
       const userRef = doc(db, 'users', auth.currentUser.uid);
       await updateDoc(userRef, {
-        isPremium: true,
-        freeServicesLeft: 3,
-        premiumExpiry: expiry
+        premiumStatus: 'pending'
       });
 
-      window.currentUserData.isPremium = true;
-      window.currentUserData.freeServicesLeft = 3;
-      window.currentUserData.premiumExpiry = expiry;
+      window.currentUserData.premiumStatus = 'pending';
       
-      showToast("Payment Successful! Welcome to Premium ✦");
+      showToast("Payment Submitted! Waiting for admin approval.");
       renderPremiumSection();
     } catch(err) {
       showToast("Payment failed: " + err.message, "error");

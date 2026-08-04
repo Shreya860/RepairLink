@@ -492,12 +492,20 @@
     }
     entries.forEach(([id, u]) => {
       const dateStr = u.createdAt ? new Date(u.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown';
+      let premiumAction = '';
+      if (u.premiumStatus === 'pending') {
+        premiumAction = `<button class="btn-small marigold" onclick="approvePremiumUser('${id}')">Approve Premium</button>`;
+      } else if (u.isPremium) {
+        premiumAction = `<span style="font-size:11px; color:#ffc935; font-weight:700;">✦ Premium</span>`;
+      }
+      
       body.innerHTML += `<tr>
         <td style="font-weight:600"><a href="#" onclick="showUserDetails('${id}'); return false;" style="color:var(--leaf); text-decoration:underline;">${u.displayName || 'No Name'}</a></td>
         <td>${u.email || ''}</td>
         <td><span class="badge ${u.role}">${u.role}</span></td>
         <td>${dateStr}</td>
         <td class="actions-cell">
+          ${premiumAction}
           <button class="btn-small" onclick="editUserRole('${id}')">Edit</button>
           <button class="btn-small danger" onclick="deleteUser('${id}')">Delete</button>
         </td>
@@ -505,6 +513,25 @@
     });
   }
   document.getElementById('userSearchInput').addEventListener('input', renderUsersTable);
+
+  window.approvePremiumUser = async function(id) {
+    if (!confirm("Approve Premium Subscription for this user? They will receive 3 free services.")) return;
+    try {
+      const expiry = new Date();
+      expiry.setMonth(expiry.getMonth() + 3);
+      
+      await updateDoc(doc(db, 'users', id), {
+        isPremium: true,
+        premiumStatus: 'active',
+        freeServicesLeft: 3,
+        premiumExpiry: expiry
+      });
+      showToast("Premium Approved!");
+      loadData();
+    } catch (err) {
+      showToast("Error approving premium: " + err.message, 'error');
+    }
+  };
 
   // ---------- Kaarigars tab: search + render ----------
   function renderKaarigarsTable() {
