@@ -22,14 +22,18 @@
 <div id="map"></div>
 
 <div class="premium-float fade-in-up">
-  <div>
-    <h3>RepairLink Premium ✦</h3>
-    <p>Get 3 free services, zero fees, & priority matches.</p>
+  <div class="pf-header">Upgrade to RepairLink Premium ✦</div>
+  <p class="pf-desc">3 free services, zero fees, priority matching for 3 months.</p>
+  <div class="pf-plan">3 Months Plan</div>
+  <div class="pf-price-wrap">
+    <div class="pf-price" id="subPriceMap">₹59</div>
+    <div class="pf-promo">Code Delta = ₹20 off!</div>
   </div>
-  <div class="price-row">
-    <div class="price-val">₹59</div>
-    <button onclick="handlePremiumSubscribe()">Subscribe</button>
+  <div class="pf-action">
+    <input type="text" id="couponInputMap" placeholder="Coupon">
+    <button class="pf-apply" onclick="applyCouponMap()">Apply</button>
   </div>
+  <button class="pf-pay" onclick="handlePremiumSubscribe()">Pay & Subscribe</button>
 </div>
 
 
@@ -257,6 +261,17 @@
     } else {
       alert("Please log in as a User to subscribe to Premium.");
       window.location.href = 'Auth.html';
+    }
+  };
+
+  window.applyCouponMap = function() {
+    const code = document.getElementById('couponInputMap').value.trim();
+    if (code.toLowerCase() === 'delta') {
+      document.getElementById('subPriceMap').innerHTML = '<span style="text-decoration:line-through; font-size:12px; color:gray;">₹59</span> ₹39';
+      alert("Coupon applied! Click 'Pay & Subscribe' to proceed.");
+    } else {
+      alert("Invalid coupon code.");
+      document.getElementById('subPriceMap').innerHTML = '₹59';
     }
   };
 </script>

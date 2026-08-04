@@ -789,22 +789,25 @@
 <!-- ============ PREMIUM ============ -->
 <section id="premium" style="padding: 40px 0; background: var(--paper-2);">
   <div class="wrap">
-    <div style="background: linear-gradient(135deg, #2A1E00 0%, #1a1300 100%); color: #fff; border: 1px solid #ffc935; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; border-radius: 20px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
-      <div>
-        <h2 style="font-family:'Fraunces', serif; font-size: 24px; margin-top: 0; margin-bottom: 8px; color: #ffc935;">RepairLink Premium ✦</h2>
-        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 16px; line-height: 1.5;">Get 3 free services with zero upfront platform fees, priority Kaarigar matching, and premium support.</p>
-        <ul style="font-size: 13px; opacity: 0.8; list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
-          <li>✅ 3 Months Validity</li>
-          <li>✅ 3 Zero-Fee Service Requests</li>
-          <li>✅ Instant Verified Matches</li>
-        </ul>
-      </div>
-      <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; min-width: 160px;">
-        <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8; font-weight:700;">Standard Price</div>
-        <div style="font-family:'JetBrains Mono', monospace; font-size:32px; font-weight:700; margin: 4px 0 12px 0;">₹59</div>
-        <button onclick="handlePremiumSubscribe()" style="display: block; padding: 12px; background: #ffc935; color: #2A1E00; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 14px; width: 100%; border: none; cursor: pointer; transition: background 0.2s;">Subscribe Now</button>
-        <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">Have a coupon? Apply in Dashboard.</div>
-      </div>
+    <div style="background: linear-gradient(135deg, #111, #333); color: white; border: 1px solid var(--line-strong); border-radius: 16px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
+        <h2 style="font-family:'Fraunces', serif; font-size: 20px; margin-top: 0; margin-bottom: 8px;">Upgrade to RepairLink Premium ✦</h2>
+        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 20px; line-height: 1.5;">Get 3 free services with zero upfront fees, priority Kaarigar matching, and premium support for 3 months.</p>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <div style="flex:1; background:rgba(255,255,255,0.05); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+              <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.05em; opacity:0.8; font-weight:700;">3 Months Plan</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:24px; font-weight:700; color:#fff;" id="subPriceIndex">₹59</div>
+              <div style="font-size:11px; color:#25D366; font-weight:700; margin-top:4px;">Apply Code Delta for ₹20 off instantly!</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="couponInputIndex" placeholder="Coupon Code" style="padding:8px 12px; border:1px solid rgba(255,255,255,0.2); border-radius:6px; font-family:'Manrope', sans-serif; font-size:13px; max-width:120px; background:rgba(0,0,0,0.5); color:white;">
+                <button onclick="applyCouponIndex()" style="padding:8px 16px; background:#444; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:13px;">Apply</button>
+              </div>
+              <button onclick="handlePremiumSubscribe()" style="padding:10px 16px; background:#ffc935; color:#2A1E00; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; width:100%;">Pay & Subscribe</button>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </section>
@@ -1599,6 +1602,17 @@
     } else {
       alert("Please log in as a User to subscribe to Premium.");
       window.location.href = 'Auth.html';
+    }
+  };
+
+  window.applyCouponIndex = function() {
+    const code = document.getElementById('couponInputIndex').value.trim();
+    if (code.toLowerCase() === 'delta') {
+      document.getElementById('subPriceIndex').innerHTML = '<span style="text-decoration:line-through; font-size:14px; color:gray;">₹59</span> ₹39';
+      alert("Coupon applied! Please 'Pay & Subscribe' to proceed.");
+    } else {
+      alert("Invalid coupon code.");
+      document.getElementById('subPriceIndex').innerHTML = '₹59';
     }
   };
 </script>
