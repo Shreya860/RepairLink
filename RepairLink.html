@@ -89,10 +89,11 @@
   
   @media (max-width: 860px) {
     .admin-shell { flex-direction: column; }
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); }
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; }
-    .main-area { flex: 1; }
+    .sidebar-nav { flex-direction: row; gap: 8px; }
+    .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; padding: 8px 12px; justify-content: center; }
+    .main-area { flex: 1; position: relative; height: calc(100vh - 65px); }
   }
   
   .legend {

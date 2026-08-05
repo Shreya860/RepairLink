@@ -46,9 +46,10 @@
   .page-head p { font-size: 13px; color: var(--ink-dim); margin-top: 4px; }
 
   @media (max-width: 860px) {
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; }
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; }
+    .sidebar-nav { flex-direction: row; gap: 8px; }
+    .sidebar-nav button, .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; }
     .sidebar-footer { display: none; }
     .admin-shell { flex-direction: column; }
     .main-area { margin-left: 0; padding: 24px 16px; }
