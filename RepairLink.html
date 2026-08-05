@@ -20,9 +20,10 @@
   /* Override global map style specifically for RepairLink page */
   #map {
     position: absolute !important;
-    right: 26px !important;
-    bottom: 26px !important;
-    width: 45vw !important;
+    top: 50% !important;
+    right: 40px !important;
+    transform: translateY(-50%) !important;
+    width: 55vw !important;
     max-width: 600px !important;
     height: 55vh !important;
     inset: auto !important;
@@ -36,6 +37,8 @@
       width: calc(100% - 28px) !important;
       right: 14px !important;
       bottom: 180px !important; /* Above the locate-box */
+      top: auto !important;
+      transform: none !important;
       height: 45vh !important;
     }
   }
