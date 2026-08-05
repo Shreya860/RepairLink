@@ -13,33 +13,30 @@
 
 <br/>
 
-RepairLink is a community-driven platform built for a circular economy. Instead of throwing away a broken mixer or a torn shoe, RepairLink instantly connects you with verified local artisans (*kaarigars*) capable of fixing it. 
+**RepairLink** is a community-driven platform built for a circular economy. Instead of throwing away a broken mixer or a torn shoe, RepairLink instantly connects you with verified local artisans (*kaarigars*) capable of fixing it. 
 
 ---
 
-## ✨ Core Features & Innovations
+## 🌟 Comprehensive Feature Set
 
-### 🗺️ Geo-Fenced Discovery (CARTO Maps)
-We utilize **CARTO Voyager** tiles paired with a custom **Inverted Polygon Mask** to visually isolate and highlight our active service area (North Delhi), dimming out regions where services are currently unavailable. Users can filter kaarigars by category (Cobbler, Tailor, Electrician, etc.) instantly on the map.
+### ✨ **New Additions & Gamification**
+- 🏆 **Eco-Gamification System:** Users earn "Waste Points" for every completed repair, unlocking progressive levels (Eco-Beginner, Eco-Warrior, Eco-Champion, Eco-Master).
+- 🏅 **Unlockable Badges:** Interactive UI badges unlock based on achievements (*Early Adopter*, *First Repair* 🛠️, *Eco-Saver* 🏆).
+- 💰 **Dynamic Service Pricing:** Tiered up-front connection fees (e.g., Cobbler ₹9, Locksmith ₹19, Appliance ₹39) ensuring fair and transparent platform costs.
+- 📱 **Kaarigar Engagement Suite:** Dedicated tabs for Kaarigars to track **Earnings**, read **Reviews**, and access **Help & Support** directly from their dashboard.
+- 📍 **Interactive Kaarigar Profile Mapping:** Kaarigars can drop pins on an embedded **Leaflet Map** or use 1-click **Auto-Detect GPS** to update their storefront locations securely.
+- 📈 **Advanced Admin Analytics:** Comprehensive admin panel with real-time charts displaying revenue streams, page visit metrics, active orders, and service distributions.
 
-### 🔒 Privacy-First Architecture
-Kaarigar phone numbers and direct contact details are protected by strict **Role-Based Access Control (RBAC)**. When users click on a map marker, they see the kaarigar's story and skills, but sensitive details are masked and strictly restricted to Admin users only, preventing unauthorized data scraping.
-
-### 🌐 Bilingual Accessibility (English & Hindi)
-To ensure maximum accessibility across diverse demographics, the platform features a seamless **Hindi/English localization toggle**, powered by dynamic CSS text rotators that prevent layout shifting during translation.
-
-### 📊 Real-Time Native Analytics
-Instead of relying on heavy third-party trackers, RepairLink features a custom, lightweight real-time analytics engine. Page visits and interactions are tracked natively and pushed directly to **Cloud Firestore (`/stats/page_visits`)**, which Admins can monitor in real-time.
-
-### 👥 Dedicated Role Portals
-The ecosystem is divided into specific portals tailored for different users:
-- **`UserDashboard.html`**: For customers to track their repair requests.
-- **`KaarigarDashboard.html`**: For artisans to manage their profile and workload.
-- **`Admin.html`**: A powerful control center for verifying kaarigars, monitoring site analytics, and managing user feedback.
-- **`Addkaarigar.html`**: A streamlined onboarding flow with an interactive map picker for pinning the exact geolocation of a new artisan's shop.
-
-### 💬 Integrated AI Support
-A floating, draggable AI Chatbot (powered by Streamlit & Groq) is embedded directly into the platform, providing instant contextual help to users without them having to leave the page.
+### 🛠️ **Core Platform Features**
+- 🗺️ **Geo-Fenced Discovery:** Utilizes Leaflet JS & CARTO Voyager tiles with an **Inverted Polygon Mask** to highlight the active service area (North Delhi), dimming out unserviceable regions.
+- 👥 **Dedicated Role Portals:** 
+  - **User Dashboard (`UserDashboard.html`)**: Track active repairs, eco-impact metrics, and manage premium memberships.
+  - **Kaarigar Dashboard (`KaarigarDashboard.html`)**: Profile management, service request handling, and business insights.
+  - **Admin Control Center (`Admin.html`)**: Kaarigar verification pipelines, site analytics, and support ticket management.
+- 🔒 **Privacy-First Architecture:** Strict Role-Based Access Control (RBAC). Contact numbers and sensitive data are strictly masked from public view and accessible only through authorized requests to prevent data scraping.
+- 🌐 **Bilingual Accessibility:** Instant English ↔ Hindi localization toggle, keeping the UI inclusive for diverse demographics without layout shifts.
+- 💬 **Integrated AI Support:** Floating, draggable AI Chatbot embedded directly into the platform providing instant, contextual assistance.
+- 💳 **Premium Membership Tiers:** Users can subscribe for free priority services and waived upfront connection fees.
 
 ---
 
@@ -47,12 +44,15 @@ A floating, draggable AI Chatbot (powered by Streamlit & Groq) is embedded direc
 
 | Page | Description |
 | :--- | :--- |
-| **`index.html`** | The landing page featuring a repair vs. replace calculator, dynamic testimonials, an interactive accordion FAQ, and a premium glassmorphism aesthetic. |
-| **`RepairLink.html`** | The core map interface where users locate and discover kaarigars. |
-| **`Pricing.html`** | Transparent breakdown of our minimal ₹9 connection fee model (no commissions on repairs). |
+| **`index.html`** | Landing page featuring a repair vs. replace calculator, dynamic testimonials, an accordion FAQ, and a premium aesthetic. |
+| **`RepairLink.html`** | The core map interface where users locate and request services from local kaarigars. |
+| **`Pricing.html`** | Transparent breakdown of our dynamic connection fee models and premium plans. |
+| **`UserDashboard.html`** | Complete user tracking hub with gamification progress and active repair monitoring. |
+| **`KaarigarDashboard.html`**| Business hub for artisans featuring map integration, earnings previews, and request management. |
+| **`Admin.html`** | Analytics dashboard with dynamic charts and Kaarigar approval workflows. |
 | **`Auth.html`** | Secure authentication handling via Firebase Auth. |
-| **`AboutUs.html`** | The mission statement page, featuring an interactive audio equalizer for the platform's custom theme song. |
-| **`script.js`** | The brain of the frontend—handling Mapbox initialization, Firestore listeners, auth state, and UI logic. |
+| **`AboutUs.html`** | Mission statement page, featuring an interactive audio equalizer for the custom theme song. |
+| **`script.js`** | The frontend brain handling Leaflet maps, Firestore listeners, auth state, and complex UI routing logic. |
 
 ---
 
@@ -65,7 +65,7 @@ A floating, draggable AI Chatbot (powered by Streamlit & Groq) is embedded direc
 *   **Frontend:** HTML5, CSS3, Vanilla JavaScript (Zero heavy frameworks for maximum performance)
 *   **Backend & Database:** Firebase (Cloud Firestore, Authentication)
 *   **Hosting:** Firebase Hosting
-*   **Mapping:** Mapbox GL JS with CARTO basemaps
+*   **Mapping:** Leaflet JS with CARTO basemaps
 *   **AI Chatbot (External):** Python, Streamlit, LangChain, Groq
 
 ---
