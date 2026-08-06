@@ -343,8 +343,10 @@
     .services-grid{grid-template-columns:1fr;}
     .impact-grid{grid-template-columns:1fr;}
     .hero-stats{gap:16px; flex-wrap:wrap;}
-    .hc-ticket{transform:rotate(-3deg) scale(0.65); top:0px; right:-20px;}
-    .hc-p1,.hc-p3{display:none;}
+    .hc-ticket{transform:rotate(-3deg) scale(0.65); top:-10px; right:-20px;}
+    .hc-p1{top:120px; left:-10px; transform:rotate(2deg) scale(0.7); display:flex;}
+    .hc-p2{bottom:0px; right:10px; transform:rotate(-1.5deg) scale(0.7); display:flex;}
+    .hc-p3{top:60px; left:20px; transform:rotate(4deg) scale(0.7); display:flex;}
     .join-copy h3{font-size:23px;}
     .logostrip .ls-items{gap:15px; justify-content:center;}
   }
@@ -724,9 +726,16 @@
       <a href="Auth.html" id="navLogin">Sign In</a>
       <a href="#" id="navLogout" style="display:none;">Logout</a>
     </nav>
-    <div class="lang-toggle-nav" id="langToggle" style="display:flex; border:1px solid var(--line); border-radius:99px; padding:4px;">
-      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" data-lang="hi" onclick="setLang('hi')">हिं</button>
+    <style>
+      .mobile-auth-btn { display: none; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--ink); }
+      @media(max-width: 960px){ .mobile-auth-btn { display: block; } }
+    </style>
+    <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+      <a href="Auth.html" class="mobile-auth-btn" id="mobileAuthBtn">Sign In</a>
+      <div class="lang-toggle-nav" id="langToggle" style="display:flex; border:1px solid var(--line); border-radius:99px; padding:4px;">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="hi" onclick="setLang('hi')">हिं</button>
+      </div>
     </div>
   </div>
 </header>
@@ -1440,61 +1449,7 @@
 
 
 
-  // Chatbot Button Draggable Logic
-  const chatbotBtn = document.getElementById('chatbotBtn');
-  let isChatDragging = false;
-  let hasChatDragged = false;
-  let chatOffsetX, chatOffsetY;
-  let chatStartX, chatStartY;
-
-  const chatDragStart = (e) => {
-    isChatDragging = true;
-    hasChatDragged = false;
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    chatStartX = clientX;
-    chatStartY = clientY;
-    chatOffsetX = clientX - chatbotBtn.getBoundingClientRect().left;
-    chatOffsetY = clientY - chatbotBtn.getBoundingClientRect().top;
-    chatbotBtn.style.cursor = 'grabbing';
-    chatbotBtn.style.transition = 'none';
-  };
-
-  const chatDrag = (e) => {
-    if (!isChatDragging) return;
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    
-    // Require at least 5px movement to consider it a drag
-    if (!hasChatDragged && (Math.abs(clientX - chatStartX) > 5 || Math.abs(clientY - chatStartY) > 5)) {
-      hasChatDragged = true;
-    }
-    
-    chatbotBtn.style.left = (clientX - chatOffsetX) + 'px';
-    chatbotBtn.style.top = (clientY - chatOffsetY) + 'px';
-    chatbotBtn.style.bottom = 'auto';
-    chatbotBtn.style.right = 'auto';
-  };
-
-  const chatDragEnd = () => {
-    if (!isChatDragging) return;
-    isChatDragging = false;
-    chatbotBtn.style.cursor = 'pointer';
-    chatbotBtn.style.transition = 'transform 0.3s, box-shadow 0.3s';
-    if (!hasChatDragged) {
-      openChatbot();
-    }
-  };
-
-  chatbotBtn.addEventListener('mousedown', chatDragStart);
-  document.addEventListener('mousemove', chatDrag);
-  document.addEventListener('mouseup', chatDragEnd);
-  chatbotBtn.addEventListener('touchstart', chatDragStart, {passive: true});
-  document.addEventListener('touchmove', chatDrag, {passive: false});
-  document.addEventListener('touchend', chatDragEnd);
-
-  // Overwrite the inline onclick for chatbotBtn to prevent double-firing
-  chatbotBtn.removeAttribute('onclick');
+  // Chatbot Button Draggable Logic has been removed to fix clicking issues on mobile
 
   // Slider Logic
   const slider = document.getElementById('repairSlider');
