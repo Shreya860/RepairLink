@@ -570,26 +570,32 @@ document.addEventListener('DOMContentLoaded', () => {
     map.flyTo([loc.lat, loc.lng], 14, { duration: 0.9 });
   });
 
-  document.getElementById('heroClose').addEventListener('click', () => {
-    document.getElementById('heroScrim').classList.add('closed');
-    const returnBtn = document.getElementById('returnHomeBtn');
-    const premiumBox = document.querySelector('.premium-float');
-    if(returnBtn) returnBtn.style.display = 'flex';
-    if(premiumBox) premiumBox.style.display = 'flex';
-  });
+  const heroClose = document.getElementById('heroClose');
+  if (heroClose) {
+    heroClose.addEventListener('click', () => {
+      document.getElementById('heroScrim').classList.add('closed');
+      const returnBtn = document.getElementById('returnHomeBtn');
+      const premiumBox = document.querySelector('.premium-float');
+      if(returnBtn) returnBtn.style.display = 'flex';
+      if(premiumBox) premiumBox.style.display = 'flex';
+    });
+  }
 
   // ---------- Role Selector & Onboarding Logic ----------
   const roleScrim = document.getElementById('roleScrim');
   const roleCustomer = document.getElementById('roleCustomer');
   const roleArtisan = document.getElementById('roleArtisan');
 
-  roleCustomer.addEventListener('click', () => {
-    roleScrim.classList.add('closed');
-  });
-
-  roleArtisan.addEventListener('click', () => {
-    window.location.href = 'Auth.html';
-  });
+  if (roleCustomer) {
+    roleCustomer.addEventListener('click', () => {
+      roleScrim.classList.add('closed');
+    });
+  }
+  if (roleArtisan) {
+    roleArtisan.addEventListener('click', () => {
+      window.location.href = 'Auth.html';
+    });
+  }
 
   // Toast logic
   function showToast(msg) {
