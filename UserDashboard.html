@@ -26,14 +26,14 @@
   }
   .sidebar-brand { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 0 8px; margin-bottom: 28px; color: var(--ink); }
   .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-  .sidebar-nav button {
+  .sidebar-nav button, .sidebar-nav a {
     display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none;
     padding: 11px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s;
+    color: var(--ink-dim); cursor: pointer; transition: background 0.15s, color 0.15s; text-decoration: none;
   }
-  .sidebar-nav button:hover { background: var(--paper-2); color: var(--ink); }
-  .sidebar-nav button.active { background: var(--marigold-dim); color: #8A5C00; }
-  .sidebar-nav button svg { flex-shrink: 0; }
+  .sidebar-nav button:hover, .sidebar-nav a:hover { background: var(--paper-2); color: var(--ink); }
+  .sidebar-nav button.active, .sidebar-nav a.active { background: var(--marigold-dim); color: #8A5C00; }
+  .sidebar-nav button svg, .sidebar-nav a svg { flex-shrink: 0; }
   .sidebar-footer { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line); }
   .sidebar-footer a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-dim); text-decoration: none; cursor: pointer; }
   .sidebar-footer a:hover { background: var(--paper-2); color: var(--ink); }
