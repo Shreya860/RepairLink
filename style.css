@@ -330,33 +330,6 @@
   }
 }.blur-locked-btn { filter: blur(3.5px); pointer-events: auto; }
 
-  /* ---------- Return Home Button ---------- */
-  .return-home-btn {
-    position: fixed;
-    top: 65%;
-    left: 20px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--ink, #1F1B13);
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 99px;
-    text-decoration: none;
-    font-weight: 700;
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    cursor: grab;
-    user-select: none;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .return-home-btn:active { cursor: grabbing; }
-  .return-home-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 34px rgba(0,0,0,0.25);
-  }
 
   /* ---------- Demo data disclaimer ---------- */
   .disclaimer-bar{
@@ -481,14 +454,6 @@
     .chat-cta:hover{transform:none;}
     .premium-float { display: none !important; }
     .leaflet-control-zoom { display: none !important; }
-    .return-home-btn {
-      top: 12px;
-      left: auto;
-      right: 58px;
-      padding: 6px 12px;
-      font-size: 12px;
-      box-shadow: 0 6px 20px rgba(34,29,20,0.1);
-    }
     .locate-box{width:calc(100% - 28px); bottom:14px; top:auto; left:14px; padding:14px;}
     .locate-box h3{font-size:14px;}
     .hero-card{padding:28px 22px;}
