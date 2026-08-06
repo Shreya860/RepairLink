@@ -434,13 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentArtisanIdx = null;
 
   function showStory(a, idx){
-    const isAdmin = (window.windowUserRole === 'admin');
-    
-    if (!isAdmin) {
-      alert("After your request to the service, if it gets verified after payment then you can see the details, not before that.");
-      return;
-    }
-
     storyView.style.display = 'block';
     resultsView.style.display = 'none';
     currentArtisan = a;
