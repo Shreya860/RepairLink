@@ -473,6 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`).join('');
     const proximityBar = document.querySelector('.proximity-bar');
     const whatsappPanel = document.getElementById('whatsappPanel');
+    const isAdmin = (window.windowUserRole === 'admin');
     
     if (!isAdmin) {
       whatsappPanel.style.filter = 'blur(5px)';
