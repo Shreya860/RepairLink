@@ -138,7 +138,12 @@
   <div class="main-area">
 
 
-<div class="auth-container glass-card fade-in-up" id="authStep1">
+<div id="authLoading" style="text-align: center; font-family: 'Manrope', sans-serif; font-size: 15px; color: var(--ink-dim); margin-top: 40px;">
+  <div style="width: 24px; height: 24px; border: 3px solid var(--line); border-top-color: var(--marigold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 12px auto;"></div>
+  Checking secure session...
+  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+</div>
+<div class="auth-container glass-card fade-in-up" id="authStep1" style="display: none;">
   <div class="logo">
     <img src="logo.png" style="width: 32px; height: 32px; object-fit: contain;">
     RepairLink<span class="logo-leaf">.</span>

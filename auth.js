@@ -21,9 +21,16 @@ const completeSignupBtn = document.getElementById('completeSignupBtn');
 
 // Automatically route users who are already logged in
 onAuthStateChanged(auth, async (user) => {
-  if (user && !currentUser) {
-    currentUser = user;
-    await checkUserRole(currentUser);
+  const authLoading = document.getElementById('authLoading');
+  if (user) {
+    if (!currentUser) {
+      currentUser = user;
+      await checkUserRole(currentUser);
+    }
+  } else {
+    // Not logged in
+    if (authLoading) authLoading.style.display = 'none';
+    if (authStep1) authStep1.style.display = 'block';
   }
 });
 
