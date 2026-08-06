@@ -60,9 +60,9 @@
   
   @media (max-width: 1024px) {
     .admin-shell { flex-direction: column; }
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow: visible; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; gap: 8px; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
     .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; padding: 8px 12px; justify-content: center; }
     .main-area { flex: 1; overflow-y: visible; }
   }

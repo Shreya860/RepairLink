@@ -46,9 +46,9 @@
   .page-head p { font-size: 13px; color: var(--ink-dim); margin-top: 4px; }
 
   @media (max-width: 1024px) {
-    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow: visible; padding: 12px; -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
-    .sidebar-nav { flex-direction: row; gap: 8px; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
     .sidebar-nav button, .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; }
     .sidebar-footer { display: none; }
     .admin-shell { flex-direction: column; }
@@ -200,7 +200,7 @@
       <!-- Badges Section -->
       <div style="margin-bottom: 24px;">
         <h3 style="font-family:'Fraunces', serif; font-size: 18px; margin-bottom: 12px; color: var(--ink);">Your Badges</h3>
-        <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;">
+        <div style="display: flex; gap: 16px; overflow: visible; padding-bottom: 8px;">
           <!-- Badge 1: Active -->
           <div style="background: white; border: 1px solid var(--leaf); padding: 12px; border-radius: 12px; text-align: center; min-width: 100px; box-shadow: 0 4px 12px rgba(31,122,68,0.1);">
             <div style="font-size: 24px; margin-bottom: 4px;">🌱</div>
