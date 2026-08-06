@@ -471,11 +471,36 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="review-top"><span class="review-name">${r.n}</span><span class="stars">${starsSvg(td.rating)}</span></div>
         <div class="review-text">${r.t}</div>
       </div>`).join('');
+    const proximityBar = document.querySelector('.proximity-bar');
     const whatsappPanel = document.getElementById('whatsappPanel');
-    whatsappPanel.target = "_blank";
-    whatsappPanel.rel = "noopener";
-    whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
-    whatsappPanel.onclick = null;
+    
+    if (!isAdmin) {
+      proximityBar.style.filter = 'blur(5px)';
+      proximityBar.style.opacity = '0.6';
+      proximityBar.style.pointerEvents = 'none';
+      proximityBar.style.userSelect = 'none';
+
+      whatsappPanel.style.filter = 'blur(5px)';
+      whatsappPanel.style.opacity = '0.6';
+      whatsappPanel.style.pointerEvents = 'none';
+      whatsappPanel.style.userSelect = 'none';
+      whatsappPanel.href = '#';
+      whatsappPanel.onclick = (e) => { e.preventDefault(); };
+    } else {
+      proximityBar.style.filter = 'none';
+      proximityBar.style.opacity = '1';
+      proximityBar.style.pointerEvents = 'auto';
+      proximityBar.style.userSelect = 'auto';
+
+      whatsappPanel.style.filter = 'none';
+      whatsappPanel.style.opacity = '1';
+      whatsappPanel.style.pointerEvents = 'auto';
+      whatsappPanel.style.userSelect = 'auto';
+      whatsappPanel.target = "_blank";
+      whatsappPanel.rel = "noopener";
+      whatsappPanel.href = `https://wa.me/${a.phone}?text=${encodeURIComponent('Hi ' + a.name + ', I found you on RepairLink and would like help with a repair.')}`;
+      whatsappPanel.onclick = null;
+    }
 
     // Action button updates using the safe t18n helper
     const doneBtn = document.getElementById('markDoneBtn');
