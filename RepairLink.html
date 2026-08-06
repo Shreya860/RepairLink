@@ -69,7 +69,7 @@
   
   /* ---------- Sidebar shell ---------- */
   body { margin: 0; padding: 0; background: var(--paper); }
-  .admin-shell { display: flex; min-height: 100vh; overflow: hidden; }
+  .admin-shell { display: flex; height: 100dvh; overflow: hidden; }
   .sidebar {
     width: 240px; flex-shrink: 0; background: var(--paper); border-right: 1px solid var(--line);
     display: flex; flex-direction: column; padding: 24px 16px; position: relative; z-index: 100;
@@ -87,7 +87,7 @@
   
   .main-area { flex: 1; position: relative; display: flex; flex-direction: column; overflow: hidden; background: #FAF8F5; }
   
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
     .admin-shell { flex-direction: column; height: 100dvh; }
     .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; flex-shrink: 0; }
     .sidebar-brand { display: none; }
