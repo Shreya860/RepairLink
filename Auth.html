@@ -56,7 +56,7 @@
 
   /* ---------- Sidebar shell ---------- */
   body { margin: 0; padding: 0; background: var(--paper); overflow: auto; }
-  .admin-shell { display: flex; min-height: 100vh; overflow: hidden; }
+  .admin-shell { display: flex; height: 100dvh; width: 100%; overflow: hidden; }
   .sidebar {
     width: 240px; flex-shrink: 0; background: var(--paper); border-right: 1px solid var(--line);
     display: flex; flex-direction: column; padding: 24px 16px; position: relative; z-index: 100;
@@ -74,7 +74,7 @@
   
   .main-area { flex: 1; position: relative; display: flex; overflow: hidden; background: #FAF8F5; overflow-y: auto; }
   
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
     .admin-shell { flex-direction: column; }
     .sidebar { position: static; width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
     .sidebar-brand { display: none; }
@@ -93,7 +93,7 @@
 <link rel="icon" type="image/png" href="logo.png?v=2">
 <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
 </head>
-<body class="mesh-bg">
+<body>
 
 <div class="admin-shell">
   <!-- SIDEBAR -->
@@ -135,7 +135,7 @@
   </div>
 
   <!-- MAIN AREA -->
-  <div class="main-area">
+  <div class="main-area mesh-bg" style="align-items: center; padding: 40px 20px; overflow-y: auto;">
 
 
 <div id="authLoading" style="text-align: center; font-family: 'Manrope', sans-serif; font-size: 15px; color: var(--ink-dim); margin-top: 40px;">
