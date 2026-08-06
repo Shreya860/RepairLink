@@ -500,20 +500,26 @@ document.addEventListener('DOMContentLoaded', () => {
     openPanel();
   }
 
-  function popupHtml(a){
-    return `<b>${a.name}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${a.area}<br><span style="opacity:.7">${t18n('clickForStory')}</span>`;
+  window.openStory = function(idx) {
+    if (ARTISANS[idx]) {
+      showStory(ARTISANS[idx], idx);
+    }
+  };
+
+  function popupHtml(a, idx){
+    return `<div onclick="window.openStory(${idx})" style="cursor:pointer; display:block;"><b>${a.name}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${a.area}<br><span style="opacity:.8; color:var(--primary, #007aff); font-weight:600; display:inline-block; margin-top:4px;">${t18n('clickForStory')}</span></div>`;
   }
 
   const markers = [];
   ARTISANS.forEach((a, idx) => {
     const marker = L.marker([a.lat, a.lng], { icon: buildIcon(a.trade, false, isVerified(a)) }).addTo(map);
-    marker.bindPopup(popupHtml(a));
+    marker.bindPopup(popupHtml(a, idx));
     marker.on('click', () => showStory(a, idx));
     markers.push(marker);
   });
 
   function refreshMarkerPopups(){
-    markers.forEach((m, i) => m.setPopupContent(popupHtml(ARTISANS[i])));
+    markers.forEach((m, i) => m.setPopupContent(popupHtml(ARTISANS[i], i)));
   }
 
   function resetHighlights(){ markers.forEach((m, i) => m.setIcon(buildIcon(ARTISANS[i].trade, false, isVerified(ARTISANS[i])))); }
