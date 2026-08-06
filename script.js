@@ -475,11 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const whatsappPanel = document.getElementById('whatsappPanel');
     
     if (!isAdmin) {
-      proximityBar.style.filter = 'blur(5px)';
-      proximityBar.style.opacity = '0.6';
-      proximityBar.style.pointerEvents = 'none';
-      proximityBar.style.userSelect = 'none';
-
       whatsappPanel.style.filter = 'blur(5px)';
       whatsappPanel.style.opacity = '0.6';
       whatsappPanel.style.pointerEvents = 'none';
@@ -487,11 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
       whatsappPanel.href = '#';
       whatsappPanel.onclick = (e) => { e.preventDefault(); };
     } else {
-      proximityBar.style.filter = 'none';
-      proximityBar.style.opacity = '1';
-      proximityBar.style.pointerEvents = 'auto';
-      proximityBar.style.userSelect = 'auto';
-
       whatsappPanel.style.filter = 'none';
       whatsappPanel.style.opacity = '1';
       whatsappPanel.style.pointerEvents = 'auto';
@@ -506,9 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const doneBtn = document.getElementById('markDoneBtn');
     const reportBtn = document.getElementById('reportBtn');
     doneBtn.disabled = false; reportBtn.disabled = false;
-    doneBtn.classList.remove('confirmed'); reportBtn.classList.remove('confirmed');
-    doneBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg><span data-i18n="markDone">' + t18n('markDone') + '</span>';
-    reportBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><span data-i18n="reportIssue">' + t18n('reportIssue') + '</span>';
 
     openPanel();
   }
