@@ -1395,12 +1395,15 @@
   let isChatDragging = false;
   let hasChatDragged = false;
   let chatOffsetX, chatOffsetY;
+  let chatStartX, chatStartY;
 
   const chatDragStart = (e) => {
     isChatDragging = true;
     hasChatDragged = false;
     const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
     const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    chatStartX = clientX;
+    chatStartY = clientY;
     chatOffsetX = clientX - chatbotBtn.getBoundingClientRect().left;
     chatOffsetY = clientY - chatbotBtn.getBoundingClientRect().top;
     chatbotBtn.style.cursor = 'grabbing';
@@ -1409,9 +1412,14 @@
 
   const chatDrag = (e) => {
     if (!isChatDragging) return;
-    hasChatDragged = true;
     const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
     const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    
+    // Require at least 5px movement to consider it a drag
+    if (!hasChatDragged && (Math.abs(clientX - chatStartX) > 5 || Math.abs(clientY - chatStartY) > 5)) {
+      hasChatDragged = true;
+    }
+    
     chatbotBtn.style.left = (clientX - chatOffsetX) + 'px';
     chatbotBtn.style.top = (clientY - chatOffsetY) + 'px';
     chatbotBtn.style.bottom = 'auto';
