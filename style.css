@@ -455,6 +455,10 @@
     .leaflet-control-zoom { display: none !important; }
     .locate-box{width:calc(100% - 28px); bottom:14px; top:auto; left:14px; padding:10px 14px;}
     .locate-box h3{display:none;}
+    .locate-box select{padding:8px 10px; font-size:12px; margin-bottom:8px;}
+    .locate-btn{padding:10px; font-size:13px;}
+    .locate-btn svg{width:16px; height:16px;}
+    .locate-eyebrow{font-size:9px; margin-bottom:4px;}
     .hero-card{padding:28px 22px;}
     .hero-card h2{font-size:23px;}
     .hero-card p{font-size:13.5px;}
