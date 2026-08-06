@@ -441,11 +441,11 @@
     header{padding:12px; flex-direction:column; gap:8px;}
     .brand{padding:10px 14px;}
     .brand p{display:none;}
-    .legend{min-width:auto; width:100%; padding:10px 12px; gap:6px 12px; display:none; flex-direction:column; margin-top:0;}
+    .legend{min-width:auto; width:max-content; max-width:calc(100vw - 32px); padding:8px 10px; gap:6px; display:none; flex-direction:column; margin-top:4px;}
     .legend.open{display:flex;}
-    .legend-title{font-size:13px;}
+    .legend-title{font-size:12px;}
     .legend-sub{display:none;}
-    .legend-row{font-size:12px; gap:8px;}
+    .legend-row{font-size:11px; gap:6px;}
     .legend-dot{width:22px; height:22px;}
     .legend-dot svg{width:19px; height:19px;}
     .chat-cta{position:fixed; top:auto; left:auto; right:14px; bottom:104px; transform:none; width:50px; height:50px; padding:0; border-radius:50%; justify-content:center;}
@@ -453,8 +453,8 @@
     .chat-cta:hover{transform:none;}
     .premium-float { display: none !important; }
     .leaflet-control-zoom { display: none !important; }
-    .locate-box{width:calc(100% - 28px); bottom:14px; top:auto; left:14px; padding:14px;}
-    .locate-box h3{font-size:14px;}
+    .locate-box{width:calc(100% - 28px); bottom:14px; top:auto; left:14px; padding:10px 14px;}
+    .locate-box h3{display:none;}
     .hero-card{padding:28px 22px;}
     .hero-card h2{font-size:23px;}
     .hero-card p{font-size:13.5px;}
