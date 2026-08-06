@@ -341,11 +341,15 @@
 </script>
 
 <!-- Return to Home Draggable Button -->
-<a href="index.html" class="return-home-btn" id="returnHomeBtn" style="position:fixed; top:65%; left:20px; z-index:9999; display:flex; align-items:center; gap:6px; background:var(--ink, #1F1B13); color:#fff; padding:8px 14px; border-radius:99px; text-decoration:none; font-weight:700; font-family:'Manrope', sans-serif; font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,0.15); cursor:grab; user-select:none; transition: transform 0.3s, box-shadow 0.3s;">
+<a href="index.html" class="return-home-btn" id="returnHomeBtn">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-  <span>Return</span>
+  Return
 </a>
+
+<!-- Scripts -->
+<script type="module" src="script.js"></script>
 <script>
+  // Simple draggable logic for Return Home button
   (function(){
     const btn = document.getElementById('returnHomeBtn');
     if(!btn) return;
