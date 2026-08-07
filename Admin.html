@@ -452,19 +452,37 @@
             ? `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Assigned</span>` 
             : `<span class="badge" style="background:#FFF9C4; color:#F57F17;">Pending Assignment</span>`;
         }
+        if (o.status === 'progress') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">In Progress</span>`;
+        if (o.status === 'ready') statusBadge = `<span class="badge" style="background:#E3F2FD; color:#1565C0;">Ready for Drop-off</span>`;
         if (o.status === 'done') statusBadge = `<span class="badge" style="background:var(--leaf-dim); color:#1F7A44;">Done</span>`;
+
+        // Flag orders stuck active for 2+ days with no update — likely forgotten, needs a manual check-in call
+        const lastTouched = (o.statusUpdatedAt || o.assignedAt)?.toDate ? (o.statusUpdatedAt || o.assignedAt).toDate() : null;
+        const daysStale = lastTouched ? Math.floor((Date.now() - lastTouched.getTime()) / 86400000) : null;
+        const isStale = ['pending', 'progress', 'ready'].includes(o.status) && o.kaarigarId && daysStale !== null && daysStale >= 2;
+        if (isStale) statusBadge += `<div style="margin-top:4px;"><span class="badge" style="background:#FFEBEE; color:#C62828; font-size:10px;">⚠ No update in ${daysStale}d — call to check</span></div>`;
 
         let actionHtml = '';
         if (!o.kaarigarId && (o.status === 'pending_payment' || o.status === 'pending')) {
           actionHtml = `<button class="btn-small marigold" onclick="openAssignModal('${oid}', '${o.trade}')">Assign Kaarigar</button>`;
-        } else if (o.kaarigarId && o.status === 'pending') {
+        } else if (o.kaarigarId && ['pending', 'progress', 'ready'].includes(o.status)) {
           const isFree = o.paymentAmount === 0;
           let revokePhotos = '';
           if (o.beforePhotoUrl) revokePhotos += `<a href="${o.beforePhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">Before Photo</a>`;
           if (o.afterPhotoUrl) revokePhotos += `<a href="${o.afterPhotoUrl}" target="_blank" style="color:var(--leaf); font-size:11px; text-decoration:underline; display:block;">After Photo</a>`;
-          
+
+          const statusOptions = [
+            { v: 'pending', l: 'Assigned' },
+            { v: 'progress', l: 'In Progress' },
+            { v: 'ready', l: 'Ready for Drop-off' },
+            { v: 'done', l: 'Mark Completed' },
+          ].map(s => `<option value="${s.v}" ${o.status === s.v ? 'selected' : ''}>${s.l}</option>`).join('');
+
           actionHtml = `
             ${revokePhotos}
+            <select onchange="updateOrderStatus('${oid}', this.value)" style="font-size:12px; padding:4px 6px; border-radius:6px; border:1px solid var(--line); margin-top:4px; font-family:'Manrope',sans-serif;">
+              ${statusOptions}
+            </select>
             <button class="btn-small danger" onclick="revokeAssignment('${oid}', ${isFree})" style="margin-top:4px;">Revoke Kaarigar</button>
           `;
         } else {
@@ -546,11 +564,22 @@
     const totalRevenue = premiumRevenue + serviceRevenue;
     const topPage = sortedStats && sortedStats.length ? sortedStats[0] : null;
 
+    const completedOrders = orders.filter(o => o.status === 'done');
+    const ratedOrders = completedOrders.filter(o => o.rating);
+    const avgRating = ratedOrders.length
+      ? (ratedOrders.reduce((s, o) => s + Number(o.rating || 0), 0) / ratedOrders.length).toFixed(1)
+      : null;
+
     document.getElementById('overviewCards').innerHTML = `
       <div class="stat-card">
         <div class="stat-label">Total Revenue</div>
         <div class="stat-num">₹${totalRevenue}</div>
         <div class="stat-sub">Premium (₹${premiumRevenue}) + Services (₹${serviceRevenue})</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Successful Services</div>
+        <div class="stat-num">${completedOrders.length}</div>
+        <div class="stat-sub">${avgRating ? avgRating + ' ★ avg (' + ratedOrders.length + ' rated)' : 'No ratings yet'}</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Premium Users</div>
@@ -771,7 +800,7 @@
     btn.textContent = 'Assigning...'; btn.disabled = true;
     try {
       const kData = window.adminKaarigarsData[kaarigarId];
-      await updateDoc(doc(db, 'orders', orderId), { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments });
+      await updateDoc(doc(db, 'orders', orderId), { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments, assignedAt: new Date() });
       showToast("Kaarigar assigned successfully!");
       document.getElementById('assignModal').style.display = 'none';
       loadData();
@@ -779,6 +808,22 @@
       showToast("Error assigning kaarigar: " + err.message, 'error');
     } finally {
       btn.textContent = 'Approve & Assign'; btn.disabled = false;
+    }
+  };
+
+  window.updateOrderStatus = async function(orderId, newStatus) {
+    if (newStatus === 'done' && !confirm("Mark this service as completed? The customer will be prompted to leave a rating.")) {
+      loadData(); // revert the dropdown visually
+      return;
+    }
+    try {
+      const updates = { status: newStatus, statusUpdatedAt: new Date() };
+      if (newStatus === 'done') updates.completedAt = new Date();
+      await updateDoc(doc(db, 'orders', orderId), updates);
+      showToast(newStatus === 'done' ? "Marked as completed!" : "Status updated.");
+      loadData();
+    } catch (err) {
+      showToast("Error updating status: " + err.message, 'error');
     }
   };
 
