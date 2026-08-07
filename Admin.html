@@ -376,13 +376,14 @@
     let sortedStats = [];
     try {
       const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
-      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'Addkaarigar.html', 'Dashboard.html'];
+      const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'Addkaarigar.html'];
       let mergedStats = {};
       
       if (statsDoc.exists()) {
         const statsData = statsDoc.data();
         // First add all dynamically discovered pages
         for (const [p, c] of Object.entries(statsData)) {
+          if (p === 'Dashboard.html') continue; // Skip non-existent page
           let key = p;
           if (key === 'AddKaarigar.html') key = 'Addkaarigar.html';
           mergedStats[key] = (mergedStats[key] || 0) + c;
