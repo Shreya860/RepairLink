@@ -246,6 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Escapes live Firestore kaarigar data (name, area, etc.) before it's templated into
+  // innerHTML/Leaflet popups. This data is visible and editable to any authenticated
+  // kaarigar account, and is rendered to every site visitor pre-auth — without this,
+  // a malicious "area" or "name" field would execute as script for anyone who loads the map.
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function t18n(key) {
     return (translations[currentLang] && translations[currentLang][key]) || translations['en'][key] || key;
   }
@@ -446,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
     badge.classList.toggle('pending', !td.verified);
     document.getElementById('verifyBadgeText').textContent = td.verified ? t18n('verifiedText') : t18n('pendingText');
     const tag = document.getElementById('tradeTag');
-    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(a.trade)} · ${a.area}`;
+    tag.innerHTML = `<svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(a.trade)} · ${escapeHtml(a.area)}`;
     tag.style.background = t.dim;
     tag.style.color = t.color;
     document.getElementById('starsRow').innerHTML = starsSvg(td.rating);
@@ -508,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function popupHtml(a, idx){
-    return `<div onclick="window.openStory(${idx})" style="cursor:pointer; display:block;"><b>${a.name}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${a.area}<br><span style="opacity:.8; color:var(--primary, #007aff); font-weight:600; display:inline-block; margin-top:4px;">${t18n('clickForStory')}</span></div>`;
+    return `<div onclick="window.openStory(${idx})" style="cursor:pointer; display:block;"><b>${escapeHtml(a.name)}</b>${isVerified(a) ? ` <span style="color:#1F7A44">✓ ${t18n('verifiedText')}</span>` : ''}<br>${tradeLabel(a.trade)} · ${escapeHtml(a.area)}<br><span style="opacity:.8; color:var(--primary, #007aff); font-weight:600; display:inline-block; margin-top:4px;">${t18n('clickForStory')}</span></div>`;
   }
 
   const markers = [];
@@ -555,13 +569,13 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'result-card';
       card.innerHTML = `
         <div class="result-top">
-          <div class="result-name">${info.artisan.name}</div>
+          <div class="result-name">${escapeHtml(info.artisan.name)}</div>
           <div class="result-dist">${formatDistance(info.dist)} ${t18n('awayLabel')}</div>
         </div>
         <div class="result-trade" style="background:${t.dim}; color:${t.color}">
           <svg viewBox="0 0 24 24">${t.icon.replaceAll('CURR', t.color)}</svg> ${tradeLabel(trade)}
         </div>
-        <div class="result-area">${info.artisan.area}</div>`;
+        <div class="result-area">${escapeHtml(info.artisan.area)}</div>`;
       card.addEventListener('click', () => showStory(info.artisan, info.idx));
       list.appendChild(card);
       markers[info.idx].setIcon(buildIcon(trade, true, isVerified(info.artisan)));

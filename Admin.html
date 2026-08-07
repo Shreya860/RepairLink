@@ -313,6 +313,19 @@
 </div>
 
 <script type="module">
+  // Escapes any user-typed text before it's templated into innerHTML, so a submitted
+  // contact-form message / repair description / review can't execute as script inside
+  // this authenticated admin session (stored XSS -> full admin session compromise).
+  window.escapeHtml = function(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   window.showToast = function(message, type = 'success') {
     let toast = document.getElementById('globalToast');
     if(!toast) {
@@ -492,9 +505,9 @@
         }
 
         ordersBody.innerHTML += `<tr>
-          <td style="font-weight:600">${o.item || 'N/A'}</td>
+          <td style="font-weight:600">${escapeHtml(o.item) || 'N/A'}</td>
           <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
-          <td>${o.kaarigarName || o.kaarigarId || 'Unassigned'}</td>
+          <td>${escapeHtml(o.kaarigarName) || o.kaarigarId || 'Unassigned'}</td>
           <td>${statusBadge}</td>
           <td>${actionHtml}</td>
         </tr>`;
@@ -525,9 +538,9 @@
                <button class="btn-small marigold" onclick="markMessageResolved('${id}')">Mark Resolved</button>`;
           let dateStr = m.createdAt ? new Date(m.createdAt.seconds * 1000).toLocaleString() : 'Unknown';
           messagesBody.innerHTML += `<tr style="${isResolved ? 'opacity:0.6;' : 'font-weight:500;'}">
-            <td>${m.name || 'Unknown'}</td>
-            <td>${m.contactInfo || '-'}</td>
-            <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${m.message || ''}</td>
+            <td>${escapeHtml(m.name) || 'Unknown'}</td>
+            <td>${escapeHtml(m.contactInfo) || '-'}</td>
+            <td style="max-width:300px; word-wrap:break-word; white-space:pre-wrap;">${escapeHtml(m.message) || ''}</td>
             <td>${dateStr}</td>
             <td>${actionHtml}</td>
           </tr>`;

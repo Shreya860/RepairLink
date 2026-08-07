@@ -365,6 +365,18 @@
 </div>
 
 <script type="module">
+  // Escapes user-typed text before it's templated into innerHTML (repair descriptions,
+  // kaarigar names, admin notes) so it can't inject markup/script into other users' pages.
+  window.escapeHtml = function(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   window.showToast = function(message, type = 'success') {
     let toast = document.getElementById('globalToast');
     if(!toast) {
@@ -632,6 +644,13 @@
       const snap = await getDocs(q);
       const listEl = document.getElementById('liveRequestsList');
       const recentEl = document.getElementById('recentRepairsList');
+      if (recentEl && !recentEl.dataset.rateListenerBound) {
+        recentEl.dataset.rateListenerBound = '1';
+        recentEl.addEventListener('click', (e) => {
+          const btn = e.target.closest('.rate-kaarigar-btn');
+          if (btn) openRatingModal(btn.dataset.oid, btn.dataset.kid, btn.dataset.kname);
+        });
+      }
       listEl.innerHTML = '';
       recentEl.innerHTML = '';
       
@@ -655,7 +674,7 @@
           let actionHtml = '';
           if (!o.rating) {
              if (!pendingRatingOrder) pendingRatingOrder = { oid, kaarigarId: o.kaarigarId, kaarigarName: o.kaarigarName || 'Kaarigar' };
-             actionHtml = `<button onclick="openRatingModal('${oid}', '${o.kaarigarId}', '${o.kaarigarName || 'Kaarigar'}')" style="margin-top:8px; background:var(--marigold); color:var(--ink); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">★ Rate Kaarigar</button>`;
+             actionHtml = `<button class="rate-kaarigar-btn" data-oid="${escapeHtml(oid)}" data-kid="${escapeHtml(o.kaarigarId)}" data-kname="${escapeHtml(o.kaarigarName || 'Kaarigar')}" style="margin-top:8px; background:var(--marigold); color:var(--ink); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">★ Rate Kaarigar</button>`;
           } else {
              actionHtml = `<div style="margin-top:8px; font-size:12px; color:var(--ink-dim);">You rated: ${o.rating} ★</div>`;
           }
@@ -664,8 +683,8 @@
             <div class="list-item" style="flex-direction:column; align-items:stretch;">
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div class="list-info">
-                  <div class="list-title">${o.item}</div>
-                  <div class="list-meta">${o.date || 'Completed'} • ${o.kaarigarName || 'Unknown'}</div>
+                  <div class="list-title">${escapeHtml(o.item)}</div>
+                  <div class="list-meta">${o.date || 'Completed'} • ${escapeHtml(o.kaarigarName) || 'Unknown'}</div>
                 </div>
                 <span class="status-badge" style="background:var(--leaf-dim); color:#1F7A44;">Completed</span>
               </div>
@@ -692,8 +711,8 @@
           statusBadge = `<span class="status-badge" style="background:#E3F2FD; color:#1565C0;">${badgeText}</span>`;
           adminNotes = `
             <div style="margin-top:12px; background:var(--paper-2); padding:12px; border-radius:8px; font-size:13px;">
-              <strong>Assigned:</strong> ${o.kaarigarName || 'Unknown Kaarigar'}<br>
-              <strong>Admin Note:</strong> ${o.adminComments || 'None'}<br>
+              <strong>Assigned:</strong> ${escapeHtml(o.kaarigarName) || 'Unknown Kaarigar'}<br>
+              <strong>Admin Note:</strong> ${escapeHtml(o.adminComments) || 'None'}<br>
             </div>
           `;
 
@@ -706,7 +725,7 @@
 
             completeAction = `
               <div style="margin-top:12px; ${isStale ? 'background:var(--marigold-dim); border:1px solid var(--marigold); border-radius:8px; padding:12px;' : ''}">
-                ${isStale ? `<div style="font-size:13px; font-weight:700; color:#8A5C00; margin-bottom:8px;">Has your ${o.item} been repaired? Let us know so we can close this out.</div>` : ''}
+                ${isStale ? `<div style="font-size:13px; font-weight:700; color:#8A5C00; margin-bottom:8px;">Has your ${escapeHtml(o.item)} been repaired? Let us know so we can close this out.</div>` : ''}
                 <button onclick="markOrderCompleted('${oid}')" style="background:var(--leaf); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12.5px;">✓ Mark as Completed</button>
               </div>
             `;
@@ -717,7 +736,7 @@
           <div class="list-item" style="flex-direction:column; align-items:stretch;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div class="list-info">
-                <div class="list-title">${o.item}</div>
+                <div class="list-title">${escapeHtml(o.item)}</div>
                 <div class="list-meta">${o.date || 'Today'}</div>
               </div>
               ${statusBadge}

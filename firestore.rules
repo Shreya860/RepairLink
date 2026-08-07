@@ -12,15 +12,30 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
+      allow read: if isOwner(userId) || isAdmin();
+      // A user can create their own profile at signup, but role must be 'user' or
+      // 'kaarigar' — never 'admin' — and only the platform grants admin manually.
+      allow create: if isOwner(userId) && request.resource.data.role in ['user', 'kaarigar'];
+      // A user may update their own profile, but can NEVER touch role, uid, or isPremium
+      // themselves — those require admin (isPremium should only flip after verified payment).
+      allow update: if isAdmin() ||
+        (isOwner(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'uid', 'isPremium']));
+      allow delete: if isAdmin();
     }
 
     match /kaarigars/{docId} {
       allow read: if true;
-      allow write: if isAdmin() || (request.auth != null && 
-        (resource == null || resource.data.uid == request.auth.uid) && 
-        (request.resource == null || request.resource.data.uid == request.auth.uid)
-      );
+      // A linked kaarigar account may create/edit their own profile, but can never
+      // self-verify or fabricate their own rating/review/job stats — those are
+      // admin- or system-controlled trust signals.
+      allow create: if isAdmin() ||
+        (request.auth != null && request.resource.data.uid == request.auth.uid &&
+          request.resource.data.get('verified', false) == false &&
+          !request.resource.data.keys().hasAny(['rating', 'reviewCount', 'jobsCompleted']));
+      allow update: if isAdmin() ||
+        (request.auth != null && resource.data.uid == request.auth.uid &&
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'verified', 'rating', 'reviewCount', 'jobsCompleted']));
+      allow delete: if isAdmin();
     }
     
     match /orders/{docId} {
@@ -47,13 +62,24 @@ service cloud.firestore {
     }
     
     match /messages/{docId} {
-      allow create: if true;
+      // Contact form stays open to logged-out visitors, but now requires the expected
+      // shape and caps field sizes — reduces junk/spam and oversized payload abuse.
+      // NOTE: this does NOT stop XSS by itself — Admin.html must also escape this text
+      // before rendering it, since rules can't sanitize content, only gate write access.
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message']) &&
+        request.resource.data.name is string && request.resource.data.name.size() < 200 &&
+        request.resource.data.email is string && request.resource.data.email.size() < 200 &&
+        request.resource.data.message is string && request.resource.data.message.size() < 3000;
       allow read, update, delete: if isAdmin();
     }
     
     match /stats/{docId} {
       allow read: if isAdmin();
-      allow write: if true;
+      // Analytics counter: can only be incremented/merged, never replaced or deleted
+      // wholesale by an anonymous visitor.
+      allow update: if true;
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
     }
   }
 }
