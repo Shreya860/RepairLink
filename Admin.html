@@ -378,15 +378,21 @@
       const statsDoc = await getDoc(doc(db, 'stats', 'page_visits'));
       const allPages = ['index.html', 'AboutUs.html', 'Contact.html', 'Pricing.html', 'RepairLink.html', 'Auth.html', 'UserDashboard.html', 'KaarigarDashboard.html', 'Admin.html', 'Addkaarigar.html', 'Dashboard.html'];
       let mergedStats = {};
-      allPages.forEach(p => mergedStats[p] = 0);
+      
       if (statsDoc.exists()) {
         const statsData = statsDoc.data();
+        // First add all dynamically discovered pages
         for (const [p, c] of Object.entries(statsData)) {
           let key = p;
           if (key === 'AddKaarigar.html') key = 'Addkaarigar.html';
           mergedStats[key] = (mergedStats[key] || 0) + c;
         }
       }
+      
+      // Ensure default pages exist even with 0 visits
+      allPages.forEach(p => {
+        if (mergedStats[p] === undefined) mergedStats[p] = 0;
+      });
       sortedStats = Object.entries(mergedStats).sort((a, b) => b[1] - a[1]);
       let maxVisits = sortedStats.length > 0 ? sortedStats[0][1] : 1;
       let html = '';
@@ -524,20 +530,31 @@
     const verifiedCount = kaarigars.filter(k => k.verified).length;
     const pendingCount = kaarigars.length - verifiedCount;
     const pendingPayment = orders.filter(o => o.status === 'pending_payment').length;
-    const totalRevenue = orders.reduce((sum, o) => {
+    
+    const premiumUsersCount = users.filter(u => u.isPremium === true).length;
+    const premiumRevenue = premiumUsersCount * 39;
+    
+    const serviceRevenue = orders.reduce((sum, o) => {
       // count revenue if it's paid (pending, progress, ready, done)
       if (o.status !== 'pending_payment') {
         return sum + (Number(o.paymentAmount) || 0);
       }
       return sum;
     }, 0);
+    
+    const totalRevenue = premiumRevenue + serviceRevenue;
     const topPage = sortedStats && sortedStats.length ? sortedStats[0] : null;
 
     document.getElementById('overviewCards').innerHTML = `
       <div class="stat-card">
         <div class="stat-label">Total Revenue</div>
         <div class="stat-num">₹${totalRevenue}</div>
-        <div class="stat-sub">From all paid orders</div>
+        <div class="stat-sub">Premium (₹${premiumRevenue}) + Services (₹${serviceRevenue})</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Premium Users</div>
+        <div class="stat-num">${premiumUsersCount}</div>
+        <div class="stat-sub">Active subscriptions (₹39/each)</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Kaarigars</div>
