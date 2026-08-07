@@ -639,6 +639,7 @@
       let hasRecent = false;
       let activeCount = 0;
       let doneCount = 0;
+      let pendingRatingOrder = null; // first completed-but-unrated order found this load
       
       snap.forEach(d => {
         const o = d.data();
@@ -653,6 +654,7 @@
           doneCount++;
           let actionHtml = '';
           if (!o.rating) {
+             if (!pendingRatingOrder) pendingRatingOrder = { oid, kaarigarId: o.kaarigarId, kaarigarName: o.kaarigarName || 'Kaarigar' };
              actionHtml = `<button onclick="openRatingModal('${oid}', '${o.kaarigarId}', '${o.kaarigarName || 'Kaarigar'}')" style="margin-top:8px; background:var(--marigold); color:var(--ink); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;">★ Rate Kaarigar</button>`;
           } else {
              actionHtml = `<div style="margin-top:8px; font-size:12px; color:var(--ink-dim);">You rated: ${o.rating} ★</div>`;
@@ -677,6 +679,7 @@
         
         let statusBadge = `<span class="status-badge" style="background:#e0e0e0; color:#333;">${o.status}</span>`;
         let adminNotes = '';
+        let completeAction = '';
         
         if (o.status === 'pending_payment') {
           statusBadge = `<span class="status-badge" style="background:#FFF9C4; color:#F57F17;">Awaiting Payment Approval</span>`;
@@ -693,6 +696,21 @@
               <strong>Admin Note:</strong> ${o.adminComments || 'None'}<br>
             </div>
           `;
+
+          if (o.kaarigarId) {
+            // Nudge: if it's been sitting active for 2+ days, don't just wait for the user
+            // to remember — ask them directly, since we have no reliable kaarigar-side signal.
+            const lastTouched = (o.statusUpdatedAt || o.assignedAt)?.toDate ? (o.statusUpdatedAt || o.assignedAt).toDate() : null;
+            const daysStale = lastTouched ? Math.floor((Date.now() - lastTouched.getTime()) / 86400000) : null;
+            const isStale = daysStale !== null && daysStale >= 2;
+
+            completeAction = `
+              <div style="margin-top:12px; ${isStale ? 'background:var(--marigold-dim); border:1px solid var(--marigold); border-radius:8px; padding:12px;' : ''}">
+                ${isStale ? `<div style="font-size:13px; font-weight:700; color:#8A5C00; margin-bottom:8px;">Has your ${o.item} been repaired? Let us know so we can close this out.</div>` : ''}
+                <button onclick="markOrderCompleted('${oid}')" style="background:var(--leaf); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12.5px;">✓ Mark as Completed</button>
+              </div>
+            `;
+          }
         }
         
         listEl.innerHTML += `
@@ -705,6 +723,7 @@
               ${statusBadge}
             </div>
             ${adminNotes}
+            ${completeAction}
           </div>
         `;
       });
@@ -717,6 +736,16 @@
             <p>You don't have any repairs in progress. Need something fixed? Request a service above!</p>
           </div>
         `;
+      }
+
+      // Uber-style prompt: if a completed repair is still unrated, surface it automatically
+      // rather than waiting for the user to notice the "Rate Kaarigar" button on their own.
+      if (pendingRatingOrder && !window.__ratingPromptShown) {
+        window.__ratingPromptShown = true;
+        const modalOpen = document.getElementById('ratingModal')?.style.display === 'flex';
+        if (!modalOpen) {
+          openRatingModal(pendingRatingOrder.oid, pendingRatingOrder.kaarigarId, pendingRatingOrder.kaarigarName);
+        }
       }
       if (!hasRecent) {
         recentEl.innerHTML = `
@@ -900,6 +929,22 @@
       btn.disabled = false;
     }
   });
+
+  window.markOrderCompleted = async function(orderId) {
+    if (!confirm("Confirm this repair has been completed? You'll be asked to rate your kaarigar next.")) return;
+    try {
+      await updateDoc(doc(db, "orders", orderId), {
+        status: 'done',
+        completedAt: new Date(),
+        completedBy: 'customer'
+      });
+      showToast("Marked as completed. Thank you!");
+      window.__ratingPromptShown = false; // allow the rating prompt to fire for this newly-completed order
+      loadLiveRequests(auth.currentUser.uid);
+    } catch (err) {
+      showToast("Error updating request: " + err.message, 'error');
+    }
+  };
 
   // Rating Modal Logic
   window.openRatingModal = function(orderId, kaarigarId, kaarigarName) {
