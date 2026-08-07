@@ -34,9 +34,9 @@
   .sidebar-nav button:hover, .sidebar-nav a:hover { background: var(--paper-2); color: var(--ink); }
   .sidebar-nav button.active, .sidebar-nav a.active { background: var(--marigold-dim); color: #8A5C00; }
   .sidebar-nav button svg, .sidebar-nav a svg { flex-shrink: 0; }
-  .sidebar-footer { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .sidebar-footer a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-dim); text-decoration: none; cursor: pointer; }
-  .sidebar-footer a:hover { background: var(--paper-2); color: var(--ink); }
+  
+  
+  
 
   .main-area { margin-left: 240px; flex: 1; padding: 36px 40px; max-width: 1200px; }
   .tab-content { display: none; }
@@ -50,7 +50,7 @@
     .sidebar-brand { display: none; }
     .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
     .sidebar-nav button, .sidebar-nav a { width: auto; white-space: nowrap; flex-shrink: 0; }
-    .sidebar-footer { display: none; }
+    
     .admin-shell { flex-direction: column; }
     .main-area { margin-left: 0; padding: 24px 16px; }
   }
@@ -112,8 +112,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Suggested Kaarigars
       </button>
-    </nav>
-    <div class="sidebar-footer">
+    
       <a href="index.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
         Return to Home
@@ -126,7 +125,9 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Logout
       </a>
-    </div>
+    
+    </nav>
+    
   </div>
 
   <div class="main-area">
