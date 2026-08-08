@@ -1590,14 +1590,7 @@
   }
 
   window.handlePremiumSubscribe = function() {
-    if (window.windowUserRole === 'user') {
-      window.location.href = 'UserDashboard.html?tab=premium';
-    } else if (window.windowUserRole === 'admin' || window.windowUserRole === 'kaarigar') {
-      alert("Premium subscription is only available for regular Users. You are logged in as " + window.windowUserRole + ".");
-    } else {
-      alert("Please log in as a User to subscribe to Premium.");
-      window.location.href = 'Auth.html';
-    }
+    window.location.href = 'UserDashboard.html?tab=premium';
   };
 
   window.applyCouponIndex = function() {

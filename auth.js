@@ -96,6 +96,13 @@ if(completeSignupBtn) {
 }
 
 function routeUser(role) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirect = urlParams.get('redirect');
+  if (redirect) {
+    window.location.href = decodeURIComponent(redirect);
+    return;
+  }
+
   if(role === 'admin') {
     window.location.href = 'Admin.html';
   } else if (role === 'kaarigar') {
