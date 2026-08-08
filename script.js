@@ -743,13 +743,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ARTISANS = [];
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
-        if (data.status === 'verified') {
-          // Check for valid Delhi coordinates to avoid zooming out randomly due to typos (like lng: 38 instead of 77)
-          if (data.lat > 28.0 && data.lat < 29.5 && data.lng > 76.5 && data.lng < 77.8) {
-            ARTISANS.push({ id: docSnap.id, ...data });
-          } else {
-            console.warn(`Kaarigar ${data.name} skipped due to invalid coordinates: [${data.lat}, ${data.lng}]`);
-          }
+        // Check for valid Delhi coordinates to avoid zooming out randomly due to typos (like lng: 38 instead of 77)
+        if (data.lat > 28.0 && data.lat < 29.5 && data.lng > 76.5 && data.lng < 77.8) {
+          ARTISANS.push({ id: docSnap.id, ...data });
+        } else {
+          console.warn(`Kaarigar ${data.name} skipped due to invalid coordinates: [${data.lat}, ${data.lng}]`);
         }
       });
       console.log(`Loaded ${ARTISANS.length} kaarigars from Firestore.`);
