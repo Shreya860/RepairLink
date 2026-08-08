@@ -1083,6 +1083,13 @@
       document.getElementById('tab-' + tabId).classList.add('active');
     });
   });
+
+  // Auto-switch tab based on URL param
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam) {
+    switchTab(tabParam);
+  }
 </script>
 
   <!-- Eco-Impact Info Modal -->
