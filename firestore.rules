@@ -66,9 +66,9 @@ service cloud.firestore {
       // shape and caps field sizes — reduces junk/spam and oversized payload abuse.
       // NOTE: this does NOT stop XSS by itself — Admin.html must also escape this text
       // before rendering it, since rules can't sanitize content, only gate write access.
-      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'message']) &&
+      allow create: if request.resource.data.keys().hasAll(['name', 'contactInfo', 'message']) &&
         request.resource.data.name is string && request.resource.data.name.size() < 200 &&
-        request.resource.data.email is string && request.resource.data.email.size() < 200 &&
+        request.resource.data.contactInfo is string && request.resource.data.contactInfo.size() < 200 &&
         request.resource.data.message is string && request.resource.data.message.size() < 3000;
       allow read, update, delete: if isAdmin();
     }
