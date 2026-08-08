@@ -414,7 +414,7 @@
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists()) {
       const role = userDoc.data().role;
-      if (role === 'user' || role === 'admin') {
+      if (role === 'user') {
         document.getElementById('userContainer').style.display = 'flex';
         
         // Populate profile
@@ -435,6 +435,9 @@
         loadLiveRequests(user.uid);
         window.loadKaarigars();
         
+      } else if (role === 'admin') {
+        alert("You are an Admin. Redirecting to Admin Dashboard.");
+        window.location.href = 'Admin.html';
       } else {
         alert("You are registered as a Kaarigar. Redirecting to your dashboard.");
         window.location.href = 'KaarigarDashboard.html';
