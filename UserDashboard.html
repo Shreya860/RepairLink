@@ -403,6 +403,7 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
+      alert("Please login as a user to access premium features.");
       const currentUrl = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
       window.location.href = 'Auth.html?redirect=' + currentUrl;
       return;
@@ -439,10 +440,11 @@
         alert("You are an Admin. Redirecting to Admin Dashboard. But to get premium, please login as user.");
         window.location.href = 'Admin.html';
       } else {
-        alert("You are registered as a Kaarigar. Redirecting to your dashboard.");
+        alert("You are registered as a Kaarigar. Redirecting to your dashboard. But to get premium, please login as user.");
         window.location.href = 'KaarigarDashboard.html';
       }
     } else {
+      alert("Please login as a user to access premium features.");
       const currentUrl = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
       window.location.href = 'Auth.html?redirect=' + currentUrl;
     }
