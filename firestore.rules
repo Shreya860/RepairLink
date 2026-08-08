@@ -24,18 +24,22 @@ service cloud.firestore {
     }
 
     match /kaarigars/{docId} {
-      allow read: if true;
-      // A linked kaarigar account may create/edit their own profile, but can never
-      // self-verify or fabricate their own rating/review/job stats — those are
-      // admin- or system-controlled trust signals.
+      allow read: if true;   // unchanged — public map still needs to work
       allow create: if isAdmin() ||
         (request.auth != null && request.resource.data.uid == request.auth.uid &&
-          request.resource.data.get('verified', false) == false &&
-          !request.resource.data.keys().hasAny(['rating', 'reviewCount', 'jobsCompleted']));
+        request.resource.data.get('verified', false) == false &&
+          !request.resource.data.keys().hasAny(['rating', 'reviewCount', 'jobsCompleted', 'phone', 'gmail', 'lat', 'lng']));
       allow update: if isAdmin() ||
         (request.auth != null && resource.data.uid == request.auth.uid &&
-          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'verified', 'rating', 'reviewCount', 'jobsCompleted']));
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'verified', 'rating', 'reviewCount', 'jobsCompleted', 'phone', 'gmail', 'lat', 'lng']));
       allow delete: if isAdmin();
+
+      match /private/contact {
+        allow read: if isAdmin() ||
+          (request.auth != null && get(/databases/$(database)/documents/kaarigars/$(docId)).data.uid == request.auth.uid);
+        allow write: if isAdmin() ||
+          (request.auth != null && get(/databases/$(database)/documents/kaarigars/$(docId)).data.uid == request.auth.uid);
+      }
     }
     
     match /orders/{docId} {
@@ -66,10 +70,12 @@ service cloud.firestore {
       // shape and caps field sizes — reduces junk/spam and oversized payload abuse.
       // NOTE: this does NOT stop XSS by itself — Admin.html must also escape this text
       // before rendering it, since rules can't sanitize content, only gate write access.
-      allow create: if request.resource.data.keys().hasAll(['name', 'contactInfo', 'message']) &&
-        request.resource.data.name is string && request.resource.data.name.size() < 200 &&
-        request.resource.data.contactInfo is string && request.resource.data.contactInfo.size() < 200 &&
-        request.resource.data.message is string && request.resource.data.message.size() < 3000;
+      allow create: if request.auth != null &&
+        request.resource.data.customerId == request.auth.uid &&
+        request.resource.data.status == 'pending_payment' &&
+        !request.resource.data.keys().hasAny(['kaarigarId', 'kaarigarName', 'kaarigarLat', 'kaarigarLng', 'adminComments', 'rating', 'reviewText', 'completedAt']) &&
+        request.resource.data.item is string && request.resource.data.item.size() < 200 &&
+        request.resource.data.address is string && request.resource.data.address.size() < 500;
       allow read, update, delete: if isAdmin();
     }
     

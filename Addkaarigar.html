@@ -234,7 +234,7 @@
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   import { firebaseConfig } from './env.js';
 
@@ -329,9 +329,18 @@
     btn.textContent = 'Adding...';
 
     try {
-      await addDoc(collection(db, 'kaarigars'), {
-        name, trade, phone, years, area, hours, s1, s2, lat, lng, verified, gmail,
+      // Public doc only ever gets a rounded, privacy-safe coordinate — exact lat/lng and
+      // contact details go straight into a private subcollection at creation time, so they
+      // never sit on the publicly-readable kaarigars/{id} doc, even for a moment.
+      const round2 = n => Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+
+      const newDocRef = await addDoc(collection(db, 'kaarigars'), {
+        name, trade, years, area, hours, s1, s2, verified,
+        approxLat: round2(lat), approxLng: round2(lng),
         createdAt: new Date()
+      });
+      await setDoc(doc(db, 'kaarigars', newDocRef.id, 'private', 'contact'), {
+        phone, gmail, lat, lng
       });
       showToast(`${name} added successfully!`);
       addKaarigarForm.reset();

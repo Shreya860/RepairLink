@@ -716,9 +716,18 @@
           if(o.status === 'progress') badgeText = 'Repair in Progress';
           if(o.status === 'ready') badgeText = 'Ready for Drop-off';
           statusBadge = `<span class="status-badge" style="background:#E3F2FD; color:#1565C0;">${badgeText}</span>`;
+          // Coordinates are only ever included in this block, which is skipped entirely
+          // once o.status === 'done' (see branch above) — so the moment the complaint is
+          // closed, the kaarigar's location stops being rendered to the customer.
+          let coordsLine = '';
+          if (o.kaarigarLat !== undefined && o.kaarigarLat !== null && o.kaarigarLng !== undefined && o.kaarigarLng !== null) {
+            const mapsUrl = `https://www.google.com/maps?q=${o.kaarigarLat},${o.kaarigarLng}`;
+            coordsLine = `<strong>Kaarigar Location:</strong> ${o.kaarigarLat}, ${o.kaarigarLng} — <a href="${mapsUrl}" target="_blank" rel="noopener" style="color:var(--leaf); text-decoration:underline;">View on map</a><br>`;
+          }
           adminNotes = `
             <div style="margin-top:12px; background:var(--paper-2); padding:12px; border-radius:8px; font-size:13px;">
               <strong>Assigned:</strong> ${escapeHtml(o.kaarigarName) || 'Unknown Kaarigar'}<br>
+              ${coordsLine}
               <strong>Admin Note:</strong> ${escapeHtml(o.adminComments) || 'None'}<br>
             </div>
           `;

@@ -210,6 +210,7 @@
       </div>
       <div class="toolbar">
         <input type="text" class="search-input" id="kaarigarSearchInput" placeholder="Search by name, trade, or area…">
+        <button class="btn-small ghost" onclick="runContactMigration()" title="One-time: moves phone/gmail/exact lat-lng off the public kaarigars doc into a private subcollection">Run Privacy Migration</button>
       </div>
       <div class="panel-block" style="padding:0; overflow-x:auto;">
         <table>
@@ -264,8 +265,8 @@
       <div class="page-head"><div><h1>Service Requests</h1><p>Live repair bookings coming through the platform.</p></div></div>
       <div class="panel-block" style="padding:0; overflow-x:auto;">
         <table>
-          <thead><tr><th>Item</th><th>Customer UID</th><th>Kaarigar Name</th><th>Status</th><th>Actions / Photos</th></tr></thead>
-          <tbody id="ordersTableBody"><tr><td colspan="5" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
+          <thead><tr><th>Item</th><th>Customer UID</th><th>Address</th><th>Kaarigar Name</th><th>Status</th><th>Actions / Photos</th></tr></thead>
+          <tbody id="ordersTableBody"><tr><td colspan="6" style="text-align:center; color:var(--ink-dim)">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -296,17 +297,25 @@
   <div class="modal-container">
     <button class="modal-close" onclick="document.getElementById('assignModal').style.display='none'">&times;</button>
     <h2 style="font-family:'Fraunces', serif; font-size:24px; margin-bottom:8px;">Approve Payment & Assign</h2>
-    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:24px;">Verify the ₹9 payment and assign a Kaarigar to this request.</p>
+    <p style="color:var(--ink-dim); font-size:14px; margin-bottom:16px;">Verify the ₹9 payment and assign a Kaarigar to this request.</p>
+    <div class="field-group" style="margin-bottom:16px;">
+      <label>Customer Address</label>
+      <div id="assignOrderAddress" style="padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper-2); font-size:13.5px; color:var(--ink);">—</div>
+    </div>
     <input type="hidden" id="assignOrderId">
     <div class="field-group" style="margin-bottom:16px;">
       <label>Select Kaarigar</label>
-      <select id="assignKaarigarSelect" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px;">
+      <select id="assignKaarigarSelect" onchange="updateAssignKaarigarCoords()" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px;">
         <option value="">Loading Kaarigars...</option>
       </select>
     </div>
+    <div class="field-group" style="margin-bottom:16px;">
+      <label>Kaarigar Coordinates (Auto-filled, sent to user)</label>
+      <div id="assignKaarigarCoords" style="padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper-2); font-size:13.5px; color:var(--ink-dim); font-family:'JetBrains Mono', monospace;">Select a kaarigar to pull their coordinates</div>
+    </div>
     <div class="field-group" style="margin-bottom:24px;">
-      <label>Admin Note / Location Coordinates (Sent to User)</label>
-      <textarea id="assignComments" placeholder="e.g. Assigned to Raju. Location: 28.6139, 77.2090" style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px; min-height:80px;"></textarea>
+      <label>Admin Note (Optional, sent to user)</label>
+      <textarea id="assignComments" placeholder="e.g. Assigned to Raju, will reach within the hour." style="width:100%; padding:12px; border:1px solid var(--line); border-radius:8px; min-height:70px;"></textarea>
     </div>
     <button class="form-submit" id="confirmAssignBtn" onclick="submitAssignment()" style="width:100%;">Approve & Assign</button>
   </div>
@@ -342,7 +351,7 @@
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteField, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   import { firebaseConfig } from './env.js';
 
@@ -452,7 +461,7 @@
       window.adminOrdersData = {};
       ordersBody.innerHTML = '';
       if (ordersSnap.empty) {
-        ordersBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No orders found.</td></tr>`;
+        ordersBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No orders found.</td></tr>`;
       }
       ordersSnap.forEach(d => {
         const o = d.data();
@@ -507,13 +516,14 @@
         ordersBody.innerHTML += `<tr>
           <td style="font-weight:600">${escapeHtml(o.item) || 'N/A'}</td>
           <td style="font-family:'JetBrains Mono', monospace; font-size:11px;">${o.customerId || 'N/A'}</td>
+          <td style="max-width:220px; font-size:13px;">${escapeHtml(o.address) || '<span style="color:var(--ink-dim)">Not provided</span>'}</td>
           <td>${escapeHtml(o.kaarigarName) || o.kaarigarId || 'Unassigned'}</td>
           <td>${statusBadge}</td>
           <td>${actionHtml}</td>
         </tr>`;
       });
     } catch (err) {
-      ordersBody.innerHTML = `<tr><td colspan="5">Error loading orders: ${err.message}</td></tr>`;
+      ordersBody.innerHTML = `<tr><td colspan="6">Error loading orders: ${err.message}</td></tr>`;
     }
 
     // ---- Messages ----
@@ -795,25 +805,69 @@
 
   window.openAssignModal = function(orderId, trade) {
     document.getElementById('assignOrderId').value = orderId;
+    const order = (window.adminOrdersData || {})[orderId] || {};
+    document.getElementById('assignOrderAddress').textContent = order.address || 'Not provided';
     const select = document.getElementById('assignKaarigarSelect');
     select.innerHTML = '<option value="">Select a Kaarigar...</option>';
     for (const [id, k] of Object.entries(window.adminKaarigarsData)) {
       if (k.verified) select.innerHTML += `<option value="${id}">${k.name} (${k.trade} - ${k.area})</option>`;
     }
     document.getElementById('assignComments').value = '';
+    document.getElementById('assignKaarigarCoords').textContent = 'Select a kaarigar to pull their coordinates';
+    document.getElementById('assignKaarigarCoords').removeAttribute('data-lat');
+    document.getElementById('assignKaarigarCoords').removeAttribute('data-lng');
     document.getElementById('assignModal').style.display = 'flex';
+  };
+
+  // Auto-pulls the selected kaarigar's saved exact coordinates from their private/contact
+  // subdoc (admin-only read) so the admin never has to type coordinates by hand — this is
+  // what gets copied onto the order and shown to the customer once assigned.
+  window.updateAssignKaarigarCoords = async function() {
+    const kaarigarId = document.getElementById('assignKaarigarSelect').value;
+    const coordsEl = document.getElementById('assignKaarigarCoords');
+    if (!kaarigarId) {
+      coordsEl.textContent = 'Select a kaarigar to pull their coordinates';
+      coordsEl.removeAttribute('data-lat');
+      coordsEl.removeAttribute('data-lng');
+      return;
+    }
+    coordsEl.textContent = 'Loading…';
+    coordsEl.removeAttribute('data-lat');
+    coordsEl.removeAttribute('data-lng');
+    try {
+      const contactSnap = await getDoc(doc(db, 'kaarigars', kaarigarId, 'private', 'contact'));
+      const contact = contactSnap.exists() ? contactSnap.data() : {};
+      if (contact.lat !== undefined && contact.lng !== undefined && contact.lat !== null && contact.lng !== null) {
+        coordsEl.textContent = `${contact.lat}, ${contact.lng}`;
+        coordsEl.dataset.lat = contact.lat;
+        coordsEl.dataset.lng = contact.lng;
+      } else {
+        coordsEl.textContent = 'No saved coordinates for this kaarigar';
+      }
+    } catch (err) {
+      coordsEl.textContent = 'Error loading coordinates: ' + err.message;
+    }
   };
 
   window.submitAssignment = async function() {
     const orderId = document.getElementById('assignOrderId').value;
     const kaarigarId = document.getElementById('assignKaarigarSelect').value;
     const comments = document.getElementById('assignComments').value;
+    const coordsEl = document.getElementById('assignKaarigarCoords');
     const btn = document.getElementById('confirmAssignBtn');
     if (!kaarigarId) { showToast("Please select a Kaarigar.", 'error'); return; }
     btn.textContent = 'Assigning...'; btn.disabled = true;
     try {
       const kData = window.adminKaarigarsData[kaarigarId];
-      await updateDoc(doc(db, 'orders', orderId), { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments, assignedAt: new Date() });
+      const updates = { status: 'pending', kaarigarId, kaarigarName: kData.name, adminComments: comments, assignedAt: new Date() };
+      if (coordsEl.dataset.lat !== undefined && coordsEl.dataset.lng !== undefined) {
+        updates.kaarigarLat = parseFloat(coordsEl.dataset.lat);
+        updates.kaarigarLng = parseFloat(coordsEl.dataset.lng);
+      } else {
+        updates.kaarigarLat = null;
+        updates.kaarigarLng = null;
+      }
+      await updateDoc(doc(db, 'orders', orderId), updates);
       showToast("Kaarigar assigned successfully!");
       document.getElementById('assignModal').style.display = 'none';
       loadData();
@@ -848,7 +902,9 @@
         status: newStatus,
         kaarigarId: null,
         kaarigarName: null,
-        adminComments: null
+        adminComments: null,
+        kaarigarLat: null,
+        kaarigarLng: null
       });
       showToast("Assignment revoked.");
       loadData();
@@ -926,40 +982,66 @@
   };
 
   // ---------- Kaarigar details / edit ----------
-  window.showKaarigarDetails = function(id) {
+  // Phone, Gmail, and exact lat/lng live in kaarigars/{id}/private/contact — a subcollection
+  // only admin (and the kaarigar's own account) can read, per firestore.rules. The public
+  // kaarigars/{id} doc only ever holds approxLat/approxLng (rounded, ~1km fuzz) for the map.
+  window.showKaarigarDetails = async function(id) {
     const k = window.adminKaarigarsData[id];
     document.getElementById('modalTitle').textContent = "Kaarigar Details";
-    let contentHtml = '';
-    const keys = Object.keys(k).sort();
+    let contentHtml = '<div class="detail-row"><div class="detail-label">Loading contact info…</div></div>';
+    document.getElementById('modalContent').innerHTML = contentHtml;
+    document.getElementById('detailsModal').style.display = 'flex';
+
+    let contact = {};
+    try {
+      const contactSnap = await getDoc(doc(db, 'kaarigars', id, 'private', 'contact'));
+      if (contactSnap.exists()) contact = contactSnap.data();
+    } catch (err) {
+      contentHtml = `<div class="detail-row"><div class="detail-label">Contact Info</div><div class="detail-value">Error loading: ${escapeHtml(err.message)}</div></div>`;
+    }
+
+    contentHtml = '';
+    const merged = { ...k, ...contact };
+    const keys = Object.keys(merged).sort();
     for (const key of keys) {
-      let val = k[key];
+      let val = merged[key];
       if (typeof val === 'object') val = JSON.stringify(val);
-      contentHtml += `<div class="detail-row"><div class="detail-label">${key}</div><div class="detail-value">${val}</div></div>`;
+      contentHtml += `<div class="detail-row"><div class="detail-label">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(val)}</div></div>`;
     }
     contentHtml += `<div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
       <button class="btn-small marigold" onclick="editKaarigarDetails('${id}')">Edit Details</button>
     </div>`;
     document.getElementById('modalContent').innerHTML = contentHtml;
-    document.getElementById('detailsModal').style.display = 'flex';
   };
 
-  window.editKaarigarDetails = function(id) {
+  window.editKaarigarDetails = async function(id) {
     const k = window.adminKaarigarsData[id];
     document.getElementById('modalTitle').textContent = "Edit Kaarigar Details";
+    document.getElementById('modalContent').innerHTML = `<div class="field-group"><label>Loading…</label></div>`;
+
+    let contact = {};
+    try {
+      const contactSnap = await getDoc(doc(db, 'kaarigars', id, 'private', 'contact'));
+      if (contactSnap.exists()) contact = contactSnap.data();
+    } catch (err) {
+      showToast("Error loading contact info: " + err.message, 'error');
+    }
+
     document.getElementById('modalContent').innerHTML = `
-      <div class="field-group"><label>Name</label><input type="text" id="editKName" value="${k.name || ''}"></div>
-      <div class="field-group"><label>Google Email (Optional)</label><input type="email" id="editKGmail" value="${k.gmail || ''}"></div>
-      <div class="field-group"><label>Trade</label><input type="text" id="editKTrade" value="${k.trade || ''}"></div>
-      <div class="field-group"><label>Area</label><input type="text" id="editKArea" value="${k.area || ''}"></div>
-      <div class="field-group"><label>Phone / WhatsApp number</label><input type="tel" id="editKPhone" value="${k.phone || ''}"></div>
+      <div class="field-group"><label>Name</label><input type="text" id="editKName" value="${escapeHtml(k.name || '')}"></div>
+      <div class="field-group"><label>Google Email (Optional)</label><input type="email" id="editKGmail" value="${escapeHtml(contact.gmail || '')}"></div>
+      <div class="field-group"><label>Trade</label><input type="text" id="editKTrade" value="${escapeHtml(k.trade || '')}"></div>
+      <div class="field-group"><label>Area</label><input type="text" id="editKArea" value="${escapeHtml(k.area || '')}"></div>
+      <div class="field-group"><label>Phone / WhatsApp number</label><input type="tel" id="editKPhone" value="${escapeHtml(contact.phone || '')}"></div>
       <div class="field-group"><label>Years of Experience</label><input type="number" id="editKYears" value="${k.years || ''}"></div>
-      <div class="field-group"><label>Working Hours</label><input type="text" id="editKHours" value="${k.hours || ''}"></div>
+      <div class="field-group"><label>Working Hours</label><input type="text" id="editKHours" value="${escapeHtml(k.hours || '')}"></div>
       <div style="display:flex; gap:12px;">
-        <div class="field-group" style="flex:1;"><label>Latitude</label><input type="number" step="any" id="editKLat" value="${k.lat ?? ''}"></div>
-        <div class="field-group" style="flex:1;"><label>Longitude</label><input type="number" step="any" id="editKLng" value="${k.lng ?? ''}"></div>
+        <div class="field-group" style="flex:1;"><label>Exact Latitude (private — pickup use only)</label><input type="number" step="any" id="editKLat" value="${contact.lat ?? ''}"></div>
+        <div class="field-group" style="flex:1;"><label>Exact Longitude (private — pickup use only)</label><input type="number" step="any" id="editKLng" value="${contact.lng ?? ''}"></div>
       </div>
-      <div class="field-group"><label>Intro line 1</label><textarea id="editKS1">${k.s1 || ''}</textarea></div>
-      <div class="field-group"><label>Intro line 2</label><textarea id="editKS2">${k.s2 || ''}</textarea></div>
+      <p style="font-size:11px; color:var(--ink-dim); margin-top:-8px;">A rounded, public-safe version of this location is auto-generated for the map — the exact point above is never shown to site visitors.</p>
+      <div class="field-group"><label>Intro line 1</label><textarea id="editKS1">${escapeHtml(k.s1 || '')}</textarea></div>
+      <div class="field-group"><label>Intro line 2</label><textarea id="editKS2">${escapeHtml(k.s2 || '')}</textarea></div>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
         <button class="btn-small" onclick="showKaarigarDetails('${id}')">Cancel</button>
         <button class="btn-small marigold" onclick="saveKaarigarDetails('${id}')">Save Changes</button>
@@ -967,21 +1049,77 @@
     `;
   };
 
+  // ---------- One-time migration: split phone/gmail/exact lat-lng off the public doc ----------
+  // Safe to run multiple times — skips any kaarigar that's already been migrated (no legacy
+  // phone/gmail/lat/lng left on the main doc). Runs under the admin's own session, so it's
+  // covered by the isAdmin() branch of firestore.rules; no service-account key needed.
+  window.runContactMigration = async function() {
+    if (!confirm("Move phone/gmail/exact coordinates off the public kaarigars doc into a private subcollection? Safe to run more than once.")) return;
+    const entries = Object.entries(window.adminKaarigarsData);
+    const round2 = n => Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+    let migrated = 0, skipped = 0, failed = 0;
+    for (const [id, k] of entries) {
+      const hasLegacy = k.phone !== undefined || k.gmail !== undefined || k.lat !== undefined || k.lng !== undefined;
+      if (!hasLegacy) { skipped++; continue; }
+      try {
+        const exactLat = typeof k.lat === 'number' ? k.lat : parseFloat(k.lat);
+        const exactLng = typeof k.lng === 'number' ? k.lng : parseFloat(k.lng);
+        await setDoc(doc(db, 'kaarigars', id, 'private', 'contact'), {
+          phone: k.phone || '',
+          gmail: k.gmail || '',
+          lat: Number.isFinite(exactLat) ? exactLat : null,
+          lng: Number.isFinite(exactLng) ? exactLng : null
+        }, { merge: true });
+        await updateDoc(doc(db, 'kaarigars', id), {
+          approxLat: round2(exactLat),
+          approxLng: round2(exactLng),
+          phone: deleteField(),
+          gmail: deleteField(),
+          lat: deleteField(),
+          lng: deleteField()
+        });
+        migrated++;
+      } catch (err) {
+        console.error(`Migration failed for kaarigar ${id}:`, err);
+        failed++;
+      }
+    }
+    showToast(`Migration done — ${migrated} moved, ${skipped} already clean, ${failed} failed.`, failed ? 'error' : 'success');
+    loadData();
+  };
+
   window.saveKaarigarDetails = async function(id) {
     try {
+      const exactLat = parseFloat(document.getElementById('editKLat').value);
+      const exactLng = parseFloat(document.getElementById('editKLng').value);
+      // Public doc only ever gets the rounded coordinate — ~0.01deg is roughly 1.1km of
+      // fuzz, plenty for map browsing/distance-sort, not enough to pinpoint a home/shop.
+      const round2 = n => Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+
       await updateDoc(doc(db, 'kaarigars', id), {
         name: document.getElementById('editKName').value,
-        gmail: document.getElementById('editKGmail').value,
         trade: document.getElementById('editKTrade').value,
         area: document.getElementById('editKArea').value,
-        phone: document.getElementById('editKPhone').value,
         years: parseInt(document.getElementById('editKYears').value) || 0,
         hours: document.getElementById('editKHours').value,
-        lat: parseFloat(document.getElementById('editKLat').value),
-        lng: parseFloat(document.getElementById('editKLng').value),
+        approxLat: round2(exactLat),
+        approxLng: round2(exactLng),
         s1: document.getElementById('editKS1').value,
-        s2: document.getElementById('editKS2').value
+        s2: document.getElementById('editKS2').value,
+        // Clean up any legacy fields still sitting on old docs pre-migration.
+        phone: deleteField(),
+        gmail: deleteField(),
+        lat: deleteField(),
+        lng: deleteField()
       });
+
+      await setDoc(doc(db, 'kaarigars', id, 'private', 'contact'), {
+        phone: document.getElementById('editKPhone').value,
+        gmail: document.getElementById('editKGmail').value,
+        lat: Number.isFinite(exactLat) ? exactLat : null,
+        lng: Number.isFinite(exactLng) ? exactLng : null
+      }, { merge: true });
+
       showToast("Kaarigar details updated successfully!");
       document.getElementById('detailsModal').style.display = 'none';
       loadData();

@@ -740,16 +740,17 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const kaarigarsCol = collection(db, 'kaarigars');
       const snapshot = await getDocs(kaarigarsCol);
-      ARTISANS = [];
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        // Check for valid Delhi coordinates to avoid zooming out randomly due to typos (like lng: 38 instead of 77)
-        if (data.lat > 28.0 && data.lat < 29.5 && data.lng > 76.5 && data.lng < 77.8) {
-          ARTISANS.push({ id: docSnap.id, ...data });
-        } else {
-          console.warn(`Kaarigar ${data.name} skipped due to invalid coordinates: [${data.lat}, ${data.lng}]`);
-        }
+      const fetchedData = [];
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        // Public site only ever gets the rounded, privacy-safe coordinate. approxLat/Lng is
+        // the post-migration field; lat/lng is a fallback for any not-yet-migrated docs so
+        // the map doesn't silently break mid-rollout — exact coordinates never reach this file.
+        const lat = d.approxLat ?? d.lat;
+        const lng = d.approxLng ?? d.lng;
+        fetchedData.push({ id: docSnap.id, ...d, lat, lng });
       });
+      ARTISANS = fetchedData;
       console.log(`Loaded ${ARTISANS.length} kaarigars from Firestore.`);
     } catch(err) {
       console.error("Firestore fetch error - showing an empty map.", err);
