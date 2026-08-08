@@ -1527,19 +1527,6 @@
   }, {passive: true});
 
   // HIDE FLOATING BUTTON ON FOOTER OR HEADER
-  const floatBtn = document.querySelector('.floating-book-now');
-  window.addEventListener('scroll', () => {
-    if(!floatBtn) return;
-    const scrollY = window.scrollY;
-    // hide if very top or very bottom
-    if(scrollY < 300) {
-      floatBtn.style.opacity = '0';
-      floatBtn.style.pointerEvents = 'none';
-    } else {
-      floatBtn.style.opacity = '1';
-      floatBtn.style.pointerEvents = 'all';
-    }
-  }, {passive: true});
 
   // FAQ ACCORDION LOGIC
   document.querySelectorAll('.faq-question').forEach(button => {
