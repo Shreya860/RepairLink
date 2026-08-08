@@ -19,7 +19,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     windowCurrentUser = user;
     if(navLogin) navLogin.style.display = 'none';
-    if(navLogout) navLogout.style.display = 'inline-block';
+    if(navLogout) navLogout.style.display = 'flex';
     
     // Check role and inject links
     try {
